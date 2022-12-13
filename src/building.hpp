@@ -1,16 +1,16 @@
-class Building
+class building
 {
 private:
   /* data */
 public:
-  Building(/* args */);
-  ~Building();
+  building(/* args */);
+  ~building();
 };
 
-Building::Building(/* args */)
+building::building(/* args */)
 {
 }
 
-Building::~Building()
+building::~building()
 {
 }

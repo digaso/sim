@@ -20,10 +20,26 @@ public:
   void addProvince(province p);
   void addCountry(country c);
   void printCountries();
+  country* getCountryById(uint id) {
+
+    if (id < countries.size()) {
+      return &countries.at(id);
+    }
+
+    return nullptr;
+  }
+  country* getCountryByAbrev(string abrev) {
+    for (auto row : countries) {
+      if (row.get_abrev() == abrev) {
+        country* c = &row;
+        return c;
+      }
+    }
+    return nullptr;
+  }
   const vector<province> getProvinces() const;
   const vector<country> getCountries() const;
 };
-ostream& operator << (ostream& os, const World& w);
 
 World::World(int day, int month, int year)
 {
@@ -68,6 +84,7 @@ const vector<country> World::getCountries() const
 {
   return this->countries;
 }
+
 
 void World::printCountries() {
   for (auto row : this->countries) {

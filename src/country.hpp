@@ -17,9 +17,15 @@ private:
   //vector<character> characters;
 
 public:
-  country(uint id, string name, string abrev);
-  ~country();
-  int get_id();
+  country() {};
+  country(uint id, string name, string abrev)
+  {
+    this->id = id;
+    this->name = name;
+    this->abrev = abrev;
+  }
+  ~country() {};
+  uint get_id();
   string get_name();
   string get_abrev();
   string print();
@@ -27,18 +33,9 @@ public:
   void remove_province(province p);
   //void add_character(character c);
   //void remove_character(character c);
-  static country* get_country_byId(uint id, vector<country> countries);
   static const int get_countryId_byAbrev(uint id, vector<country> countries);
 };
 #endif
-country::country(uint id, string name, string abrev)
-{
-  this->id = id;
-  this->name = name;
-  this->abrev = abrev;
-}
-
-country::~country() {}
 
 void country::add_province(province p) {
   this->provinces.push_back(p);
@@ -59,13 +56,6 @@ const int get_countryId_byAbrev(string abrev, vector<country> countries)
   return -1;
 }
 
-country* country::get_country_byId(uint id, vector<country> countries)
-{
-  if (id < countries.size())
-    return &countries.at(id);
-  return NULL;
-}
-
 string country::get_name() {
   return this->name;
 }
@@ -77,6 +67,6 @@ string country::print() {
   return this->name + " (" + this->abrev + ")";
 }
 
-int country::get_id() {
+uint country::get_id() {
   return this->id;
 }

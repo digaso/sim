@@ -1,26 +1,43 @@
 #pragma once
 #ifndef _PROVINCE_H_
 #define _PROVINCE_H_
+#include "population.hpp"
 #include "country.hpp"
 #include <string>
+#include <vector>
+
 using namespace std;
+
+class country;
 
 class province {
 private:
-  static uint id_counter;
   uint id;
   string name;
-  uint population;
+  uint population_size;
   float latitude;
   float longitude;
-  //country* country_owner;
-  int country_id;
+  country* country_owner;
   uint migration_atraction;
   float tax_control;
+  vector<population> populations;
+  typedef struct {
+    int k;
+  } buildings;
 
 public:
-  province(uint id, string name, uint population, float latitude, float longitude, uint country_id);
-  ~province();
+  province();
+  province(uint id, string name, uint population_size, float latitude, float longitude, country* country_owner)
+  {
+    this->id = id;
+    this->name = name;
+    this->population_size = population_size;
+    this->latitude = latitude;
+    this->longitude = longitude;
+    this->country_owner = country_owner;
+    this->id = 0;
+  }
+  ~province() {};
   string get_name();
   uint get_id();
   uint get_population();
@@ -32,20 +49,6 @@ public:
 
 };
 #endif
-province::province(uint id, string name, uint population, float latitude, float longitude, uint country_id)
-{
-  this->id = id;
-  this->name = name;
-  this->population = population;
-  this->latitude = latitude;
-  this->longitude = longitude;
-  this->country_id = country_id;
-  this->id = 0;
-}
-
-province::~province()
-{
-}
 
 string province::get_name()
 {
@@ -59,7 +62,7 @@ uint province::get_id()
 
 uint province::get_population()
 {
-  return this->population;
+  return this->population_size;
 }
 
 float province::get_latitude()
@@ -72,10 +75,6 @@ float province::get_longitude()
   return this->longitude;
 }
 
-uint province::get_country_id()
-{
-  return this->country_id;
-}
 
 uint province::get_migration_atraction()
 {

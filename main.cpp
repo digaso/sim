@@ -30,8 +30,8 @@ void load_provinces(World* world_sim) {
   int i = 0;
   for (auto row : provinces) {
     string country_abrev = row[ "country" ];
-    int country_id = get_countryId_byAbrev(country_abrev, world_sim->getCountries());
-    province p(i++, row[ "name" ], stoi(row[ "population" ]), stof(row[ "latitude" ]), stof(row[ "longitude" ]), country_id);
+    country* c = world_sim->getCountryByAbrev(country_abrev);
+    province p(i++, row[ "name" ], stoi(row[ "population" ]), stof(row[ "latitude" ]), stof(row[ "longitude" ]), c);
     world_sim->addProvince(p);
   }
   cout << "Provinces loaded" << endl;
