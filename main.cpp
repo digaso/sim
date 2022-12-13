@@ -1,8 +1,9 @@
 #include <iostream>
 #include <unistd.h>
 #include <SFML/Graphics.hpp>
-#include "utils/world.hpp"
-#include "utils/read_csv.hpp"
+#include "src/world.hpp"
+#include "src/utils/read_csv.hpp"
+
 using namespace std;
 using namespace sf;
 
