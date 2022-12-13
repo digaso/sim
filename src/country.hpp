@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _COUNTRY_H_
+#define _COUNTRY_H_
 #include <string>
 #include <vector>
 #include "province.hpp"
@@ -12,26 +14,40 @@ private:
   string abrev;
   float money;
   vector<province> provinces;
+  //vector<character> characters;
 
 public:
-  country(string name, string abrev);
+  country(uint id, string name, string abrev);
   ~country();
   int get_id();
   string get_name();
   string get_abrev();
   string print();
+  void add_province(province p);
+  void remove_province(province p);
+  //void add_character(character c);
+  //void remove_character(character c);
   static country* get_country_byId(uint id, vector<country> countries);
   static const int get_countryId_byAbrev(uint id, vector<country> countries);
 };
-
-country::country(string name, string abrev)
+#endif
+country::country(uint id, string name, string abrev)
 {
+  this->id = id;
   this->name = name;
   this->abrev = abrev;
 }
 
 country::~country() {}
 
+void country::add_province(province p) {
+  this->provinces.push_back(p);
+}
+
+
+//void country::add_character(character c) {
+//  this->characters.push_back(c);
+//}
 
 const int get_countryId_byAbrev(string abrev, vector<country> countries)
 {
@@ -60,8 +76,6 @@ string country::get_abrev() {
 string country::print() {
   return this->name + " (" + this->abrev + ")";
 }
-
-
 
 int country::get_id() {
   return this->id;

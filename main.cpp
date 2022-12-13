@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <SFML/Graphics.hpp>
 #include "src/world.hpp"
+#include "src/character.hpp"
 #include "src/utils/read_csv.hpp"
 
 using namespace std;
@@ -14,12 +15,45 @@ Font createFont() {
   return font;
 }
 
+void load_countries(World* world_sim) {
+  hashMap countries = read_csv("data/countries.csv");
+  int i = 0;
+  for (auto row : countries) {
+    country c(i++, row[ "name" ], row[ "abrev" ]);
+    world_sim->addCountry(c);
+  }
+  cout << "Countries loaded" << endl;
+}
+
+void load_provinces(World* world_sim) {
+  hashMap provinces = read_csv("data/provinces.csv");
+  int i = 0;
+  for (auto row : provinces) {
+    string country_abrev = row[ "country" ];
+    int country_id = get_countryId_byAbrev(country_abrev, world_sim->getCountries());
+    province p(i++, row[ "name" ], stoi(row[ "population" ]), stof(row[ "latitude" ]), stof(row[ "longitude" ]), country_id);
+    world_sim->addProvince(p);
+  }
+  cout << "Provinces loaded" << endl;
+
+}
+
+void load_characters(World* world_sim) {
+  hashMap characters = read_csv("data/characters.csv");
+  int i = 0;
+  for (auto row : characters) {
+    string country_abrev = row[ "country" ];
+    int country_id = get_countryId_byAbrev(country_abrev, world_sim->getCountries());
+    character c(i++, row[ "name" ], row[ "birthdate" ], country_id);
+  }
+  cout << "Characters loaded" << endl;
+}
 
 void  load_files(World* world_sim) {
-  hashMap countries = read_csv("data/countries.csv");
-  hashMap provinces = read_csv("data/provinces.csv");
   hashMap characters = read_csv("data/characters.csv");
-  print_csv(provinces);
+  load_countries(world_sim);
+  load_provinces(world_sim);
+
 }
 
 int main() {
@@ -32,14 +66,14 @@ int main() {
   //CircleShape shape[ 2 ];
   //Font font = createFont();
   //Text text[ 2 ];
-//
+  //
   //Clock clock;
   //while (window.isOpen())
   //{
   //  Vector2i mousePos = Mouse::getPosition(window);
-//
+  //
   //  Event event;
-//
+  //
   //  if (clock.getElapsedTime().asMilliseconds() > 10)
   //  {
   //    printf("1/2 second passed\n");
@@ -51,7 +85,7 @@ int main() {
   //    if (event.type == Event::Closed)
   //      window.close();
   //  }
-//
+  //
   //  window.clear();
   //  declareCities(font, size, text, shape);
   //  for (int i = 0; i < size; i++)
@@ -61,7 +95,7 @@ int main() {
   //  }
   //  window.display();
   //}
-//
-//
-  return 0;
+  //
+  //
+  return EXIT_SUCCESS;
 }
