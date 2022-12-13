@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
-#include "province.hpp"
 #include <vector>
+#include "province.hpp"
 using namespace std;
 
 class Country
@@ -16,6 +16,7 @@ private:
 public:
   Country(string name, uint population);
   ~Country();
+  static Country* getCountryById(uint id, vector<Country> countries);
 };
 
 Country::Country(string name, uint population)
@@ -26,4 +27,11 @@ Country::Country(string name, uint population)
 
 Country::~Country()
 {
+}
+
+Country* Country::getCountryById(uint id, vector<Country> countries)
+{
+  if (id < countries.size())
+    return &countries.at(id);
+  return NULL;
 }

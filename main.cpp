@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <SFML/Graphics.hpp>
 #include "utils/world.hpp"
+#include "utils/read_csv.hpp"
 using namespace std;
 using namespace sf;
 
@@ -13,11 +14,18 @@ Font createFont() {
 }
 
 
+void  load_files(World* world_sim) {
+  hashMap countries = read_csv("data/countries.csv");
+  hashMap provinces = read_csv("data/provinces.csv");
+  hashMap characters = read_csv("data/characters.csv");
+  print_csv(provinces);
+}
+
 int main() {
   //RenderWindow window(VideoMode(800, 800), "SFML works!");
 
-  World world_sim(1268, 1, 1);
-
+  World world_sim(1, 1, 1268);
+  load_files(&world_sim);
   cout << world_sim.to_string() << endl;
 
   //CircleShape shape[ 2 ];

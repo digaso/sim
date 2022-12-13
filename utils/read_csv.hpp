@@ -12,26 +12,35 @@ typedef vector < unordered_map<string, string>> hashMap;
 hashMap read_csv(string filename) {
   hashMap data;
   ifstream file(filename);
-  string line, key, value;
-  if (file.is_open()) {
-    while (getline(file, line)) {
-      stringstream ss(line);
-      getline(ss, key, ',');
-      while (getline(ss, value, ',')) {
-        data[ key ].push_back(value);
-      }
+  // Read the column names
+  string line;
+  getline(file, line);
+  stringstream ss(line);
+  string col_name;
+  vector<string> col_names;
+  while (getline(ss, col_name, ',')) {
+    col_names.push_back(col_name);
+  }
+  // Read data, line by line
+  while (getline(file, line)) {
+    stringstream ss(line);
+    string val;
+    unordered_map<string, string> row;
+    int col_idx = 0;
+    while (getline(ss, val, ',')) {
+      row[ col_names[ col_idx ] ] = val;
+      col_idx++;
     }
-    file.close();
-
+    data.push_back(row);
   }
   return data;
+
 }
 
 void print_csv(hashMap data) {
-  for (auto& x : data) {
-    cout << " " << x.first << " ";
-    for (auto& y : x.second) {
-      cout << y << " ";
+  for (auto row : data) {
+    for (auto col : row) {
+      cout << col.first << " : " << col.second << " ";
     }
     cout << endl;
   }

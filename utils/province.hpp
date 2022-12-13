@@ -1,10 +1,9 @@
 #pragma once
+#include "country.hpp"
 #include <string>
-
 using namespace std;
 
-class Province
-{
+class Province {
 private:
   static uint id_counter;
   uint id;
@@ -12,7 +11,7 @@ private:
   uint population;
   float latitude;
   float longitude;
-  uint country_id;
+  int country_id;
   uint migration_atraction;
   float tax_control;
 

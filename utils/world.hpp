@@ -34,7 +34,7 @@ World::~World()
 const string World::to_string() const
 {
   ostringstream os;
-  os << "World date: " << this->world_date << endl;
+  os << "World date: " << this->world_date.day() << "-" << world_date.month() << "-" << world_date.year();
   return os.str();
 }
 const date World::getDate() const
