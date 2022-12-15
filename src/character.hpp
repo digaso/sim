@@ -8,22 +8,24 @@ class character
 {
 protected:
   uint id;
-  uint country_id;
+  country* country_living;
   std::string name;
   string birth_date;
 public:
-  character(uint id, std::string name, string birth_date, uint country_id);
+  character(uint id, std::string name, string birth_date, country* country_living);
   ~character();
-  std::string get_name();
+  string get_name();
   string get_birth_date();
+  country* get_country_living();
+
 };
 #endif
-character::character(uint id, std::string name, string birth_date, uint country_id)
+character::character(uint id, string name, string birth_date, country* country_living)
 {
   this->id = id;
   this->name = name;
   this->birth_date = birth_date;
-  this->country_id = country_id;
+  this->country_living = country_living;
 }
 
 std::string character::get_name()
@@ -38,4 +40,9 @@ string character::get_birth_date()
 
 character::~character()
 {
+}
+
+country* character::get_country_living()
+{
+  return this->country_living;
 }

@@ -4,6 +4,8 @@
 #include "date.hpp"
 #include <vector>
 #include <sstream>
+
+class character;
 class World
 {
 private:
@@ -19,6 +21,7 @@ public:
   void setDate(date d);
   void addProvince(province p);
   void addCountry(country c);
+  void addCharacter(character* c);
   void printCountries();
   country* getCountryById(uint id) {
 
@@ -49,6 +52,8 @@ World::World(int day, int month, int year)
 World::~World()
 {
 }
+
+
 const string World::to_string() const
 {
   ostringstream os;
@@ -85,9 +90,16 @@ const vector<country> World::getCountries() const
   return this->countries;
 }
 
-
 void World::printCountries() {
   for (auto row : this->countries) {
     cout << row.get_name() << endl;
+  }
+}
+
+void World::addCharacter(character* c) {
+  for (auto row : this->countries) {
+    if (row.get_id() == c->get_country_living()->get_id()) {
+      row.add_character(c);
+    }
   }
 }

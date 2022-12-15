@@ -10,7 +10,7 @@ public:
 
   culture(/* args */) {};
   culture(string name) {
-
+    this->name = name;
   };
   ~culture() {};
 };

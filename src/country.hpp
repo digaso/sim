@@ -4,17 +4,19 @@
 #include <string>
 #include <vector>
 #include "province.hpp"
+#include "character.hpp"
 using namespace std;
 
+class province;
 class country
 {
 private:
+  vector<province> provinces;
+  vector<character> characters;
   uint id;
   string name;
   string abrev;
   float money;
-  vector<province> provinces;
-  //vector<character> characters;
 
 public:
   country() {};
@@ -31,8 +33,8 @@ public:
   string print();
   void add_province(province p);
   void remove_province(province p);
-  //void add_character(character c);
-  //void remove_character(character c);
+  void add_character(character* c);
+  void remove_character(character c);
   static const int get_countryId_byAbrev(uint id, vector<country> countries);
 };
 #endif
@@ -42,9 +44,11 @@ void country::add_province(province p) {
 }
 
 
-//void country::add_character(character c) {
-//  this->characters.push_back(c);
-//}
+void country::add_character(character* c) {
+  this->characters.push_back(*c);
+}
+
+
 
 const int get_countryId_byAbrev(string abrev, vector<country> countries)
 {

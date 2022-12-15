@@ -43,8 +43,8 @@ void load_characters(World* world_sim) {
   int i = 0;
   for (auto row : characters) {
     string country_abrev = row[ "country" ];
-    int country_id = get_countryId_byAbrev(country_abrev, world_sim->getCountries());
-    character c(i++, row[ "name" ], row[ "birthdate" ], country_id);
+    country* country_living = world_sim->getCountryByAbrev(country_abrev);
+    character c(i++, row[ "name" ], row[ "birthdate" ], country_living);
   }
   cout << "Characters loaded" << endl;
 }
@@ -53,6 +53,7 @@ void  load_files(World* world_sim) {
   hashMap characters = read_csv("data/characters.csv");
   load_countries(world_sim);
   load_provinces(world_sim);
+  load_characters(world_sim);
 
 }
 
