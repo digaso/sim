@@ -4,6 +4,9 @@
 #include <string>
 #include "country.hpp"
 using namespace std;
+
+class country;
+
 class character
 {
 protected:

@@ -1,8 +1,8 @@
 #pragma once
 #include "country.hpp"
 #include "province.hpp"
-#include "date.hpp"
 #include <vector>
+#include "utils/date.hpp"
 #include <sstream>
 
 class character;
@@ -23,6 +23,7 @@ public:
   void addCountry(country c);
   void addCharacter(character* c);
   void printCountries();
+  void setupWorld();
   country* getCountryById(uint id) {
 
     if (id < countries.size()) {
@@ -31,6 +32,7 @@ public:
 
     return nullptr;
   }
+
   country* getCountryByAbrev(string abrev) {
     for (auto row : countries) {
       if (row.get_abrev() == abrev) {
@@ -40,8 +42,20 @@ public:
     }
     return nullptr;
   }
+  province* getProvinceById(uint id) {
+    if (id < provinces.size()) {
+      return &provinces.at(id);
+    }
+    return nullptr;
+  }
   const vector<province> getProvinces() const;
   const vector<country> getCountries() const;
+  void printProvinces() {
+    for (auto row : this->provinces) {
+      cout << row.get_name() << endl;
+    }
+  }
+
 };
 
 World::World(int day, int month, int year)
@@ -52,7 +66,6 @@ World::World(int day, int month, int year)
 World::~World()
 {
 }
-
 
 const string World::to_string() const
 {

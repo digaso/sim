@@ -1,20 +1,22 @@
 #include <iostream>
 #include <unistd.h>
-#include <SFML/Graphics.hpp>
-#include "src/world.hpp"
-#include "src/character.hpp"
 #include "src/utils/read_csv.hpp"
+#include "src/character.hpp"
+#include "src/province.hpp"
+#include "src/country.hpp"
+#include "src/world.hpp"
+#include <SFML/Graphics.hpp>
 
 using namespace std;
-using namespace sf;
+//using namespace sf;
 
-Font createFont() {
-  Font font;
-  if (!font.loadFromFile("font/arial.ttf"))
-    cout << "Error loading font" << endl;
-  return font;
-}
-
+//Font createFont() {
+//  Font font;
+//  if (!font.loadFromFile("font/arial.ttf"))
+//    cout << "Error loading font" << endl;
+//  return font;
+//}
+//
 void load_countries(World* world_sim) {
   hashMap countries = read_csv("data/countries.csv");
   int i = 0;
@@ -33,6 +35,8 @@ void load_provinces(World* world_sim) {
     country* c = world_sim->getCountryByAbrev(country_abrev);
     province p(i++, row[ "name" ], stoi(row[ "population" ]), stof(row[ "latitude" ]), stof(row[ "longitude" ]), c);
     world_sim->addProvince(p);
+    c->add_province(p);
+
   }
   cout << "Provinces loaded" << endl;
 
@@ -45,15 +49,15 @@ void load_characters(World* world_sim) {
     string country_abrev = row[ "country" ];
     country* country_living = world_sim->getCountryByAbrev(country_abrev);
     character c(i++, row[ "name" ], row[ "birthdate" ], country_living);
+    world_sim->addCharacter(&c);
   }
   cout << "Characters loaded" << endl;
 }
 
 void  load_files(World* world_sim) {
-  hashMap characters = read_csv("data/characters.csv");
   load_countries(world_sim);
   load_provinces(world_sim);
-  load_characters(world_sim);
+  //load_characters(world_sim);
 
 }
 
@@ -63,6 +67,8 @@ int main() {
   World world_sim(1, 1, 1268);
   load_files(&world_sim);
   cout << world_sim.to_string() << endl;
+
+
 
   //CircleShape shape[ 2 ];
   //Font font = createFont();

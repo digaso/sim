@@ -1,4 +1,4 @@
-S2 Number,name,population,Area,latitude,longitude,country
+id,name,population,area,latitude,longitude,country
 1,London & Southwark,70000,330,51.5038411,-0.0947961,ENG
 2,York,22700,135,53.9599651,-1.0872979,ENG
 3,Bristol,14400,130,51.454513,-2.58791,ENG
