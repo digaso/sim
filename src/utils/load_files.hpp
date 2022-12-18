@@ -36,7 +36,7 @@ void load_characters(World* world_sim) {
     string country_abrev = row[ "country" ];
     country* country_living = world_sim->getCountryByAbrev(country_abrev);
     character c(i++, row[ "name" ], row[ "birthdate" ], country_living);
-    world_sim->addCharacter(&c);
+    world_sim->addCharacter(c);
   }
   cout << "Characters loaded" << endl;
 }
@@ -44,7 +44,6 @@ void load_characters(World* world_sim) {
 void  load_files(World* world_sim) {
   load_countries(world_sim);
   load_provinces(world_sim);
-
   load_characters(world_sim);
 
 }

@@ -4,12 +4,13 @@
 
 using namespace std;
 
-
-
 int main() {
   World w(1, 5, 1234);
   load_files(&w);
-  country* c = w.getCountryById(0);
+  country* c = w.getCountryById(1);
   c->print_provinces();
+  c->print_characters();
+
+  return EXIT_SUCCESS;
 
 }

@@ -19,7 +19,7 @@ public:
   void setDate(date d);
   void addProvince(province p);
   void addCountry(country c);
-  void addCharacter(character* c);
+  void addCharacter(character c);
   void printCountries();
   void setupWorld();
   country* getCountryById(uint id) {

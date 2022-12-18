@@ -35,7 +35,7 @@ public:
   string print();
   void add_province(province* p);
   void remove_province(province* p);
-  void add_character(character* c);
+  void add_character(character c);
   void remove_character(character c);
   void print_characters();
   void print_provinces();
@@ -44,5 +44,6 @@ public:
   vector<character> get_characters();
 };
 
+country _0_POR = country(0, "Portugal", "POR");
 
 

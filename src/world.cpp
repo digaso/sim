@@ -51,10 +51,9 @@ void World::printCountries() {
   }
 }
 
-void World::addCharacter(character* c) {
-  for (auto row : this->countries) {
-    if (row.get_id() == c->get_country_living()->get_id()) {
-      row.add_character(c);
-    }
+void World::addCharacter(character c) {
+  country* ctry = c.get_country_living();
+  if (ctry != nullptr) {
+    ctry->add_character(c);
   }
 }
