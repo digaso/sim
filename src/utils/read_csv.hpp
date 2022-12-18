@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-
+#include <string>
 using namespace std;
 
 typedef vector < unordered_map<string, string>> hashMap;
