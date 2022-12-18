@@ -1,6 +1,6 @@
 #include <iostream>
-#include "world.hpp"
-#include "utils/load_files.hpp"
+#include "src/world.hpp"
+#include "src/utils/load_files.hpp"
 
 using namespace std;
 
