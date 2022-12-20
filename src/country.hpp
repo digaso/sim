@@ -7,11 +7,14 @@
 
 using namespace std;
 
+
 class character;
 class province;
+
 class country
 {
-  vector<province*> provinces;
+  uint num_provinces = 0;
+  province* provinces[ 1000 ];
   vector<character> characters;
   uint id;
   string name;
@@ -40,10 +43,7 @@ public:
   void print_characters();
   void print_provinces();
   //static void setup_countries(World* w);
-  vector<province*> get_provinces();
+  province** get_provinces();
   vector<character> get_characters();
 };
-
-country _0_POR = country(0, "Portugal", "POR");
-
 

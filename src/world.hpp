@@ -3,12 +3,21 @@
 #include <vector>
 #include "country.hpp"
 #include "utils/date.hpp"
+#include <list>
+#include <utility>
+
+struct graph_node {
+  uint id;
+  vector<pair<uint, province*>> neighbours;
+};
 
 class World
 {
 private:
   /* data */
   date world_date;
+  typedef list<graph_node> Map;
+  Map map;
   vector<province> provinces;
   vector<country> countries;
 public:

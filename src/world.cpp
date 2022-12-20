@@ -28,6 +28,7 @@ void World::setDate(date d)
 void World::addProvince(province p)
 {
   this->provinces.push_back(p);
+  this->map.push_back(graph_node{ p.get_id(),vector<pair<uint, province*>>() });
 }
 
 void World::addCountry(country c)

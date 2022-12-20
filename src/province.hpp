@@ -39,7 +39,7 @@ private:
   country* country_owner;
   float migration_atraction;
   float tax_control;
-  vector<province*> neighbours;
+  vector<pair<int, province*>> neighbours;
   typedef struct {
     int k;
   } buildings;
@@ -65,12 +65,14 @@ public:
   float get_longitude();
   country* get_country();
   void set_country(country* country_owner);
-  void add_neighbour(province* p);
+  void add_neighbour(uint16_t cost, province* p);
   float get_migration_atraction();
   float get_tax_control();
   void print_neighbours();
+  bool is_neighbour(province* p);
   void set_migration_atraction(float migration_atraction);
   void set_tax_control(float tax_control);
-  vector<province*> get_neighbours();
+  vector<pair<int, province*>> get_neighbours();
+  void find_path(province* p);
 
 };

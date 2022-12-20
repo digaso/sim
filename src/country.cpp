@@ -4,10 +4,11 @@ using namespace std;
 
 
 void country::add_province(province* p) {
-  this->provinces.push_back(p);
-
+  this->provinces[ this->num_provinces ] = p;
+  this->num_provinces++;
+  if (this->abrev == "GRN")
+    this->print_provinces();
 }
-
 
 void country::add_character(character c) {
   this->characters.push_back(c);
@@ -42,7 +43,7 @@ string country::print() {
 uint country::get_id() {
   return this->id;
 }
-vector<province*> country::get_provinces() {
+province** country::get_provinces() {
   return this->provinces;
 }
 
@@ -61,12 +62,15 @@ void country::print_characters() {
 }
 
 void country::print_provinces() {
-  if (this->provinces.size() == 0) {
+  if (this->num_provinces == 0) {
     cout << "No provinces" << endl;
     return;
   }
-  for (int i = 0; i < this->provinces.size(); i++) {
-    cout << this->provinces.at(i)->get_id() << " " << this->provinces.at(i)->get_name() << endl;
+  //print the provinces
+
+  for (int i = 0; i < this->num_provinces; i++) {
+    cout << this->provinces[ i ]->get_name() << endl;
   }
+
 }
 

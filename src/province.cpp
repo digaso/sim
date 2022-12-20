@@ -60,28 +60,34 @@ void province::set_tax_control(float tax_control)
   this->tax_control = tax_control;
 }
 
-vector<province*> province::get_neighbours()
-{
-  return this->neighbours;
-}
 
 void province::print_neighbours()
 {
   cout << "Neighbours of " << this->get_name() << endl;
-  for (province* p : this->neighbours) {
-    cout << p->get_id() << " " << p->get_name() << endl;
+  for (auto item : this->neighbours) {
+    cout << item.second->get_name() << " " << item.first << " Days" << endl;
   }
   cout << "End;" << endl;
 }
-
-void province::add_neighbour(province* p)
+bool province::is_neighbour(province* p)
+{
+  for (auto item : this->neighbours) {
+    if (item.second->get_id() == p->get_id())
+      return true;
+  }
+  return false;
+}
+void province::add_neighbour(uint16_t cost, province* p)
 {
 
-  for (province* neigh : this->neighbours) {
-    if (neigh->get_id() == p->get_id()) {
-      return;
-    }
-  }
-  this->neighbours.push_back(p);
-  p->add_neighbour(this);
+  if (this->is_neighbour(p))
+    return;
+  pair<int, province*> pair = make_pair(cost, p);
+  this->neighbours.push_back(pair);
+  p->add_neighbour(cost, this);
+}
+
+void find_path(province* p)
+{
+  cout << "Finding path to " << p->get_name() << endl;
 }
