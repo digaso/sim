@@ -17,4 +17,3 @@ public:
     this->size_workers = size_workers;
   }
 };
-

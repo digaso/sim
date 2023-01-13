@@ -6,6 +6,7 @@ class culture
 {
 private:
   string name;
+
 public:
 
   culture(/* args */) {};

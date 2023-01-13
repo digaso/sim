@@ -6,8 +6,6 @@ using namespace std;
 void country::add_province(province* p) {
   this->provinces[ this->num_provinces ] = p;
   this->num_provinces++;
-  if (this->abrev == "GRN")
-    this->print_provinces();
 }
 
 void country::add_character(character c) {

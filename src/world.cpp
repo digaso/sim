@@ -1,5 +1,4 @@
 #include "world.hpp"
-
 World::World(int day, int month, int year)
 {
   this->world_date = date(day, month, year);
@@ -57,4 +56,13 @@ void World::addCharacter(character c) {
   if (ctry != nullptr) {
     ctry->add_character(c);
   }
+}
+
+vector<province*> World::get_path_between_provinces(uint start, uint end) {
+  vector<province*> path;
+  vector<uint> visited;
+  queue<uint> q;
+  q.push(start);
+  visited.push_back(start);
+  return path;
 }

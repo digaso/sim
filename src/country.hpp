@@ -14,7 +14,7 @@ class province;
 class country
 {
   uint num_provinces = 0;
-  province* provinces[ 1000 ];
+  province* provinces[ 2000 ];
   vector<character> characters;
   uint id;
   string name;

@@ -1,11 +1,13 @@
 #pragma once
 #include <sstream>
 #include <vector>
-#include "country.hpp"
 #include "utils/date.hpp"
-#include <list>
 #include <utility>
+#include "country.hpp"
+#include <queue>
+#include <list>
 
+using namespace std;
 struct graph_node {
   uint id;
   vector<pair<uint, province*>> neighbours;
@@ -64,5 +66,5 @@ public:
       cout << row.get_name() << endl;
     }
   }
-
+  vector<province*> get_path_between_provinces(uint start, uint end);
 };

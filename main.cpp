@@ -16,7 +16,6 @@ void print_memory_usage() {
       cout << s << endl;
     }
   }
-
 }
 
 
@@ -50,6 +49,8 @@ int main() {
 
   evora->print_neighbours();
   cout << "----------------" << endl;
+
+  vector<province*> provinces = w.get_path_between_provinces(176, 179);
 
   print_memory_usage();
 

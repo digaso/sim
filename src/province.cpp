@@ -24,6 +24,11 @@ uint province::get_id()
   return this->id;
 }
 
+vector<pair<int, province*>> province::get_neighbours()
+{
+  return this->neighbours;
+}
+
 uint province::get_population()
 {
   return this->population_size;

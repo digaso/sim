@@ -1,6 +1,31 @@
 #pragma once
 #include "read_csv.hpp"
+#include <cstring>
 #include "../world.hpp"
+
+
+void read_neighbours(World* w) {
+  ifstream file("data/neighbours.txt");
+  string line;
+  while (getline(file, line, '{')) {
+    int id_province = stoi(line);
+    string val;
+    getline(file, val, '}');
+    stringstream ss2(val);
+    string val2;
+    getline(ss2, val2);
+    while (getline(ss2, val2)) {
+      stringstream ss3(val2);
+      string val3;
+      getline(ss3, val3, ',');
+      int neighbour_id = stoi(val3);
+      getline(ss3, val3, ';');
+      int distance = stoi(val3);
+      w->getProvinceById(id_province)->add_neighbour(distance, w->getProvinceById(neighbour_id));
+    }
+  }
+  cout << "Neighbours loaded" << endl;
+}
 
 void load_countries(World* world_sim) {
   hashMap countries = read_csv("data/countries.csv");
@@ -45,5 +70,6 @@ void  load_files(World* world_sim) {
   load_countries(world_sim);
   load_provinces(world_sim);
   load_characters(world_sim);
+  read_neighbours(world_sim);
 
 }
