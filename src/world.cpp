@@ -66,3 +66,7 @@ vector<province*> World::get_path_between_provinces(uint start, uint end) {
   visited.push_back(start);
   return path;
 }
+
+void World::advanceDate() {
+  this->world_date++;
+}

@@ -33,6 +33,7 @@ public:
   void addCharacter(character c);
   void printCountries();
   void setupWorld();
+  void advanceDate();
   country* getCountryById(uint id) {
 
     if (id < countries.size()) {
