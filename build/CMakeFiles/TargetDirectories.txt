@@ -1,5 +1,0 @@
-/home/digaso/dev/sim/build/CMakeFiles/package_source.dir
-/home/digaso/dev/sim/build/CMakeFiles/rebuild_cache.dir
-/home/digaso/dev/sim/build/CMakeFiles/package.dir
-/home/digaso/dev/sim/build/CMakeFiles/edit_cache.dir
-/home/digaso/dev/sim/build/CMakeFiles/sim.dir
