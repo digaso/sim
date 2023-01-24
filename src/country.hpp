@@ -45,5 +45,6 @@ public:
   //static void setup_countries(World* w);
   province** get_provinces();
   vector<character> get_characters();
+  friend ostream& operator<<(ostream& os, const country& c);
 };
 

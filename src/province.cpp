@@ -96,3 +96,9 @@ void find_path(province* p)
 {
   cout << "Finding path to " << p->get_name() << endl;
 }
+
+ostream& operator<<(ostream& os, const province& p)
+{
+  os << "Province: " << p.name << " Population: " << p.population_size << " Country: " << p.country_owner->get_name() << " Latitude: " << p.latitude << " Longitude: " << p.longitude;
+  return os;
+}

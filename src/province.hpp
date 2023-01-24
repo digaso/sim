@@ -74,5 +74,6 @@ public:
   void set_tax_control(float tax_control);
   vector<pair<int, province*>> get_neighbours();
   void find_path(province* p);
+  friend ostream& operator<<(ostream& os, const province& p);
 
 };
