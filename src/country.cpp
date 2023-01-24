@@ -72,3 +72,8 @@ void country::print_provinces() {
 
 }
 
+
+ostream& operator<<(ostream& os, const country& c) {
+  os << c.name << " (" << c.abrev << ")";
+  return os;
+}

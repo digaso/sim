@@ -2,6 +2,7 @@
 #include "read_csv.hpp"
 #include <cstring>
 #include "../world.hpp"
+#include "mercator.hpp"
 
 
 void read_neighbours(World* w) {
@@ -43,7 +44,9 @@ void load_provinces(World* world_sim) {
   for (auto row : provinces) {
     string country_abrev = row[ "country" ];
     country* c = world_sim->getCountryByAbrev(country_abrev);
-    province p(i++, row[ "name" ], stoi(row[ "population" ]), stof(row[ "latitude" ]), stof(row[ "longitude" ]), c);
+    float longi = mercatorX(stof(row[ "longitude" ]));
+    float lat = mercatorY(stof(row[ "latitude" ]));
+    province p(i++, row[ "name" ], stoi(row[ "population" ]), lat, longi, c);
     world_sim->addProvince(p);
     if (c != nullptr) {
       province* np = world_sim->getProvinceById(i - 1);

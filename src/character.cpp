@@ -26,3 +26,9 @@ country* character::get_country_living()
 {
   return this->country_living;
 }
+
+ostream& operator<<(ostream& os, const character& c)
+{
+  os << c.name << " (" << c.birth_date << ")";
+  return os;
+}

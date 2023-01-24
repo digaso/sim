@@ -52,12 +52,7 @@ void make_some_neighbours(World* w) {
 int main() {
   World w(1, 5, 1268);
   load_files(&w);
-  make_some_neighbours(&w);
-  province* evora = w.getProvinceById(181);
-  evora->print_neighbours();
-
-  cout << "----------------" << endl;
-
+  //make_some_neighbours(&w);
   vector<province*> provinces = w.get_path_between_provinces(176, 179);
 
   print_memory_usage();

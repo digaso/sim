@@ -19,5 +19,5 @@ public:
   string get_name();
   string get_birth_date();
   country* get_country_living();
-
+  friend ostream& operator<<(ostream& os, const character& c);
 };
