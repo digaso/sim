@@ -18,6 +18,7 @@ private:
   uint population_size;
   float latitude;
   float longitude;
+  float height;
   country* country_owner;
   float migration_atraction;
   float tax_control;
@@ -28,7 +29,7 @@ private:
 
 public:
   province() {};
-  province(uint id, string name, uint population_size, float latitude, float longitude, country* country_owner)
+  province(uint id, string name, uint population_size, float latitude, float longitude, float height, country* country_owner)
   {
     this->id = id;
     this->name = name;
@@ -38,6 +39,7 @@ public:
     this->country_owner = country_owner;
     this->migration_atraction = 0;
     this->tax_control = 0;
+    this->height = height;
   }
   ~province() {};
   string get_name();

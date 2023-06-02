@@ -2,6 +2,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 #include "../generation/generation.hpp"
+#include "../utils/wgen.hpp"
 
 #define WINDOW_WIDTH 1080
 #define WINDOW_HEIGHT 720
@@ -35,19 +36,21 @@ void setup_window(RenderWindow& window) {
   window.setFramerateLimit(60);
 }
 
-void generate_map(RectangleShape** map, uint tile_size, float frequency, int seed, int octaves) {
+void generate_map(RectangleShape** map, uint tile_size, float frequency, int seed, int octaves, province* provinces) {
   float** tiles = setup(NUM_ROWS, NUM_COLS, frequency, seed, octaves);
+  uint id_count = 1;
   for (int row = 0; row < NUM_ROWS; row++) {
     for (int col = 0; col < NUM_COLS; col++) {
       map[ row ][ col ].setSize(Vector2f(tile_size, tile_size));
       map[ row ][ col ].setPosition(tile_size * col, tile_size * row);
-
+      string province_name = generateCityName();
       float height = tiles[ row ][ col ];
-      if (height < -0.22f) map[ row ][ col ].setFillColor(Blue);
-      else if (height < -0.12f) map[ row ][ col ].setFillColor(Blue2);
-      else if (height < 0.1f) map[ row ][ col ].setFillColor(LightBlue);
-      else if (height < 0.2f) map[ row ][ col ].setFillColor(Yellow);
-      else if (height < 0.4f) map[ row ][ col ].setFillColor(Grass);
+      province p(id_count++, province_name, 500, row, col, height, nullptr);
+      if (height < -0.12f) map[ row ][ col ].setFillColor(Blue);
+      else if (height < -0.05f) map[ row ][ col ].setFillColor(Blue2);
+      else if (height < 0.052f) map[ row ][ col ].setFillColor(LightBlue);
+      else if (height < 0.059f) map[ row ][ col ].setFillColor(Yellow);
+      else if (height < 0.3f) map[ row ][ col ].setFillColor(Grass);
       else if (height < 0.55f) map[ row ][ col ].setFillColor(DarkGrass);
       else if (height < 0.7f) map[ row ][ col ].setFillColor(Mountain);
       else  map[ row ][ col ].setFillColor(Snow);
@@ -95,7 +98,7 @@ void draw_window(RenderWindow& window, RectangleShape** map) {
 }
 
 
-void run() {
+void run(World* w) {
   RenderWindow window;
   setup_window(window);
   View view;
@@ -113,10 +116,12 @@ void run() {
   int octaves = 4;
 
   RectangleShape** map = new RectangleShape * [ NUM_ROWS ];
+  province* provinces = new province[ NUM_ROWS ];
+
   for (int i = 0; i < NUM_ROWS; i++) {
     map[ i ] = new RectangleShape[ NUM_COLS ];
   }
-  generate_map(map, tile_size, frequency, seed, octaves);
+  generate_map(map, tile_size, frequency, seed, octaves, provinces);
   while (window.isOpen()) {
     Event event;
     Vector2i position = sf::Mouse::getPosition();

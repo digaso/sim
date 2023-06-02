@@ -4,7 +4,6 @@
 #include <fstream>
 #include <string>
 #include "src/world.hpp"
-#include "src/utils/load_files.hpp"
 #include "src/graphics/window.hpp"
 
 using namespace sf;
@@ -25,7 +24,7 @@ void print_memory_usage() {
 int main() {
   World w(1, 5, 1208);
 
-  run();
+  run(&w);
   print_memory_usage();
 
   return EXIT_SUCCESS;
