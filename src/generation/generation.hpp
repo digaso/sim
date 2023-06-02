@@ -7,7 +7,7 @@
 
 vector<float> generate_noise(int rows, int cols, float frequency, int seed, int octaves) {
   FastNoiseLite noise;
-  noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+  noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2S);
   noise.SetFractalType(FastNoiseLite::FractalType_FBm);
   noise.SetSeed(seed);
   noise.SetFrequency(frequency);
