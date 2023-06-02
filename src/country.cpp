@@ -16,7 +16,7 @@ void country::add_character(character c) {
 
 const int get_countryId_byAbrev(string abrev, vector<country> countries)
 {
-  for (int i = 0; i < countries.size(); i++)
+  for (uint i = 0; i < countries.size(); i++)
   {
     if (countries.at(i).get_abrev() == abrev)
       return i;
@@ -66,7 +66,7 @@ void country::print_provinces() {
   }
   //print the provinces
 
-  for (int i = 0; i < this->num_provinces; i++) {
+  for (uint i = 0; i < this->num_provinces; i++) {
     cout << this->provinces[ i ]->get_name() << endl;
   }
 

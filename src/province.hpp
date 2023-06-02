@@ -7,30 +7,12 @@
 
 using namespace std;
 
-enum types_of_province {
-  meadows = 0,
-  hills = 1,
-  valley = 2,
-  mountain = 3,
-  desert = 4,
-  jungle = 5,
-  swamp = 6,
-  forest = 7,
-  tundra = 8,
-  glacier = 9,
-  ice = 10,
-  ocean = 11,
-  coast = 12,
-  island = 13,
-  archipelago = 14,
-  river = 15
-};
+
 
 class country;
 class province {
 private:
   vector<population> populations;
-  types_of_province type_of_province;
   uint id;
   string name;
   uint population_size;

@@ -1,5 +1,5 @@
 sim: ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/culture.o ./out/population.o ./out/province.o ./out/world.o ./out/date.o
-	g++ -g -Wall ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/culture.o ./out/population.o ./out/province.o ./out/world.o ./out/date.o -o sim
+		g++ -g -O2 -Wall ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/culture.o ./out/population.o ./out/province.o ./out/world.o ./out/date.o -o sim -lsfml-graphics -lsfml-window -lsfml-system
 
 ./out/main.o: main.cpp
 	g++ -g -Wall -c main.cpp -o ./out/main.o
