@@ -46,10 +46,10 @@ void load_provinces(World* world_sim) {
     country* c = world_sim->getCountryByAbrev(country_abrev);
     float longi = mercatorX(stof(row[ "longitude" ]));
     float lat = mercatorY(stof(row[ "latitude" ]));
-    province p(i++, row[ "name" ], stoi(row[ "population" ]), lat, longi, 0.1, c);
+    Province p(i++, row[ "name" ], stoi(row[ "population" ]), lat, longi, 0.1, c);
     world_sim->addProvince(p);
     if (c != nullptr) {
-      province* np = world_sim->getProvinceById(i - 1);
+      Province* np = world_sim->getProvinceById(i - 1);
       c->add_province(np);
     }
   }

@@ -24,10 +24,10 @@ void World::setDate(date d)
   this->world_date = d;
 }
 
-void World::addProvince(province p)
+void World::addProvince(Province p)
 {
   this->provinces.push_back(p);
-  this->map.push_back(graph_node{ p.get_id(),vector<pair<uint, province*>>() });
+  this->map.push_back(graph_node{ p.get_id(),vector<pair<uint, Province*>>() });
 }
 
 void World::addCountry(country c)
@@ -35,7 +35,7 @@ void World::addCountry(country c)
   this->countries.push_back(c);
 }
 
-const vector<province> World::getProvinces() const
+const vector<Province> World::getProvinces() const
 {
   return this->provinces;
 }
@@ -58,8 +58,8 @@ void World::addCharacter(character c) {
   }
 }
 
-vector<province*> World::get_path_between_provinces(uint start, uint end) {
-  vector<province*> path;
+vector<Province*> World::get_path_between_provinces(uint start, uint end) {
+  vector<Province*> path;
   vector<uint> visited;
   queue<uint> q;
   q.push(start);

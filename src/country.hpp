@@ -9,12 +9,12 @@ using namespace std;
 
 
 class character;
-class province;
+class Province;
 
 class country
 {
   uint num_provinces = 0;
-  province* provinces[ 2000 ];
+  Province* provinces[ 2000 ];
   vector<character> characters;
   uint id;
   string name;
@@ -36,14 +36,14 @@ public:
   void set_name(string name);
   string get_abrev();
   string print();
-  void add_province(province* p);
-  void remove_province(province* p);
+  void add_province(Province* p);
+  void remove_province(Province* p);
   void add_character(character c);
   void remove_character(character c);
   void print_characters();
   void print_provinces();
   //static void setup_countries(World* w);
-  province** get_provinces();
+  Province** get_provinces();
   vector<character> get_characters();
   friend ostream& operator<<(ostream& os, const country& c);
 };

@@ -8,23 +8,25 @@
 using namespace std;
 
 enum type_province {
-  deep_sea,
-  sea,
-  coastal_sea,
-  coast,
-  grassland,
-  forest,
-  tropical_forest,
-  desert,
-  temperate_desert,
-  hill,
-  tropical,
-  mountain,
-  tundra,
+  deep_sea = 0,
+  sea = 1,
+  coastal_sea = 2,
+  coast = 3,
+  grassland = 4,
+  forest = 5,
+  tropical_forest = 6,
+  desert = 7,
+  temperate_desert = 8,
+  hill = 9,
+  tropical = 10,
+  mountain = 11,
+  bare = 12,
+  taiga = 13,
+  tundra = 14,
 };
 
 class country;
-class province {
+class Province {
 private:
   vector<population> populations;
   uint id;
@@ -33,32 +35,33 @@ private:
   float latitude;
   float longitude;
   float height;
+  float moisture;
   type_province type;
   country* country_owner;
   float migration_atraction;
   float tax_control;
-  vector<pair<int, province*>> neighbours;
+  vector<pair<int, Province*>> neighbours;
   typedef struct {
     int k;
   } buildings;
 
 public:
-  province() {};
-  province(uint id, string name, uint population_size, float latitude, float longitude, float height, type_province type)
+  Province() {};
+  Province(uint id, string name, uint population_size, float latitude, float longitude, float height, type_province type, float moisture)
   {
     this->id = id;
     this->name = name;
     this->population_size = population_size;
     this->latitude = latitude;
     this->longitude = longitude;
-    this->country_owner = country_owner;
     this->migration_atraction = 0;
     this->tax_control = 0;
     this->height = height;
     this->type = type;
+    this->moisture = moisture;
 
   }
-  ~province() {};
+  ~Province() {};
   string get_name();
   uint get_id();
   uint get_population();
@@ -67,15 +70,15 @@ public:
   country* get_country();
   type_province get_type();
   void set_country(country* country_owner);
-  void add_neighbour(uint16_t cost, province* p);
+  void add_neighbour(uint16_t cost, Province* p);
   float get_migration_atraction();
   float get_tax_control();
   void print_neighbours();
-  bool is_neighbour(province* p);
+  bool is_neighbour(Province* p);
   void set_migration_atraction(float migration_atraction);
   void set_tax_control(float tax_control);
-  vector<pair<int, province*>> get_neighbours();
-  void find_path(province* p);
-  friend ostream& operator<<(ostream& os, const province& p);
+  vector<pair<int, Province*>> get_neighbours();
+  void find_path(Province* p);
+  friend ostream& operator<<(ostream& os, const Province& p);
 
 };

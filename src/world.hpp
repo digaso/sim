@@ -10,7 +10,7 @@
 using namespace std;
 struct graph_node {
   uint id;
-  vector<pair<uint, province*>> neighbours;
+  vector<pair<uint, Province*>> neighbours;
 };
 
 class World
@@ -20,7 +20,7 @@ private:
   date world_date;
   typedef list<graph_node> Map;
   Map map;
-  vector<province> provinces;
+  vector<Province> provinces;
   vector<country> countries;
 public:
   World(int year, int month, int day);
@@ -28,7 +28,7 @@ public:
   const date getDate() const;
   const string to_string() const;
   void setDate(date d);
-  void addProvince(province p);
+  void addProvince(Province p);
   void addCountry(country c);
   void addCharacter(character c);
   void printCountries();
@@ -54,18 +54,18 @@ public:
     }
     return nullptr;
   }
-  province* getProvinceById(uint id) {
+  Province* getProvinceById(uint id) {
     if (id < provinces.size()) {
       return &provinces.at(id);
     }
     return nullptr;
   }
-  const vector<province> getProvinces() const;
+  const vector<Province> getProvinces() const;
   const vector<country> getCountries() const;
   void printProvinces() {
     for (auto row : this->provinces) {
       cout << row.get_name() << endl;
     }
   }
-  vector<province*> get_path_between_provinces(uint start, uint end);
+  vector<Province*> get_path_between_provinces(uint start, uint end);
 };

@@ -3,7 +3,7 @@
 using namespace std;
 
 
-void country::add_province(province* p) {
+void country::add_province(Province* p) {
   this->provinces[ this->num_provinces ] = p;
   this->num_provinces++;
 }
@@ -41,7 +41,7 @@ string country::print() {
 uint country::get_id() {
   return this->id;
 }
-province** country::get_provinces() {
+Province** country::get_provinces() {
   return this->provinces;
 }
 
