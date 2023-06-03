@@ -14,8 +14,13 @@ enum type_province {
   coast,
   grassland,
   forest,
+  tropical_forest,
+  desert,
+  temperate_desert,
   hill,
-  mountain
+  tropical,
+  mountain,
+  tundra,
 };
 
 class country;

@@ -43,7 +43,7 @@ std::string generateCityName() {
   std::string cityName;
 
   for (int i = 0; i < numWords; ++i) {
-    cityName += generateWord(2, 5); // Generate word with 2 to 5 syllables
+    cityName += generateWord(2, 4); // Generate word with 2 to 4syllables
     if (i < numWords - 1) {
       cityName += " ";
     }

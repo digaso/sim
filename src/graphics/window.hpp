@@ -6,6 +6,7 @@
 #include "../province.hpp"
 #define WINDOW_WIDTH 1080
 #define WINDOW_HEIGHT 720
+#define TILE_SIZE 4
 using namespace sf;
 using namespace std;
 
@@ -24,7 +25,7 @@ Color Yellow(247, 182, 158);
 Color Grass(91, 179, 97);
 Color DarkGrass(30, 136, 117);
 Color Mountain(96, 108, 129);
-Color Snow(255, 255, 255);
+Color White(255, 255, 255);
 
 void setup_view(RenderWindow& window, View& view) {
   view.setSize(1200, 1200);
@@ -33,12 +34,75 @@ void setup_view(RenderWindow& window, View& view) {
 
 
 void setup_window(RenderWindow& window) {
-  window.create(VideoMode(800, 1200), "Sim");
-  window.setFramerateLimit(30);
+  window.create(VideoMode(1200, 1200), "Sim");
+  window.setFramerateLimit(60);
 }
 
-void generate_map(RectangleShape** map, uint tile_size, float frequency, int seed, int octaves, province* provinces) {
+typedef struct province_properties {
+  int pop;
+  string province_name;
+  type_province type;
+  Color color;
+
+} province_properties;
+
+province_properties get_province_type(float height, float moisture) {
+  uint pop = 500;
+  string province_name;
+  type_province type;
+  Color color;
+  if (height < -0.12f) {
+    color = Blue;
+    type = deep_sea;
+    pop = 0;
+  }
+  else if (height < -0.03f) {
+    color = Blue2;
+    type = sea;
+    pop = 0;
+  }
+  else if (height < 0.052f) {
+    color = LightBlue;
+    type = coastal_sea;
+    pop = 0;
+  }
+  else if (height < 0.059f) {
+    color = Yellow;
+    type = coast;
+    province_name = generateCityName();
+  }
+  else if (height < 0.3f) {
+    color = Grass;
+    type = grassland;
+    province_name = generateCityName();
+  }
+  else if (height < 0.55f) {
+    color = DarkGrass;
+    type = forest;
+    province_name = generateCityName();
+  }
+  else if (height < 0.7f) {
+    color = Mountain;
+    type = hill;
+    province_name = generateCityName();
+  }
+  else {
+    color = White;
+    type = mountain;
+    province_name = generateCityName();
+  };
+  return { pop, province_name, type, color };
+
+}
+
+void generate_map(RectangleShape** map, uint tile_size, float frequency, int octaves, province* provinces) {
+  srand((unsigned)time(NULL));
+
+  int random = rand();
+  int seed = random % 100000;
   float** tiles = setup(NUM_ROWS, NUM_COLS, frequency, seed, octaves);
+  seed = random % 10000;
+  float** moisture = setup(NUM_ROWS, NUM_COLS, frequency, seed, octaves);
   uint id_count = 1;
   for (int row = 0; row < NUM_ROWS; row++) {
     for (int col = 0; col < NUM_COLS; col++) {
@@ -46,50 +110,10 @@ void generate_map(RectangleShape** map, uint tile_size, float frequency, int see
       map[ row ][ col ].setPosition(tile_size * col, tile_size * row);
       string province_name;
       float height = tiles[ row ][ col ];
-      type_province type;
-      uint pop = 500;
-      if (height < -0.12f) {
-        map[ row ][ col ].setFillColor(Blue);
-        type = deep_sea;
-        pop = 0;
-      }
-      else if (height < -0.05f) {
-        map[ row ][ col ].setFillColor(Blue2);
-        type = sea;
-        pop = 0;
-      }
-      else if (height < 0.052f) {
-        map[ row ][ col ].setFillColor(LightBlue);
-        type = coastal_sea;
-        pop = 0;
-      }
-      else if (height < 0.059f) {
-        map[ row ][ col ].setFillColor(Yellow);
-        type = coast;
-        province_name = generateCityName();
-      }
-      else if (height < 0.3f) {
-        map[ row ][ col ].setFillColor(Grass);
-        type = grassland;
-        province_name = generateCityName();
-      }
-      else if (height < 0.55f) {
-        map[ row ][ col ].setFillColor(DarkGrass);
-        type = forest;
-        province_name = generateCityName();
-      }
-      else if (height < 0.7f) {
-        map[ row ][ col ].setFillColor(Mountain);
-        type = hill;
-        province_name = generateCityName();
-      }
-      else {
-        map[ row ][ col ].setFillColor(Snow);
-        type = mountain;
-        province_name = generateCityName();
-      };
-
-      province p(id_count++, province_name, pop, row, col, height, type);
+      float moisture_level = moisture[ row ][ col ];
+      province_properties props = get_province_type(height, moisture_level);
+      map[ row ][ col ].setFillColor(props.color);
+      province p(id_count++, props.province_name, props.pop, row, col, height, props.type);
       provinces[ row * NUM_COLS + col ] = p;
     }
   }
@@ -141,16 +165,15 @@ void run(World* w) {
   setup_view(window, view);
   sf::Font font;
 
-  uint tile_size = 8;
-
-  NUM_ROWS = window.getSize().y / tile_size;
-  NUM_COLS = window.getSize().x / tile_size;
+  if (!font.loadFromFile("arial_narrow_7.ttf")) {
+    // Error handling
+    return;
+  }
+  NUM_ROWS = window.getSize().y / TILE_SIZE;
+  NUM_COLS = window.getSize().x / TILE_SIZE;
 
   float frequency = 0.01f;
-  srand((unsigned)time(NULL));
 
-  int random = rand();
-  int seed = random % 100000;
   int octaves = 4;
 
   RectangleShape** map = new RectangleShape * [ NUM_ROWS ];
@@ -158,7 +181,7 @@ void run(World* w) {
   for (int i = 0; i < NUM_ROWS; i++) {
     map[ i ] = new RectangleShape[ NUM_COLS ];
   }
-  generate_map(map, tile_size, frequency, seed, octaves, provinces);
+  generate_map(map, TILE_SIZE, frequency, octaves, provinces);
   //print provinces
   for (int i = 0; i < NUM_ROWS; i++) {
     for (int j = 0; j < NUM_COLS; j++) {
@@ -166,6 +189,7 @@ void run(World* w) {
       cout << endl;
     }
   }
+  Text province_name;
   while (window.isOpen()) {
     Event event;
     while (window.pollEvent(event)) {
@@ -174,15 +198,19 @@ void run(World* w) {
       check_key_pressed(event, window, view);
 
       if (event.type == Event::MouseButtonPressed) {
-        Vector2i position = sf::Mouse::getPosition();
+        Vector2i position = sf::Mouse::getPosition(window);
+        Vector2f worldPos = window.mapPixelToCoords(position, view); // Convert mouse position to world coordinates
         for (int i = 0; i < NUM_ROWS; i++) {
           for (int j = 0; j < NUM_COLS; j++) {
-            if (map[ i ][ j ].getGlobalBounds().contains(position.x, position.y)) {
+            if (map[ i ][ j ].getGlobalBounds().contains(worldPos.x, worldPos.y)) {
               // If the mouse position is inside a RectangleShape, display the province name
-              Text province_name(provinces[ i * NUM_COLS + j ].get_name(), font, 40);
+              cout << provinces[ i * NUM_COLS + j ].get_name() << endl;
+              province_name.setFont(font);
+              province_name.setString(provinces[ i * NUM_COLS + j ].get_name());
               province_name.setFillColor(Color::Black);
-              province_name.setPosition(Mouse::getPosition().x + 5, Mouse::getPosition().y + 5);
-              window.draw(province_name);
+              province_name.setCharacterSize(20);
+              province_name.setStyle(sf::Text::Bold | sf::Text::Underlined);
+              province_name.setPosition(worldPos);
             }
           }
         }
@@ -191,6 +219,7 @@ void run(World* w) {
     }
     window.clear();
     draw_window(window, map);
+    window.draw(province_name);
     window.display();
   }
 }
