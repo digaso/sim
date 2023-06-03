@@ -39,6 +39,11 @@ float province::get_latitude()
   return this->latitude;
 }
 
+type_province province::get_type()
+{
+  return this->type;
+}
+
 float province::get_longitude()
 {
   return this->longitude;

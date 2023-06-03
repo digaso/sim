@@ -7,7 +7,16 @@
 
 using namespace std;
 
-
+enum type_province {
+  deep_sea,
+  sea,
+  coastal_sea,
+  coast,
+  grassland,
+  forest,
+  hill,
+  mountain
+};
 
 class country;
 class province {
@@ -19,6 +28,7 @@ private:
   float latitude;
   float longitude;
   float height;
+  type_province type;
   country* country_owner;
   float migration_atraction;
   float tax_control;
@@ -29,7 +39,7 @@ private:
 
 public:
   province() {};
-  province(uint id, string name, uint population_size, float latitude, float longitude, float height, country* country_owner)
+  province(uint id, string name, uint population_size, float latitude, float longitude, float height, type_province type)
   {
     this->id = id;
     this->name = name;
@@ -40,6 +50,8 @@ public:
     this->migration_atraction = 0;
     this->tax_control = 0;
     this->height = height;
+    this->type = type;
+
   }
   ~province() {};
   string get_name();
@@ -48,6 +60,7 @@ public:
   float get_latitude();
   float get_longitude();
   country* get_country();
+  type_province get_type();
   void set_country(country* country_owner);
   void add_neighbour(uint16_t cost, province* p);
   float get_migration_atraction();
