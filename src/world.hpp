@@ -6,8 +6,10 @@
 #include "country.hpp"
 #include <queue>
 #include <list>
+#include "economy/trade_route.hpp"
 
 using namespace std;
+
 struct graph_node {
   uint id;
   vector<pair<uint, Province*>> neighbours;
@@ -17,9 +19,9 @@ class World
 {
 private:
   /* data */
+  uint8_t num_rows;
+  uint8_t num_cols;
   date world_date;
-  typedef list<graph_node> Map;
-  Map map;
   vector<Province> provinces;
   vector<country> countries;
 public:
@@ -34,6 +36,7 @@ public:
   void printCountries();
   void setupWorld();
   void advanceDate();
+  void printNeighbours(uint id);
   country* getCountryById(uint id) {
 
     if (id < countries.size()) {
@@ -42,7 +45,6 @@ public:
 
     return nullptr;
   }
-
   country* getCountryByAbrev(string abrev) {
     uint i = 0;
     for (auto row : countries) {
@@ -62,9 +64,15 @@ public:
   }
   const vector<Province> getProvinces() const;
   const vector<country> getCountries() const;
+  void set_num_rows(uint8_t num_rows) {
+    this->num_rows = num_rows;
+  }
+  void set_num_cols(uint8_t num_cols) {
+    this->num_cols = num_cols;
+  };
   void printProvinces() {
     for (auto row : this->provinces) {
-      cout << row.get_name() << endl;
+      cout << row.get_id() << " " << row.get_name() << " " << row.type_province_to_string(row.get_type()) << endl;
     }
   }
   vector<Province*> get_path_between_provinces(uint start, uint end);

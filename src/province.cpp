@@ -2,12 +2,10 @@
 
 using namespace std;
 
-
 string Province::get_name()
 {
   return this->name;
 }
-
 
 country* Province::get_country()
 {
@@ -24,19 +22,15 @@ uint Province::get_id()
   return this->id;
 }
 
-vector<pair<int, Province*>> Province::get_neighbours()
-{
-  return this->neighbours;
-}
 
 uint Province::get_population()
 {
   return this->population_size;
 }
 
-float Province::get_latitude()
+float Province::get_y()
 {
-  return this->latitude;
+  return this->y;
 }
 
 type_province Province::get_type()
@@ -44,11 +38,15 @@ type_province Province::get_type()
   return this->type;
 }
 
-float Province::get_longitude()
+float Province::get_x()
 {
-  return this->longitude;
+  return this->x;
 }
 
+float Province::get_height()
+{
+  return this->height;
+}
 
 float Province::get_migration_atraction()
 {
@@ -70,40 +68,63 @@ void Province::set_tax_control(float tax_control)
   this->tax_control = tax_control;
 }
 
-
-void Province::print_neighbours()
+string Province::type_province_to_string(type_province type)
 {
-  cout << "Neighbours of " << this->get_name() << endl;
-  for (auto item : this->neighbours) {
-    cout << item.second->get_name() << " " << item.first << " Days" << endl;
+  switch (type)
+  {
+  case deep_sea:
+    return "Deep Sea";
+    break;
+  case sea:
+    return "Sea";
+    break;
+  case coastal_sea:
+    return "Coastal Sea";
+    break;
+  case coast:
+    return "Coast";
+    break;
+  case grassland:
+    return "Grassland";
+    break;
+  case desert:
+    return "Desert";
+    break;
+  case tundra:
+    return "Tundra";
+    break;
+  case taiga:
+    return "Taiga";
+    break;
+  case bare:
+    return "Bare";
+    break;
+  case mountain:
+    return "Mountain";
+    break;
+  case hill:
+    return "Hill";
+    break;
+  case tropical:
+    return "Tropical";
+    break;
+  case tropical_forest:
+    return "Tropical Forest";
+    break;
+  case temperate_desert:
+    return "Temperate Desert";
+    break;
+  case forest:
+    return "Forest";
+    break;
+  default:
+    break;
   }
-  cout << "End;" << endl;
-}
-bool Province::is_neighbour(Province* p)
-{
-  for (auto item : this->neighbours) {
-    if (item.second->get_id() == p->get_id())
-      return true;
-  }
-  return false;
-}
-void Province::add_neighbour(uint16_t cost, Province* p)
-{
-
-  if (this->is_neighbour(p))
-    return;
-  pair<int, Province*> pair = make_pair(cost, p);
-  this->neighbours.push_back(pair);
-  p->add_neighbour(cost, this);
-}
-
-void find_path(Province* p)
-{
-  cout << "Finding path to " << p->get_name() << endl;
+  return "None";
 }
 
 ostream& operator<<(ostream& os, const Province& p)
 {
-  os << "Province: " << p.name << " Population: " << p.population_size << " Country: " << p.country_owner->get_name() << " Latitude: " << p.latitude << " Longitude: " << p.longitude;
+  os << "Province: " << p.name << " Population: " << p.population_size << " Country: " << p.country_owner->get_name() << " Latitude: " << p.y << " Longitude: " << p.x;
   return os;
 }

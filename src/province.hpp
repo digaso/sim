@@ -7,6 +7,7 @@
 
 using namespace std;
 
+
 enum type_province {
   deep_sea = 0,
   sea = 1,
@@ -32,53 +33,48 @@ private:
   uint id;
   string name;
   uint population_size;
-  float latitude;
-  float longitude;
+  float y;
+  float x;
   float height;
   float moisture;
   type_province type;
   country* country_owner;
   float migration_atraction;
   float tax_control;
-  vector<pair<int, Province*>> neighbours;
   typedef struct {
     int k;
   } buildings;
 
 public:
   Province() {};
-  Province(uint id, string name, uint population_size, float latitude, float longitude, float height, type_province type, float moisture)
+  Province(uint id, string name, uint population_size, float y, float x, float height, type_province type, float moisture)
   {
     this->id = id;
     this->name = name;
     this->population_size = population_size;
-    this->latitude = latitude;
-    this->longitude = longitude;
+    this->y = y;
+    this->x = x;
     this->migration_atraction = 0;
     this->tax_control = 0;
     this->height = height;
     this->type = type;
     this->moisture = moisture;
-
   }
   ~Province() {};
   string get_name();
   uint get_id();
   uint get_population();
-  float get_latitude();
-  float get_longitude();
+  float get_y();
+  float get_x();
   country* get_country();
   type_province get_type();
   void set_country(country* country_owner);
-  void add_neighbour(uint16_t cost, Province* p);
   float get_migration_atraction();
   float get_tax_control();
-  void print_neighbours();
-  bool is_neighbour(Province* p);
+  float get_height();
   void set_migration_atraction(float migration_atraction);
   void set_tax_control(float tax_control);
-  vector<pair<int, Province*>> get_neighbours();
-  void find_path(Province* p);
+  static string type_province_to_string(type_province type);
   friend ostream& operator<<(ostream& os, const Province& p);
 
 };

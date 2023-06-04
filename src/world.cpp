@@ -27,7 +27,6 @@ void World::setDate(date d)
 void World::addProvince(Province p)
 {
   this->provinces.push_back(p);
-  this->map.push_back(graph_node{ p.get_id(),vector<pair<uint, Province*>>() });
 }
 
 void World::addCountry(country c)
@@ -65,6 +64,19 @@ vector<Province*> World::get_path_between_provinces(uint start, uint end) {
   q.push(start);
   visited.push_back(start);
   return path;
+}
+
+void World::printNeighbours(uint id) {
+  Province* p = this->getProvinceById(id);
+  int x = p->get_x();
+  int y = p->get_y();
+  for (Province& neighbor : this->provinces) {
+    if (neighbor.get_x() >= x - 1 && neighbor.get_x() <= x + 1 &&
+      neighbor.get_y() >= y - 1 && neighbor.get_y() <= y + 1 &&
+      !(neighbor.get_x() == x && neighbor.get_y() == y)) {
+      cout << neighbor.get_name() << endl;
+    }
+  }
 }
 
 void World::advanceDate() {

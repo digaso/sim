@@ -7,8 +7,10 @@
 #define WINDOW_WIDTH 1080
 #define WINDOW_HEIGHT 720
 #define TILE_SIZE 4
+
 using namespace sf;
 using namespace std;
+
 
 int NUM_ROWS;
 int NUM_COLS;
@@ -46,7 +48,7 @@ void setup_window(RenderWindow& window) {
 }
 
 typedef struct province_properties {
-  int pop;
+  uint pop;
   string province_name;
   type_province type;
   Color color;
@@ -56,9 +58,9 @@ typedef struct province_properties {
 province_properties get_province_type(float height, float moisture) {
   uint pop = 500;
   string province_name;
-  type_province type;
+  type_province type = sea;
   Color color;
-  if (height < -0.12f) {
+  if (height < -0.17f) {
     color = DeepSea;
     type = deep_sea;
     pop = 0;
@@ -73,7 +75,7 @@ province_properties get_province_type(float height, float moisture) {
     type = coastal_sea;
     pop = 0;
   }
-  else if (height < 0.059f) {
+  else if (height < 0.060f) {
     color = Beach;
     type = coast;
     province_name = generateCityName();
@@ -91,7 +93,7 @@ province_properties get_province_type(float height, float moisture) {
       color = Forest;
       type = forest;
     }
-    else if (moisture < 0.7) {
+    else if (moisture < 0.55) {
       color = Tropical;
       type = tropical;
     }
@@ -110,13 +112,13 @@ province_properties get_province_type(float height, float moisture) {
       color = Taiga;
       type = taiga;
     }
-    else if (moisture < 0.5) {
-      color = Hill;
-      type = hill;
-    }
-    else {
+    else if (moisture < 0.4) {
       color = Tundra;
       type = tundra;
+    }
+    else {
+      color = Hill;
+      type = hill;
     }
     province_name = generateCityName();
   }
@@ -129,26 +131,26 @@ province_properties get_province_type(float height, float moisture) {
 
 }
 
-void generate_map(RectangleShape** map, uint tile_size, float frequency, int octaves, Province* provinces) {
+void generate_map(RectangleShape** map, uint tile_size, float frequency, int octaves, Province* provinces, World* w) {
   srand((unsigned)time(NULL));
 
   int random = rand();
   int seed = random % 100000;
   float** tiles = setup(NUM_ROWS, NUM_COLS, frequency, seed, octaves);
   seed = random % 1000000;
-  float** moisture = setup(NUM_ROWS, NUM_COLS, frequency / 2, seed, octaves);
-  uint id_count = 1;
+  float** moisture = setup(NUM_ROWS, NUM_COLS, frequency / 3, seed, octaves);
+  uint id_count = 0;
   for (int row = 0; row < NUM_ROWS; row++) {
     for (int col = 0; col < NUM_COLS; col++) {
       map[ row ][ col ].setSize(Vector2f(tile_size, tile_size));
       map[ row ][ col ].setPosition(tile_size * col, tile_size * row);
-      string province_name;
       float height = tiles[ row ][ col ];
       float moisture_level = moisture[ row ][ col ];
       province_properties props = get_province_type(height, moisture_level);
       map[ row ][ col ].setFillColor(props.color);
       Province p(id_count++, props.province_name, props.pop, row, col, height, props.type, moisture_level);
       provinces[ row * NUM_COLS + col ] = p;
+      w->addProvince(p);
     }
   }
 }
@@ -172,10 +174,10 @@ void check_close(Event event, RenderWindow& window) {
 
 void check_key_pressed(Event event, RenderWindow& window, View& view) {
   if (event.type == sf::Event::KeyPressed) {
-    if (event.key.code == sf::Keyboard::Up) view.move(0, -10);
-    if (event.key.code == sf::Keyboard::Down) view.move(0, 10);
-    if (event.key.code == sf::Keyboard::Left) view.move(-10, 0);
-    if (event.key.code == sf::Keyboard::Right) view.move(10, 0);
+    if (event.key.code == sf::Keyboard::W) view.move(0, -10);
+    if (event.key.code == sf::Keyboard::S) view.move(0, 10);
+    if (event.key.code == sf::Keyboard::A) view.move(-10, 0);
+    if (event.key.code == sf::Keyboard::D) view.move(10, 0);
     window.setView(view);
     if (event.key.code == sf::Keyboard::Escape) {
       window.close();
@@ -183,21 +185,21 @@ void check_key_pressed(Event event, RenderWindow& window, View& view) {
   }
 }
 
-void check_mouse_pressed(Event event, Province* provinces, Text& province_name, RenderWindow& window, View& view, Font& font, RectangleShape** map) {
+void check_mouse_pressed(Event event, Province* provinces, Text& province_name, RenderWindow& window, View& view, Font& font, RectangleShape** map, World* w) {
   if (event.type == Event::MouseButtonPressed) {
     Vector2i position = sf::Mouse::getPosition(window);
     Vector2f worldPos = window.mapPixelToCoords(position, view); // Convert mouse position to world coordinates
     for (int i = 0; i < NUM_ROWS; i++) {
       for (int j = 0; j < NUM_COLS; j++) {
         if (map[ i ][ j ].getGlobalBounds().contains(worldPos.x, worldPos.y)) {
-          // If the mouse position is inside a RectangleShape, display the province name
-          cout << provinces[ i * NUM_COLS + j ].get_name() << endl;
           province_name.setFont(font);
-          province_name.setString(provinces[ i * NUM_COLS + j ].get_name() + "\n" + to_string(provinces[ i * NUM_COLS + j ].get_type()));
+          province_name.setString(provinces[ i * NUM_COLS + j ].get_name() + "\n" + provinces[ i * NUM_COLS + j ].type_province_to_string(provinces[ i * NUM_COLS + j ].get_type()));
           province_name.setFillColor(Color::Black);
           province_name.setCharacterSize(20);
           province_name.setStyle(sf::Text::Bold | sf::Text::Underlined);
           province_name.setPosition(worldPos);
+          w->printNeighbours(i * NUM_COLS + j);
+
         }
       }
     }
@@ -226,32 +228,29 @@ void run(World* w) {
   }
   NUM_ROWS = window.getSize().y / TILE_SIZE;
   NUM_COLS = window.getSize().x / TILE_SIZE;
-
-  float frequency = 0.01f;
+  w->set_num_rows(NUM_ROWS);
+  w->set_num_cols(NUM_COLS);
+  float frequency = 0.011f;
 
   int octaves = 4;
 
   RectangleShape** map = new RectangleShape * [ NUM_ROWS ];
   Province* provinces = new Province[ NUM_ROWS * NUM_COLS ];
+
   for (int i = 0; i < NUM_ROWS; i++) {
     map[ i ] = new RectangleShape[ NUM_COLS ];
   }
-  generate_map(map, TILE_SIZE, frequency, octaves, provinces);
-  //print provinces
-  for (int i = 0; i < NUM_ROWS; i++) {
-    for (int j = 0; j < NUM_COLS; j++) {
-      cout << provinces[ i * NUM_COLS + j ].get_name() << " " << provinces[ i * NUM_COLS + j ].get_type();
-      cout << endl;
-    }
-  }
+  generate_map(map, TILE_SIZE, frequency, octaves, provinces, w);
+  cout << "mundo com " << w->getProvinces().max_size() << endl;
   Text province_name;
+
   while (window.isOpen()) {
     Event event;
     while (window.pollEvent(event)) {
       check_scroll(event, window, view);
       check_close(event, window);
       check_key_pressed(event, window, view);
-      check_mouse_pressed(event, provinces, province_name, window, view, font, map);
+      check_mouse_pressed(event, provinces, province_name, window, view, font, map, w);
     }
     window.clear();
     draw_window(window, map);
