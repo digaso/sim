@@ -79,6 +79,20 @@ void World::printNeighbours(uint id) {
   }
 }
 
+vector<int> World::getNeighbours(uint id) {
+  vector<int> neighbours;
+  Province* p = this->getProvinceById(id);
+  int x = p->get_x();
+  int y = p->get_y();
+  for (Province& neighbor : this->provinces) {
+    if (neighbor.get_x() >= x - 1 && neighbor.get_x() <= x + 1 &&
+      neighbor.get_y() >= y - 1 && neighbor.get_y() <= y + 1 &&
+      !(neighbor.get_x() == x && neighbor.get_y() == y)) {
+      neighbours.push_back(neighbor.get_id());
+    }
+  }
+  return neighbours;
+}
 void World::advanceDate() {
   this->world_date++;
 }

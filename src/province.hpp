@@ -2,6 +2,7 @@
 #include <string>
 #include "population.hpp"
 #include "country.hpp"
+#include "economy/good.hpp"
 #include <vector>
 
 
@@ -41,9 +42,7 @@ private:
   country* country_owner;
   float migration_atraction;
   float tax_control;
-  typedef struct {
-    int k;
-  } buildings;
+
 
 public:
   Province() {};
@@ -55,7 +54,7 @@ public:
     this->y = y;
     this->x = x;
     this->migration_atraction = 0;
-    this->tax_control = 0;
+    this->tax_control = 0.5;
     this->height = height;
     this->type = type;
     this->moisture = moisture;

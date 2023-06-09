@@ -1,5 +1,5 @@
-sim: ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/culture.o ./out/population.o ./out/province.o ./out/world.o ./out/date.o
-		g++ -g  -Wall ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/culture.o ./out/population.o ./out/province.o ./out/world.o ./out/date.o -o sim -lsfml-graphics -lsfml-window -lsfml-system
+sim: ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/culture.o ./out/population.o ./out/province.o ./out/world.o ./out/date.o ./out/good.o
+		g++ -g  -Wall ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/culture.o ./out/population.o ./out/province.o ./out/world.o ./out/date.o ./out/good.o -o sim -lsfml-graphics -lsfml-window -lsfml-system
 
 ./out/main.o: main.cpp
 	g++ -g -Wall -c main.cpp -o ./out/main.o
@@ -27,6 +27,9 @@ sim: ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/cultu
 
 ./out/date.o: ./src/utils/date.cpp
 	g++ -Wall -g -c ./src/utils/date.cpp -o ./out/date.o
+
+./out/good.o:
+	g++ -Wall -g -c ./src/economy/good.cpp -o ./out/good.o
 
 clean:
 	rm -f ./out/*.o sim

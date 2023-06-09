@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "world.hpp"
 
 using namespace std;
 
@@ -11,9 +12,8 @@ class building
 public:
   ~building() {};
   building() {};
-  building(uint id, string name, uint size_workers) {
+  building(uint id, string name, void (*func) (World*)) {
     this->id = id;
     this->name = name;
-    this->size_workers = size_workers;
   }
 };

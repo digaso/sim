@@ -37,6 +37,9 @@ public:
   void setupWorld();
   void advanceDate();
   void printNeighbours(uint id);
+  vector<int> getNeighbours(uint id);
+  Province* getProvinceByCoords(uint8_t x, uint8_t y);
+
   country* getCountryById(uint id) {
 
     if (id < countries.size()) {
