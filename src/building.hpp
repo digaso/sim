@@ -16,4 +16,5 @@ public:
     this->id = id;
     this->name = name;
   }
+  uint get_id() { return this->id; };
 };

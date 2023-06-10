@@ -29,6 +29,14 @@ Color Bare(234, 182, 118);
 Color Taiga(109, 247, 146);
 Color Mountain(255, 255, 255);
 
+typedef struct province_properties {
+  uint pop;
+  string province_name;
+  type_province type;
+  Color color;
+
+} province_properties;
+
 
 float** setup(int rows, int cols, float frequency, int seed, int octaves);
 
@@ -52,14 +60,6 @@ vector<float> generate_noise(int rows, int cols, float frequency, int seed, int 
   }
   return noiseData;
 }
-
-typedef struct province_properties {
-  uint pop;
-  string province_name;
-  type_province type;
-  Color color;
-
-} province_properties;
 
 province_properties get_province_type(float height, float moisture) {
   uint pop = 500;
@@ -148,7 +148,6 @@ province_properties get_province_type(float height, float moisture) {
 
 void generate_map(RectangleShape** map, uint tile_size, float frequency, int octaves, World* w) {
   srand((unsigned)time(NULL));
-
   int random = rand();
   int seed = random % 100000;
   float** tiles = setup(NUM_ROWS, NUM_COLS, frequency, seed, octaves);
@@ -171,7 +170,11 @@ void generate_map(RectangleShape** map, uint tile_size, float frequency, int oct
   free(moisture);
 }
 
+void set_map_goods(World* w) {
 
+
+
+}
 
 float** setup(int rows, int cols, float frequency, int seed, int octaves) {
 

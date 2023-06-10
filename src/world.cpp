@@ -1,7 +1,13 @@
 #include "world.hpp"
+#include "economy/good.hpp"
+
+
+
 World::World(int day, int month, int year)
 {
   this->world_date = date(day, month, year);
+  Good good;
+  good.set_goods(this);
 }
 
 World::~World()
@@ -93,6 +99,12 @@ vector<int> World::getNeighbours(uint id) {
   }
   return neighbours;
 }
+
+void World::addGood(Good g) {
+  this->goods.push_back(g);
+}
+
 void World::advanceDate() {
   this->world_date++;
 }
+

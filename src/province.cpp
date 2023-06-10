@@ -47,6 +47,16 @@ float Province::get_height()
   return this->height;
 }
 
+float Province::get_moisture()
+{
+  return this->moisture;
+}
+
+void Province::add_goods(uint_fast8_t good_id)
+{
+  this->goods.push_back(good_id);
+}
+
 float Province::get_migration_atraction()
 {
   return this->migration_atraction;

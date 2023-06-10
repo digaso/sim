@@ -31,25 +31,28 @@ enum type_province {
 class country;
 class Province {
 private:
-  vector<population> populations;
-  uint id;
-  string name;
-  uint population_size;
+  vector<population> populations; //vector of populations
+  uint id; //id of province
+  string name; //name of province
+  uint population_size; //population size
   float y;
   float x;
-  float height;
-  float moisture;
-  type_province type;
-  country* country_owner;
-  float migration_atraction;
-  float tax_control;
-  bool trade_route_candidate = false;
+  float height; //value between -1 and 1
+  float moisture; //value between -1 and 1
+  type_province type; //type of province
+  country* country_owner; //pointer to country that owns the province
+  float migration_atraction; //value between 0 and 1
+  float tax_control; //value between 0 and 1
+  bool trade_route_candidate = false; //becomes true if province has a marketplace or a port
+  vector<uint_fast8_t> goods; //id of goods
+  vector<uint_fast8_t> buildings; //id of buildings
 
 
 public:
   Province() {};
   Province(uint id, string name, uint population_size, float y, float x, float height, type_province type, float moisture)
   {
+
     this->id = id;
     this->name = name;
     this->population_size = population_size;
@@ -69,6 +72,7 @@ public:
   float get_x();
   country* get_country();
   type_province get_type();
+  float get_moisture();
   void set_country(country* country_owner);
   float get_migration_atraction();
   float get_tax_control();
@@ -76,6 +80,7 @@ public:
   void set_migration_atraction(float migration_atraction);
   void set_tax_control(float tax_control);
   static string type_province_to_string(type_province type);
+  void add_goods(uint_fast8_t good_id);
   friend ostream& operator<<(ostream& os, const Province& p);
 
 };
