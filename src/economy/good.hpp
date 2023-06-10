@@ -15,7 +15,7 @@ private:
 public:
   void (*func) (Province*);
   Good(/* args */);
-  Good(uint id, string name, float base_value, void (*func) (Province*));
+  Good(uint id, string name, float base_value);
   ~Good();
 };
 
