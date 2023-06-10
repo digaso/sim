@@ -4,6 +4,8 @@
 #include "../generation/generation.hpp"
 #include "../utils/wgen.hpp"
 #include "../world.hpp"
+
+
 #define WINDOW_WIDTH 1080
 #define WINDOW_HEIGHT 720
 #define TILE_SIZE 4
@@ -26,6 +28,7 @@ Color DeepSea(0, 0, 175);
 Color Sea(10, 10, 235);
 Color CoastalSea(17, 173, 193);
 Color Beach(247, 182, 158);
+Color CoastalDesert(255, 170, 122);
 Color Grassland(91, 179, 97);
 Color Forest(30, 136, 117);
 Color Tropical(30, 255, 30);
@@ -77,8 +80,16 @@ province_properties get_province_type(float height, float moisture) {
     pop = 0;
   }
   else if (height < 0.19f) {
-    color = Beach;
-    type = coast;
+    if (moisture < -0.4)
+    {
+      color = CoastalDesert;
+      type = coastal_desert;
+    }
+    else {
+
+      color = Beach;
+      type = coast;
+    }
     province_name = generateCityName();
   }
   else if (height < 0.45f) {
@@ -153,6 +164,8 @@ void generate_map(RectangleShape** map, uint tile_size, float frequency, int oct
       w->addProvince(p);
     }
   }
+  free(tiles);
+  free(moisture);
 }
 
 void check_scroll(Event event, RenderWindow& window, View& view) {

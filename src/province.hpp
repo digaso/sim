@@ -25,6 +25,7 @@ enum type_province {
   bare = 12,
   taiga = 13,
   tundra = 14,
+  coastal_desert = 15,
 };
 
 class country;
@@ -42,6 +43,7 @@ private:
   country* country_owner;
   float migration_atraction;
   float tax_control;
+  bool trade_route_candidate = false;
 
 
 public:

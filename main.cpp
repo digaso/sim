@@ -22,9 +22,12 @@ void print_memory_usage() {
 
 
 int main() {
+
   World w(1, 5, 1208);
 
+
   run(&w);
+
   print_memory_usage();
 
   return EXIT_SUCCESS;

@@ -22,7 +22,6 @@ uint Province::get_id()
   return this->id;
 }
 
-
 uint Province::get_population()
 {
   return this->population_size;
@@ -116,6 +115,9 @@ string Province::type_province_to_string(type_province type)
     break;
   case forest:
     return "Forest";
+    break;
+  case coastal_desert:
+    return "Coastal Desert";
     break;
   default:
     break;
