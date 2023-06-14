@@ -52,6 +52,11 @@ float Province::get_moisture()
   return this->moisture;
 }
 
+vector<uint_fast8_t> Province::get_goods()
+{
+  return this->goods;
+}
+
 void Province::add_goods(uint_fast8_t good_id)
 {
   this->goods.push_back(good_id);

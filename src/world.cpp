@@ -129,7 +129,12 @@ void World::addGood(Good g) {
   this->goods.push_back(g);
 }
 
-void World::advanceDate() {
+bool World::advanceDate() {
+  int month = this->world_date.month();
   this->world_date++;
+  if (month != this->world_date.month()) {
+    return true;
+  }
+  return false;
 }
 

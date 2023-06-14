@@ -81,6 +81,7 @@ public:
   void set_tax_control(float tax_control);
   static string type_province_to_string(type_province type);
   void add_goods(uint_fast8_t good_id);
+  vector<uint_fast8_t> get_goods();
   friend ostream& operator<<(ostream& os, const Province& p);
 
 };

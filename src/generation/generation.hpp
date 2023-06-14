@@ -177,7 +177,7 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
   vector<float**> maps;
   for (uint i = 0; i < goods.size(); i++) {
     Good g = goods[ i ];
-    float** map = setup(NUM_ROWS, NUM_COLS, frequency, seed, octaves);
+    float** map = setup(NUM_ROWS, NUM_COLS, frequency / 2, seed, octaves);
     seed += 50;
     maps.push_back(map);
   }
@@ -192,12 +192,15 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
         {
           p->add_goods(g.get_id()); count++;
         }
-        if (map[ row ][ col ] > 0.5 - (0.5 / g.get_base_value())) {
+        if (map[ row ][ col ] > 0.5 - (0.7 / g.get_base_value())) {
           if (g.get_type() == type_good::mineral && (p->get_type() == type_province::mountain || p->get_type() == type_province::hill || p->get_type() == bare || p->get_type() == tundra || p->get_type() == taiga) && p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)
           {
             p->add_goods(g.get_id()); count++;
           } if (g.get_type() == type_good::plantable && p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)
           {
+            p->add_goods(g.get_id()); count++;
+          }
+          if (g.get_type() == catchable && !g.is_maritime()) {
             p->add_goods(g.get_id()); count++;
           }
         }
@@ -206,9 +209,19 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
     cout << g.get_name() << " " << count << endl;
   }
 
+  maps.clear();
+  int count = 0;
+  for (int row = 0; row < NUM_ROWS; row++) {
+    for (int col = 0; col < NUM_COLS; col++) {
+      Province* p = w->getProvinceById(row * NUM_COLS + col);
+      if (p->get_goods().size() == 0)
+      {
+        count++;
+      }
 
-
-
+    }
+  }
+  cout << "No goods: " << count << endl;
 }
 
 float** setup(int rows, int cols, float frequency, int seed, int octaves) {

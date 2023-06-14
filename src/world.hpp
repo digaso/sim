@@ -43,7 +43,7 @@ public:
   void setupWorld();
   void addGood(Good g);
   Good* getGoodById(uint id);
-  void advanceDate();
+  bool advanceDate();
   void printNeighbours(uint id);
   vector<int> getNeighbours(uint id);
   Province* getProvinceByCoords(uint8_t x, uint8_t y);

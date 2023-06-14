@@ -162,7 +162,7 @@ void run(World* w) {
       check_key_pressed(event, window, view);
       check_mouse_pressed(event, province_name, window, view, font, map, w);
     }
-    w->advanceDate();
+    if (w->advanceDate()) cout << "Turn" << endl;
     date_text.setString(w->getDateString());
     window.clear();
     draw_window(window, map);
