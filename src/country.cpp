@@ -41,6 +41,15 @@ string country::print() {
 uint country::get_id() {
   return this->id;
 }
+
+void country::set_player(bool is_player) {
+  this->is_player = is_player;
+}
+
+bool country::player() {
+  return this->is_player;
+}
+
 Province** country::get_provinces() {
   return this->provinces;
 }

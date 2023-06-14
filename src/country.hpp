@@ -14,11 +14,12 @@ class Province;
 class country
 {
   uint num_provinces = 0;
-  Province* provinces[ 2000 ];
+  Province* provinces[ 100000 ];
   vector<character> characters;
   uint id;
   string name;
   string abrev;
+  bool is_player = false;
   float money;
 
 public:
@@ -42,6 +43,8 @@ public:
   void remove_character(character c);
   void print_characters();
   void print_provinces();
+  void set_player(bool is_player);
+  bool player();
   //static void setup_countries(World* w);
   Province** get_provinces();
   vector<character> get_characters();
