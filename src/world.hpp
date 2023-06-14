@@ -34,6 +34,7 @@ public:
   ~World();
   const date getDate() const;
   const string to_string() const;
+  string getDateString();
   void setDate(date d);
   void addProvince(Province p);
   void addCountry(country c);
@@ -41,6 +42,7 @@ public:
   void printCountries();
   void setupWorld();
   void addGood(Good g);
+  Good* getGoodById(uint id);
   void advanceDate();
   void printNeighbours(uint id);
   vector<int> getNeighbours(uint id);

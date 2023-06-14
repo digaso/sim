@@ -113,9 +113,6 @@ void draw_window(RenderWindow& window, RectangleShape** map) {
   }
 }
 
-void asd(Province* p) {
-  cout << p->get_name() << endl;
-}
 
 void run(World* w) {
   RenderWindow window;
@@ -144,8 +141,14 @@ void run(World* w) {
   }
   generate_map(map, TILE_SIZE, frequency, octaves, w);
   Text province_name;
-
+  Text date_text;
   while (window.isOpen()) {
+    date_text.setFont(font);
+    date_text.setString(w->getDateString());
+    date_text.setFillColor(Color::Black);
+    date_text.setCharacterSize(20);
+    date_text.setStyle(sf::Text::Bold);
+    date_text.setPosition(view.getCenter().x + 600, 0);
     Event event;
     while (window.pollEvent(event)) {
       check_scroll(event, window, view);
@@ -156,6 +159,7 @@ void run(World* w) {
     window.clear();
     draw_window(window, map);
     window.draw(province_name);
+    window.draw(date_text);
     window.display();
   }
 }

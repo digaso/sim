@@ -25,6 +25,31 @@ const date World::getDate() const
   return this->world_date;
 }
 
+Good* World::getGoodById(uint id)
+{
+  if (id < goods.size()) {
+    return &goods.at(id);
+  }
+  return nullptr;
+}
+
+Province* World::getProvinceByCoords(uint8_t x, uint8_t y)
+{
+  for (Province& p : this->provinces) {
+    if (p.get_x() == x && p.get_y() == y) {
+      return &p;
+    }
+  }
+  return nullptr;
+}
+
+string World::getDateString()
+{
+  ostringstream os;
+  os << this->world_date.day() << "-" << world_date.month() << "-" << world_date.year();
+  return os.str();
+}
+
 void World::setDate(date d)
 {
   this->world_date = d;

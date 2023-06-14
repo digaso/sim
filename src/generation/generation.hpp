@@ -39,6 +39,7 @@ typedef struct province_properties {
 
 
 float** setup(int rows, int cols, float frequency, int seed, int octaves);
+void set_map_goods(World* w, float frequency, int seed, int octaves);
 
 vector<float> generate_noise(int rows, int cols, float frequency, int seed, int octaves) {
   FastNoiseLite noise;
@@ -168,9 +169,43 @@ void generate_map(RectangleShape** map, uint tile_size, float frequency, int oct
   }
   free(tiles);
   free(moisture);
+  set_map_goods(w, frequency / 3, seed, octaves);
 }
 
-void set_map_goods(World* w) {
+void set_map_goods(World* w, float frequency, int seed, int octaves) {
+  vector<Good> goods = w->getGoods();
+  vector<float**> maps;
+  for (uint i = 0; i < goods.size(); i++) {
+    Good g = goods[ i ];
+    float** map = setup(NUM_ROWS, NUM_COLS, frequency, seed, octaves);
+    seed += 50;
+    maps.push_back(map);
+  }
+  for (uint i = 0; i < goods.size(); i++) {
+    Good g = goods[ i ];
+    int count = 0;
+    for (int row = 0; row < NUM_ROWS; row++) {
+      for (int col = 0; col < NUM_COLS; col++) {
+        float** map = maps[ i ];
+        Province* p = w->getProvinceById(row * NUM_COLS + col);
+        if (g.get_type() == catchable && g.is_maritime() && (p->get_type() == sea || p->get_type() == coastal_sea || p->get_type() == deep_sea))
+        {
+          p->add_goods(g.get_id()); count++;
+        }
+        if (map[ row ][ col ] > 0.5 - (0.5 / g.get_base_value())) {
+          if (g.get_type() == type_good::mineral && (p->get_type() == type_province::mountain || p->get_type() == type_province::hill || p->get_type() == bare || p->get_type() == tundra || p->get_type() == taiga) && p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)
+          {
+            p->add_goods(g.get_id()); count++;
+          } if (g.get_type() == type_good::plantable && p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)
+          {
+            p->add_goods(g.get_id()); count++;
+          }
+        }
+      }
+    }
+    cout << g.get_name() << " " << count << endl;
+  }
+
 
 
 

@@ -23,7 +23,7 @@ void print_memory_usage() {
 
 int main() {
 
-  World w(1, 5, 1208);
+  World w(1, 5, 1166);
 
 
   run(&w);
