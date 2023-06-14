@@ -148,7 +148,6 @@ void run(World* w) {
   Text province_name;
   Text date_text;
   date_text.setFont(font);
-  date_text.setString(w->getDateString());
   date_text.setFillColor(Color::Red);
   date_text.setCharacterSize(20);
   date_text.setStyle(sf::Text::Bold);
@@ -163,6 +162,8 @@ void run(World* w) {
       check_key_pressed(event, window, view);
       check_mouse_pressed(event, province_name, window, view, font, map, w);
     }
+    w->advanceDate();
+    date_text.setString(w->getDateString());
     window.clear();
     draw_window(window, map);
     window.setView(window.getDefaultView());
