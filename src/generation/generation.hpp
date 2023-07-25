@@ -163,6 +163,8 @@ void generate_map(RectangleShape** map, uint tile_size, float frequency, int oct
       float moisture_level = moisture[ row ][ col ];
       province_properties props = get_province_type(height, moisture_level);
       map[ row ][ col ].setFillColor(props.color);
+      if (props.province_name != "")
+        cout << props.province_name << endl;
       Province p(id_count++, props.province_name, props.pop, row, col, height, props.type, moisture_level);
       w->addProvince(p);
     }
@@ -192,7 +194,7 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
         {
           p->add_goods(g.get_id()); count++;
         }
-        if (map[ row ][ col ] > 0.5 - (0.7 / g.get_base_value())) {
+        if (map[ row ][ col ] > 0.5 - (1.0 / g.get_base_value())) {
           if (g.get_type() == type_good::mineral && (p->get_type() == type_province::mountain || p->get_type() == type_province::hill || p->get_type() == bare || p->get_type() == tundra || p->get_type() == taiga) && p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)
           {
             p->add_goods(g.get_id()); count++;

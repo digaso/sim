@@ -79,9 +79,11 @@ void print_city_neighbours(Text& province_name, World* w, Font& font, Vector2f w
         province_name.setFont(font);
         province_name.setString(province->get_name() + "\n" + province->type_province_to_string(province->get_type()));
         province_name.setFillColor(Color::Black);
+        province_name.setOutlineThickness(1);
+        province_name.setOutlineColor(Color::White);
         province_name.setCharacterSize(20);
         province_name.setStyle(sf::Text::Bold | sf::Text::Underlined);
-        province_name.setPosition(worldPos);
+        province_name.setPosition(worldPos.x, worldPos.y);
         w->printNeighbours(i * NUM_COLS + j);
       }
     }
@@ -137,7 +139,7 @@ void run(World* w) {
   w->set_num_cols(NUM_COLS);
   float frequency = 0.011f;
 
-  int octaves = 4;
+  int octaves = 5;
 
   RectangleShape** map = new RectangleShape * [ NUM_ROWS ];
 
@@ -152,6 +154,7 @@ void run(World* w) {
   date_text.setCharacterSize(20);
   date_text.setStyle(sf::Text::Bold);
   date_text.setPosition(10, 0);
+  window.setView(view);
   while (window.isOpen()) {
 
     window.setView(view);

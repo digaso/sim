@@ -56,7 +56,7 @@ void Good::set_goods(World* world)
   world->addGood(Good(19, "Paper", 3.0, manufactured));
   world->addGood(Good(20, "Incense", 2.4, plantable));
   world->addGood(Good(21, "Gold", 7.0, mineral));
-  world->addGood(Good(22, "Silver", 3.2, mineral));
+  world->addGood(Good(22, "Silver", 3.0, mineral));
   world->addGood(Good(23, "Spices", 2.5, plantable));
 }
 
