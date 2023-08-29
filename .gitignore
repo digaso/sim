@@ -3,3 +3,4 @@ sim
 *.o
 .vscode
 PROVINCES.TXT
+log.txt

@@ -16,14 +16,16 @@ struct graph_node {
   vector<pair<uint, Province*>> neighbours;
 };
 
+
+
 class Good;
 
 class World
 {
 private:
   /* data */
-  uint8_t num_rows;
-  uint8_t num_cols;
+  int num_rows;
+  int num_cols;
   date world_date;
   vector<Province> provinces;
   vector<country> countries;
@@ -63,12 +65,18 @@ public:
   }
   const vector<Province> getProvinces() const;
   const vector<country> getCountries() const;
-  void set_num_rows(uint8_t num_rows) {
+  void set_num_rows(int num_rows) {
     this->num_rows = num_rows;
   }
-  void set_num_cols(uint8_t num_cols) {
+  void set_num_cols(int num_cols) {
     this->num_cols = num_cols;
   };
+  int get_num_rows() {
+    return this->num_rows;
+  }
+  int get_num_cols() {
+    return this->num_cols;
+  }
   vector<Good> getGoods() {
     return this->goods;
   }
