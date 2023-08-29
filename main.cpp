@@ -6,7 +6,7 @@
 #include "src/world.hpp"
 //#include "src/graphics/window.hpp"
 #include "src/graphics/raytest.hpp"
-#define NUM_CHUNKS 8
+#define NUM_CHUNKS 10
 using namespace std;
 
 void print_memory_usage() {

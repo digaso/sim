@@ -1,6 +1,8 @@
 #include <raylib.h>
 #include <rlgl.h>
+#define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
+#include "raudio.h"
 #include <raymath.h>
 
 #include "../world.hpp"
@@ -71,7 +73,6 @@ Image renderGeographicalMap(World* w, province_properties* p) {
 
   return img;
 }
-
 
 Image* renderGoodMap(World* w) {
   vector<Good> g = w->getGoods();
@@ -159,11 +160,6 @@ void run(World* w) {
       camera.offset.x += 10 / camera.zoom;
     if (IsKeyDown(KEY_D))
       camera.offset.x -= 10 / camera.zoom;
-    if (IsKeyPressed(KEY_UP))
-      id_good += 1;
-    if (IsKeyPressed(KEY_DOWN) && id_good > 0)
-      id_good -= 1;
-
 
 
     BeginDrawing();
@@ -171,7 +167,12 @@ void run(World* w) {
     ClearBackground(RAYWHITE);
     DrawTexturePro(map, { 0, 0, (float)map.width, (float)map.height }, { 0, 0, map.width * camera.zoom, map.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
     DrawTexturePro(texgoods[ id_good ], { 0, 0, (float)texgoods[ id_good ].width, (float)texgoods[ id_good ].height }, { 0, 0, texgoods[ id_good ].width * camera.zoom, texgoods[ id_good ].height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
-    DrawText("Move the camera with WASD keys and drag the mouse to look around", 10, 10, 20, DARKGRAY);
+    if (GuiButton(Rectangle{ 10, 10, 100, 20 }, "Change good")) {
+      id_good += 1;
+      if (id_good >= w->getGoods().size())
+        id_good = 0;
+    }
+
     EndMode2D();
     EndDrawing();
   }

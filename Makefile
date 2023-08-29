@@ -1,5 +1,5 @@
 sim: ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/culture.o ./out/population.o ./out/province.o ./out/world.o ./out/date.o ./out/good.o
-		g++ -g  -Wall ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/culture.o ./out/population.o ./out/province.o ./out/world.o ./out/date.o ./out/good.o -o sim -lraylib -lGL -lm -lpthread -ldl -lrt -lX11  -O2
+		g++ -g  -Wall ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/culture.o ./out/population.o ./out/province.o ./out/world.o ./out/date.o ./out/good.o -o sim -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -DRAYGUI_IMPLEMENTATION -O2
 
 ./out/main.o: main.cpp
 	g++ -g -Wall -c main.cpp -o ./out/main.o -O2
