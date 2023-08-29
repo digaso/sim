@@ -146,7 +146,6 @@ void run(World* w) {
   for (int i = 0; i < NUM_ROWS; i++) {
     map[ i ] = new RectangleShape[ NUM_COLS ];
   }
-  generate_map(map, TILE_SIZE, frequency, octaves, w);
   Text province_name;
   Text date_text;
   date_text.setFont(font);

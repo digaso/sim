@@ -4,44 +4,23 @@
 #include <list>
 #include "FastNoiseLite.h"
 #include "../utils/wgen.hpp"
-
-using namespace sf;
-
-
-int NUM_ROWS;
-int NUM_COLS;
+#include "../world.hpp"
 
 
-Color DeepSea(0, 0, 175);
-Color Sea(10, 10, 235);
-Color CoastalSea(17, 173, 193);
-Color Beach(247, 182, 158);
-Color CoastalDesert(255, 170, 122);
-Color Grassland(91, 179, 97);
-Color Forest(30, 136, 117);
-Color Tropical(30, 255, 30);
-Color TropicalForest(0, 100, 0);
-Color Desert(253, 253, 150);
-Color TemperateDesert(200, 200, 0);
-Color Hill(96, 108, 129);
-Color Tundra(171, 219, 227);
-Color Bare(234, 182, 118);
-Color Taiga(109, 247, 146);
-Color Mountain(255, 255, 255);
 
 typedef struct province_properties {
   uint pop;
   string province_name;
   type_province type;
-  Color color;
-
+  int color_id;
 } province_properties;
 
 
 float** setup(int rows, int cols, float frequency, int seed, int octaves);
+
 void set_map_goods(World* w, float frequency, int seed, int octaves);
 
-vector<float> generate_noise(int rows, int cols, float frequency, int seed, int octaves) {
+vector<float> _generate_noise(int rows, int cols, float frequency, int seed, int octaves) {
   FastNoiseLite noise;
   noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
   noise.SetFractalType(FastNoiseLite::FractalType_FBm);
@@ -66,79 +45,79 @@ province_properties get_province_type(float height, float moisture) {
   uint pop = 500;
   string province_name;
   type_province type = sea;
-  Color color;
+  int color = 0;
   if (height < -0.17f) {
-    color = DeepSea;
+    color = 0;
     type = deep_sea;
     pop = 0;
   }
   else if (height < 0.05f) {
-    color = Sea;
+    color = 1;
     type = sea;
     pop = 0;
   }
   else if (height < 0.18f) {
-    color = CoastalSea;
+    color = 2;
     type = coastal_sea;
     pop = 0;
   }
   else if (height < 0.19f) {
     if (moisture < -0.4)
     {
-      color = CoastalDesert;
+      color = 4;
       type = coastal_desert;
     }
     else {
 
-      color = Beach;
+      color = 3;
       type = coast;
     }
     province_name = generateCityName();
   }
   else if (height < 0.45f) {
     if (moisture < -0.4) {
-      color = Desert;
+      color = 9;
       type = desert;
     }
     else if (moisture < 0.2) {
-      color = Grassland;
+      color = 5;
       type = grassland;
     }
     else if (moisture < 0.4) {
-      color = Forest;
+      color = 6;
       type = forest;
     }
     else if (moisture < 0.55) {
-      color = Tropical;
+      color = 7;
       type = tropical;
     }
     else if (moisture < 0.99) {
-      color = TropicalForest;
+      color = 8;
       type = tropical_forest;
     }
     province_name = generateCityName();
   }
   else if (height < 0.8f) {
     if (moisture < -0.4) {
-      color = Bare;
+      color = 13;
       type = bare;
     }
     else if (moisture < 0.1) {
-      color = Taiga;
+      color = 14;
       type = taiga;
     }
     else if (moisture < 0.4) {
-      color = Tundra;
+      color = 12;
       type = tundra;
     }
     else {
-      color = Hill;
+      color = 11;
       type = hill;
     }
     province_name = generateCityName();
   }
   else {
-    color = Mountain;
+    color = 15;
     type = mountain;
     province_name = generateCityName();
   }
@@ -147,49 +126,54 @@ province_properties get_province_type(float height, float moisture) {
 }
 
 
-void generate_map(RectangleShape** map, uint tile_size, float frequency, int octaves, World* w) {
+province_properties* generate_map(World* w) {
   srand((unsigned)time(NULL));
   int random = rand();
   int seed = random % 100000;
-  float** tiles = setup(NUM_ROWS, NUM_COLS, frequency, seed, octaves);
+  float frequency = 0.007f;
+  int octaves = 7;
+  int cols = w->get_num_cols();
+  int rows = w->get_num_rows();
+
+  province_properties* prov_props = new province_properties[ rows * cols ];
+
+  float** tiles = setup(rows, cols, frequency, seed, octaves);
   seed = random % 1000000;
-  float** moisture = setup(NUM_ROWS, NUM_COLS, frequency / 3, seed, octaves);
+  float** moisture = setup(rows, cols, frequency / 3, seed, octaves);
   uint id_count = 0;
-  for (int row = 0; row < NUM_ROWS; row++) {
-    for (int col = 0; col < NUM_COLS; col++) {
-      map[ row ][ col ].setSize(Vector2f(tile_size, tile_size));
-      map[ row ][ col ].setPosition(tile_size * col, tile_size * row);
+  for (int row = 0; row < rows; row++) {
+    for (int col = 0; col < cols; col++) {
       float height = tiles[ row ][ col ];
       float moisture_level = moisture[ row ][ col ];
       province_properties props = get_province_type(height, moisture_level);
-      map[ row ][ col ].setFillColor(props.color);
-      if (props.province_name != "")
-        cout << props.province_name << endl;
+      prov_props[ row * cols + col ] = props;
       Province p(id_count++, props.province_name, props.pop, row, col, height, props.type, moisture_level);
       w->addProvince(p);
     }
   }
-  free(tiles);
   free(moisture);
+  free(tiles);
   set_map_goods(w, frequency / 3, seed, octaves);
+  return prov_props;
 }
 
 void set_map_goods(World* w, float frequency, int seed, int octaves) {
   vector<Good> goods = w->getGoods();
+  uint cols = w->get_num_cols();
+  uint rows = w->get_num_rows();
   vector<float**> maps;
   for (uint i = 0; i < goods.size(); i++) {
-    Good g = goods[ i ];
-    float** map = setup(NUM_ROWS, NUM_COLS, frequency / 2, seed, octaves);
+    float** map = setup(rows, cols, frequency / 2, seed, octaves);
     seed += 50;
     maps.push_back(map);
   }
   for (uint i = 0; i < goods.size(); i++) {
     Good g = goods[ i ];
     int count = 0;
-    for (int row = 0; row < NUM_ROWS; row++) {
-      for (int col = 0; col < NUM_COLS; col++) {
+    for (uint row = 0; row < rows; row++) {
+      for (uint col = 0; col < cols; col++) {
         float** map = maps[ i ];
-        Province* p = w->getProvinceById(row * NUM_COLS + col);
+        Province* p = w->getProvinceById(row * cols + col);
         if (g.get_type() == catchable && g.is_maritime() && (p->get_type() == sea || p->get_type() == coastal_sea || p->get_type() == deep_sea))
         {
           p->add_goods(g.get_id()); count++;
@@ -213,9 +197,9 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
 
   maps.clear();
   int count = 0;
-  for (int row = 0; row < NUM_ROWS; row++) {
-    for (int col = 0; col < NUM_COLS; col++) {
-      Province* p = w->getProvinceById(row * NUM_COLS + col);
+  for (int row = 0; row < rows; row++) {
+    for (int col = 0; col < cols; col++) {
+      Province* p = w->getProvinceById(row * cols + col);
       if (p->get_goods().size() == 0)
       {
         count++;
@@ -233,7 +217,7 @@ float** setup(int rows, int cols, float frequency, int seed, int octaves) {
     tiles[ i ] = new float[ cols ];
   }
 
-  vector<float> noiseData = generate_noise(rows, cols, frequency, seed, octaves);
+  vector<float> noiseData = _generate_noise(rows, cols, frequency, seed, octaves);
   int index = 0;
   for (int row = 0; row < rows; row++) {
     for (int col = 0; col < cols; col++) {
