@@ -45,6 +45,12 @@ public:
   void setupWorld();
   void addGood(Good g);
   Good* getGoodById(uint id);
+  bool* getGoodMapById(uint id) {
+    return this->goods.at(id).get_map();
+  }
+  void setGoodMapById(uint id, bool* map) {
+    this->goods.at(id).set_map(map);
+  }
   bool advanceDate();
   void printNeighbours(uint id);
   vector<int> getNeighbours(uint id);

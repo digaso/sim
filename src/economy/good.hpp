@@ -22,6 +22,7 @@ private:
   float base_value;
   type_good type;
   bool maritime = false;
+  bool* map;
 public:
   void static set_goods(World* world);
   Good(/* args */);
@@ -32,6 +33,15 @@ public:
   bool is_maritime() {
     return maritime;
   }
+
+  void set_map(bool* map) {
+    this->map = map;
+  }
+
+  bool* get_map() {
+    return map;
+  }
+
   void set_maritime(bool maritime) {
     this->maritime = maritime;
   }
