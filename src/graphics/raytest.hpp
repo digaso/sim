@@ -47,13 +47,13 @@ Color* colors = new Color[ 16 ]{
   Mountain
 };
 
-Image renderMap(World* w, province_properties* p) {
+Image renderGeographicalMap(World* w, province_properties* p) {
   byte* pixels = new byte[ w->get_num_rows() * w->get_num_cols() * 4 ];
   for (int i = 0; i < w->get_num_rows(); i++) {
     for (int j = 0; j < w->get_num_cols(); j++) {
-      int index = i * w->get_num_cols() + j;
-      int x = j * TILESIZE;
-      int y = i * TILESIZE;
+      int index = (i * w->get_num_cols() + j);
+      //int x = j * TILESIZE;
+      //int y = i * TILESIZE;
       Color c = colors[ p[ index ].color_id ];
       pixels[ (index * 4) + 0 ] = (byte)c.r;
       pixels[ (index * 4) + 1 ] = (byte)c.g;
@@ -73,58 +73,104 @@ Image renderMap(World* w, province_properties* p) {
 }
 
 
-
+Image* renderGoodMap(World* w) {
+  vector<Good> g = w->getGoods();
+  int cols = w->get_num_cols();
+  int rows = w->get_num_rows();
+  Image* imgs = new Image[ g.size() ]; //one image for each good
+  for (uint i = 0; i < g.size(); i++) {
+    byte* pixels = new byte[ rows * cols * 4 ];
+    bool* map = w->getGoodMapById(i);
+    for (int j = 0; j < rows * cols; j++) {
+      int index = j * 4;
+      if (map[ j ]) {
+        pixels[ index + 0 ] = (byte)255;
+        pixels[ index + 1 ] = (byte)0;
+        pixels[ index + 2 ] = (byte)0;
+        pixels[ index + 3 ] = (byte)150;
+      }
+      else {
+        pixels[ index + 0 ] = (byte)255;
+        pixels[ index + 1 ] = (byte)255;
+        pixels[ index + 2 ] = (byte)255;
+        pixels[ index + 3 ] = (byte)150;
+      }
+    }
+    imgs[ i ] = {
+      .data = pixels,
+      .width = cols,
+      .height = rows,
+      .mipmaps = 1,
+      .format = 7
+    };
+  }
+  return imgs;
+}
 
 void run(World* w) {
-  InitWindow(1200, 800, "raylib [core] example - basic window");
+  InitWindow(1200, 800, "SIM");
   SetTargetFPS(60);
   bool map_changed = false;
-  Texture2D* textures = new Texture2D[ 16 ];
+  uint id_good = 0;
   Camera2D camera = { 0 };
   camera.target = { 0 };
   camera.offset = { 0 };
   camera.rotation = 0.0f;
   camera.zoom = 1.0f;
 
-
-  //  for (int i = 0; i < 16; i++) {
-  //    Image img = GenImageColor(TILESIZE, TILESIZE, colors[ i ]);
-  //    textures[ i ] = LoadTextureFromImage(img);
-  //  }
-  //
-  //
   province_properties* p = generate_map(w);
-  Image img = renderMap(w, p);
-  Texture2D map = LoadTextureFromImage(img);
+  Image imgMap = renderGeographicalMap(w, p);
+  Texture2D* texgoods = new Texture2D[ w->getGoods().size() ];
+  Image* imgGoods = renderGoodMap(w);
+
+  for (uint i = 0; i < w->getGoods().size(); i++) {
+    ImageResizeNN(&imgGoods[ i ], w->get_num_cols() * TILESIZE, w->get_num_rows() * TILESIZE);
+    texgoods[ i ] = LoadTextureFromImage(imgGoods[ i ]);
+  }
+
+  ImageResizeNN(&imgMap, w->get_num_cols() * TILESIZE, w->get_num_rows() * TILESIZE);
+  Texture2D map = LoadTextureFromImage(imgMap);
+
+  Vector2 prevMousePos = GetMousePosition();
+
+
   while (!WindowShouldClose()) {
-    if (IsKeyDown(KEY_W)) camera.target.y -= 2;
-    if (IsKeyDown(KEY_S)) camera.target.y += 2;
-    if (IsKeyDown(KEY_A)) camera.target.x -= 2;
-    if (IsKeyDown(KEY_D)) camera.target.x += 2;
+    float mouseDelta = GetMouseWheelMove();
 
-    if (IsKeyDown(KEY_R)) camera.rotation -= 1.0f;
-    if (IsKeyDown(KEY_T)) camera.rotation += 1.0f;
+    float newZoom = camera.zoom + mouseDelta * 0.01f;
+    if (newZoom <= 0)
+      newZoom = 0.01f;
 
-    //mouse wheel to zoom
-    camera.zoom += ((float)GetMouseWheelMove() * 0.05f);
-    camera.zoom = Clamp(camera.zoom, 0.1f, 2.0f);
+    camera.zoom = newZoom;
+
+    Vector2 thisPos = GetMousePosition();
+
+    Vector2 delta = Vector2Subtract(prevMousePos, thisPos);
+    prevMousePos = thisPos;
+
+    if (IsMouseButtonDown(0))
+      camera.target = GetScreenToWorld2D(Vector2Add(camera.offset, delta), camera);
+
+    if (IsKeyDown(KEY_W))
+      camera.offset.y += 10 / camera.zoom;
+    if (IsKeyDown(KEY_S))
+      camera.offset.y -= 10 / camera.zoom;
+    if (IsKeyDown(KEY_A))
+      camera.offset.x += 10 / camera.zoom;
+    if (IsKeyDown(KEY_D))
+      camera.offset.x -= 10 / camera.zoom;
+    if (IsKeyPressed(KEY_UP))
+      id_good += 1;
+    if (IsKeyPressed(KEY_DOWN) && id_good > 0)
+      id_good -= 1;
 
 
 
     BeginDrawing();
     BeginMode2D(camera);
     ClearBackground(RAYWHITE);
-    //for (int i = 0; i < w->get_num_rows(); i++) {
-    //  for (int j = 0; j < w->get_num_cols(); j++) {
-    //    int index = i * w->get_num_cols() + j;
-    //    int x = j * TILESIZE;
-    //    int y = i * TILESIZE;
-    //    DrawTexture(textures[ p[ index ].color_id ], x, y, WHITE);
-    //  }
-    //}
-
-
     DrawTexturePro(map, { 0, 0, (float)map.width, (float)map.height }, { 0, 0, map.width * camera.zoom, map.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
+    DrawTexturePro(texgoods[ id_good ], { 0, 0, (float)texgoods[ id_good ].width, (float)texgoods[ id_good ].height }, { 0, 0, texgoods[ id_good ].width * camera.zoom, texgoods[ id_good ].height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
     DrawText("Move the camera with WASD keys and drag the mouse to look around", 10, 10, 20, DARKGRAY);
     EndMode2D();
     EndDrawing();
