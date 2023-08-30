@@ -2,14 +2,13 @@
 #include <rlgl.h>
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
-#include "raudio.h"
 #include <raymath.h>
-
 #include "../world.hpp"
 #include "../generation/generation.hpp"
+#include <filesystem>
+
 #define TILESIZE 4
 #define CHUNKSIZE 64
-
 
 using namespace std;
 
@@ -49,7 +48,7 @@ Color* colors = new Color[ 16 ]{
   Mountain
 };
 
-Image renderGeographicalMap(World* w, province_properties* p) {
+Texture2D renderGeographicalMap(World* w, province_properties* p) {
   byte* pixels = new byte[ w->get_num_rows() * w->get_num_cols() * 4 ];
   for (int i = 0; i < w->get_num_rows(); i++) {
     for (int j = 0; j < w->get_num_cols(); j++) {
@@ -70,8 +69,8 @@ Image renderGeographicalMap(World* w, province_properties* p) {
     .mipmaps = 1,
     .format = 7
   };
-
-  return img;
+  ImageResizeNN(&img, w->get_num_cols() * TILESIZE, w->get_num_rows() * TILESIZE);
+  return LoadTextureFromImage(img);
 }
 
 Image* renderGoodMap(World* w) {
@@ -108,10 +107,13 @@ Image* renderGoodMap(World* w) {
   return imgs;
 }
 
+
+
 void run(World* w) {
   InitWindow(1200, 800, "SIM");
   SetTargetFPS(60);
   bool map_changed = false;
+  bool goods_map = false;
   uint id_good = 0;
   Camera2D camera = { 0 };
   camera.target = { 0 };
@@ -119,8 +121,9 @@ void run(World* w) {
   camera.rotation = 0.0f;
   camera.zoom = 1.0f;
 
+
+
   province_properties* p = generate_map(w);
-  Image imgMap = renderGeographicalMap(w, p);
   Texture2D* texgoods = new Texture2D[ w->getGoods().size() ];
   Image* imgGoods = renderGoodMap(w);
 
@@ -129,15 +132,23 @@ void run(World* w) {
     texgoods[ i ] = LoadTextureFromImage(imgGoods[ i ]);
   }
 
-  ImageResizeNN(&imgMap, w->get_num_cols() * TILESIZE, w->get_num_rows() * TILESIZE);
-  Texture2D map = LoadTextureFromImage(imgMap);
-
+  Texture2D map = renderGeographicalMap(w, p);
+  free(imgGoods);
   Vector2 prevMousePos = GetMousePosition();
-
-
+  string path = "assets/songs";
+  vector<Music> musics;
+  InitAudioDevice();
+  for (const auto& entry : filesystem::directory_iterator(path)) {
+    string s = entry.path().string();
+    musics.push_back(LoadMusicStream(s.c_str()));
+  }
+  int music_id = GetRandomValue(0, musics.size() - 1);
+  float vol = 0.01;
+  SetMusicVolume(musics[ music_id ], vol);
+  PlayMusicStream(musics[ music_id ]);
   while (!WindowShouldClose()) {
     float mouseDelta = GetMouseWheelMove();
-
+    UpdateMusicStream(musics[ music_id ]);
     float newZoom = camera.zoom + mouseDelta * 0.01f;
     if (newZoom <= 0)
       newZoom = 0.01f;
@@ -166,15 +177,36 @@ void run(World* w) {
     BeginMode2D(camera);
     ClearBackground(RAYWHITE);
     DrawTexturePro(map, { 0, 0, (float)map.width, (float)map.height }, { 0, 0, map.width * camera.zoom, map.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
-    DrawTexturePro(texgoods[ id_good ], { 0, 0, (float)texgoods[ id_good ].width, (float)texgoods[ id_good ].height }, { 0, 0, texgoods[ id_good ].width * camera.zoom, texgoods[ id_good ].height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
+    if (goods_map) {
+      DrawTexturePro(texgoods[ id_good ], { 0, 0, (float)texgoods[ id_good ].width, (float)texgoods[ id_good ].height }, { 0, 0, texgoods[ id_good ].width * camera.zoom, texgoods[ id_good ].height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
+    }
+
+    EndMode2D();
+    DrawText(TextFormat("Good: %s", w->getGoodById(id_good)->get_name().c_str()), 120, 10, 20, BLACK);
     if (GuiButton(Rectangle{ 10, 10, 100, 20 }, "Change good")) {
       id_good += 1;
       if (id_good >= w->getGoods().size())
         id_good = 0;
     }
 
-    EndMode2D();
+    if (GuiButton(Rectangle{ 10, 40, 100, 20 }, "Change music")) {
+      StopMusicStream(musics[ music_id ]);
+      music_id += 1;
+      if (music_id >= musics.size())
+        music_id = 0;
+      SetMusicVolume(musics[ music_id ], vol);
+
+      PlayMusicStream(musics[ music_id ]);
+    }
+
+    if (GuiButton(Rectangle{ 10, 70, 100, 20 }, "Toggle map")) {
+      goods_map = !goods_map;
+    }
+
+    //slider to music volume
+
     EndDrawing();
   }
+  CloseAudioDevice();
   CloseWindow();
 }

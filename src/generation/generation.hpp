@@ -175,31 +175,45 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
       bmap[ i ] = false;
     }
     int count = 0;
-    for (uint row = 0; row < rows; row++) {
-      for (uint col = 0; col < cols; col++) {
-        float** map = maps[ i ];
-        Province* p = w->getProvinceById(row * cols + col);
-        if (g.get_type() == catchable && g.is_maritime() && (p->get_type() == sea || p->get_type() == coastal_sea || p->get_type() == deep_sea))
-        {
-          p->add_goods(g.get_id()); count++;
+    if (g.get_type() != manufactured) {
 
-          bmap[ row * cols + col ] = true;
-        }
-        else if (map[ row ][ col ] > 0.5 - (1.0 / g.get_base_value()) && (p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)) {
-          if (g.get_type() == type_good::mineral && (p->get_type() == type_province::mountain || p->get_type() == type_province::hill || p->get_type() == bare || p->get_type() == tundra || p->get_type() == taiga) && p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)
-          {
+      for (uint row = 0; row < rows; row++) {
+        for (uint col = 0; col < cols; col++) {
+          float** map = maps[ i ];
+          Province* p = w->getProvinceById(row * cols + col);
+          if (g.get_name() == "Salt" && (p->get_type() == coastal_desert || p->get_type() == coast)) {
             p->add_goods(g.get_id()); count++;
             bmap[ row * cols + col ] = true;
-
-          } if (g.get_type() == type_good::plantable && p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)
+            continue;
+          }
+          if (g.get_type() == catchable && g.is_maritime() && (p->get_type() == sea || p->get_type() == coastal_sea || p->get_type() == deep_sea))
           {
             p->add_goods(g.get_id()); count++;
 
             bmap[ row * cols + col ] = true;
           }
-          if (g.get_type() == catchable && !g.is_maritime()) {
-            p->add_goods(g.get_id()); count++;
-            bmap[ row * cols + col ] = true;
+          else if (map[ row ][ col ] > 0.5 - (1.0 / g.get_base_value()) && (p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)) {
+            if (g.get_name() == "Ivory" && p->get_type() == type_province::temperate_desert || p->get_type() == type_province::coastal_desert || p->get_type() == type_province::tropical) {
+              p->add_goods(g.get_id()); count++;
+              bmap[ row * cols + col ] = true;
+              continue;
+
+            }
+            if (g.get_type() == type_good::mineral && (p->get_type() == type_province::mountain || p->get_type() == type_province::hill || p->get_type() == bare || p->get_type() == tundra || p->get_type() == taiga) && p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)
+            {
+              p->add_goods(g.get_id()); count++;
+              bmap[ row * cols + col ] = true;
+
+            } if (g.get_type() == type_good::plantable && p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)
+            {
+              p->add_goods(g.get_id()); count++;
+
+              bmap[ row * cols + col ] = true;
+            }
+            if (g.get_type() == catchable && !g.is_maritime()) {
+              p->add_goods(g.get_id()); count++;
+              bmap[ row * cols + col ] = true;
+            }
           }
         }
       }
