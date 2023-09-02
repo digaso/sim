@@ -12,6 +12,7 @@ std::vector<std::string> syllables = {
     "pe", "pi", "po", "por", "qua", "ra", "re", "ri", "ro", "ru", "sa", "se", "si", "so", "son", "ta", "te",
     "ti", "to", "tor", "u", "va", "ve", "vi", "vo", "vu", "xa", "xe", "xi", "xo", "za", "ze", "zi", "zo", "guim", "os", "mu", "mum",
     "mus", "tul", "tum", "tus", "bu", "bum", "bus", "dum", "dus", "fum", "fus", "gum", "gus", "hum", "hus", "jum", "jus", "kum", "kus",
+    "lum", "lus", "mum", "mus", "num", "nus", "pum", "pus", "qum", "qus", "rum", "rus", "sum", "sus", "tum", "tus", "vum", "vus", "wum",
 };
 
 // Generate a random number of syllables between minSyllables and maxSyllables
