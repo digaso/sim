@@ -73,11 +73,12 @@ Texture2D renderGeographicalMap(World* w, province_properties* p) {
   return LoadTextureFromImage(img);
 }
 
-Image* renderGoodMap(World* w) {
+Texture2D* renderGoodMap(World* w) {
   vector<Good> g = w->getGoods();
   int cols = w->get_num_cols();
   int rows = w->get_num_rows();
-  Image* imgs = new Image[ g.size() ]; //one image for each good
+  Texture2D* tex = new Texture2D[ g.size() ]; //one image for each good
+
   for (uint i = 0; i < g.size(); i++) {
     byte* pixels = new byte[ rows * cols * 4 ];
     bool* map = w->getGoodMapById(i);
@@ -96,17 +97,19 @@ Image* renderGoodMap(World* w) {
         pixels[ index + 3 ] = (byte)150;
       }
     }
-    imgs[ i ] = {
+    Image img = {
       .data = pixels,
       .width = cols,
       .height = rows,
       .mipmaps = 1,
       .format = 7
     };
-  }
-  return imgs;
-}
+    ImageResizeNN(&img, cols * TILESIZE, rows * TILESIZE);
+    tex[ i ] = LoadTextureFromImage(img);
 
+  }
+  return tex;
+}
 
 
 void run(World* w) {
@@ -121,19 +124,10 @@ void run(World* w) {
   camera.rotation = 0.0f;
   camera.zoom = 1.0f;
 
-
-
   province_properties* p = generate_map(w);
-  Texture2D* texgoods = new Texture2D[ w->getGoods().size() ];
-  Image* imgGoods = renderGoodMap(w);
-
-  for (uint i = 0; i < w->getGoods().size(); i++) {
-    ImageResizeNN(&imgGoods[ i ], w->get_num_cols() * TILESIZE, w->get_num_rows() * TILESIZE);
-    texgoods[ i ] = LoadTextureFromImage(imgGoods[ i ]);
-  }
+  Texture2D* texgoods = renderGoodMap(w);
 
   Texture2D map = renderGeographicalMap(w, p);
-  free(imgGoods);
   Vector2 prevMousePos = GetMousePosition();
   string path = "assets/songs";
   vector<Music> musics;
@@ -143,9 +137,10 @@ void run(World* w) {
     musics.push_back(LoadMusicStream(s.c_str()));
   }
   int music_id = GetRandomValue(0, musics.size() - 1);
-  float vol = 0.01;
+  float vol = 0.001;
   SetMusicVolume(musics[ music_id ], vol);
   PlayMusicStream(musics[ music_id ]);
+
   while (!WindowShouldClose()) {
     float mouseDelta = GetMouseWheelMove();
     UpdateMusicStream(musics[ music_id ]);
@@ -195,7 +190,6 @@ void run(World* w) {
       if (music_id >= musics.size())
         music_id = 0;
       SetMusicVolume(musics[ music_id ], vol);
-
       PlayMusicStream(musics[ music_id ]);
     }
 

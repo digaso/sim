@@ -28,7 +28,7 @@ enum type_province {
   coastal_desert = 15,
 };
 
-class country;
+class Country;
 class Province {
 private:
   vector<population> populations; //vector of populations
@@ -40,7 +40,7 @@ private:
   float height; //value between -1 and 1
   float moisture; //value between -1 and 1
   type_province type; //type of province
-  country* country_owner; //pointer to country that owns the province
+  Country* country_owner; //pointer to country that owns the province
   float migration_atraction; //value between 0 and 1
   float tax_control; //value between 0 and 1
   bool trade_route_candidate = false; //becomes true if province has a marketplace or a port
@@ -70,10 +70,10 @@ public:
   uint get_population();
   float get_y();
   float get_x();
-  country* get_country();
+  Country* get_country();
   type_province get_type();
   float get_moisture();
-  void set_country(country* country_owner);
+  void set_country(Country* country_owner);
   float get_migration_atraction();
   float get_tax_control();
   float get_height();

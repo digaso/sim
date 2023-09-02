@@ -11,7 +11,7 @@ using namespace std;
 class character;
 class Province;
 
-class country
+class Country
 {
   uint num_provinces = 0;
   Province* provinces[ 100000 ];
@@ -24,14 +24,14 @@ class country
 
 public:
 
-  country() {};
-  country(uint id, string name, string abrev)
+  Country() {};
+  Country(uint id, string name, string abrev)
   {
     this->id = id;
     this->name = name;
     this->abrev = abrev;
   }
-  ~country() {};
+  ~Country() {};
   uint get_id();
   string get_name();
   void set_name(string name);
@@ -48,6 +48,6 @@ public:
   //static void setup_countries(World* w);
   Province** get_provinces();
   vector<character> get_characters();
-  friend ostream& operator<<(ostream& os, const country& c);
+  friend ostream& operator<<(ostream& os, const Country& c);
 };
 

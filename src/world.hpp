@@ -8,6 +8,7 @@
 #include <list>
 #include "economy/trade_route.hpp"
 #include "economy/good.hpp"
+#include "religion.hpp"
 
 using namespace std;
 
@@ -28,8 +29,9 @@ private:
   int num_cols;
   date world_date;
   vector<Province> provinces;
-  vector<country> countries;
+  vector<Country> countries;
   vector<character> characters;
+  vector<Religion> religions;
   vector<Good> goods;
 public:
   World(int year, int month, int day);
@@ -39,7 +41,7 @@ public:
   string getDateString();
   void setDate(date d);
   void addProvince(Province p);
-  void addCountry(country c);
+  void addCountry(Country c);
   void addCharacter(character c);
   void printCountries();
   void setupWorld();
@@ -55,7 +57,7 @@ public:
   void printNeighbours(uint id);
   vector<int> getNeighbours(uint id);
   Province* getProvinceByCoords(uint8_t x, uint8_t y);
-  country* getCountryById(uint id) {
+  Country* getCountryById(uint id) {
 
     if (id < countries.size()) {
       return &countries.at(id);
@@ -70,7 +72,7 @@ public:
     return nullptr;
   }
   const vector<Province> getProvinces() const;
-  const vector<country> getCountries() const;
+  const vector<Country> getCountries() const;
   void set_num_rows(int num_rows) {
     this->num_rows = num_rows;
   }

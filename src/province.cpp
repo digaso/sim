@@ -7,12 +7,12 @@ string Province::get_name()
   return this->name;
 }
 
-country* Province::get_country()
+Country* Province::get_country()
 {
   return this->country_owner;
 }
 
-void Province::set_country(country* country_owner)
+void Province::set_country(Country* country_owner)
 {
   this->country_owner = country_owner;
 }

@@ -32,7 +32,7 @@ void load_countries(World* world_sim) {
   hashMap countries = read_csv("data/countries.csv");
   int i = 0;
   for (auto row : countries) {
-    country c(i++, row[ "name" ], row[ "abrev" ]);
+    Country c(i++, row[ "name" ], row[ "abrev" ]);
     world_sim->addCountry(c);
   }
   cout << "Countries loaded" << endl;
@@ -43,7 +43,7 @@ void load_provinces(World* world_sim) {
   int i = 0;
   for (auto row : provinces) {
     string country_abrev = row[ "country" ];
-    country* c = world_sim->getCountryByAbrev(country_abrev);
+    Country* c = world_sim->getCountryByAbrev(country_abrev);
     float longi = mercatorX(stof(row[ "longitude" ]));
     float lat = mercatorY(stof(row[ "latitude" ]));
     Province p(i++, row[ "name" ], stoi(row[ "population" ]), lat, longi, 0.1, c);
@@ -62,7 +62,7 @@ void load_characters(World* world_sim) {
   int i = 0;
   for (auto row : characters) {
     string country_abrev = row[ "country" ];
-    country* country_living = world_sim->getCountryByAbrev(country_abrev);
+    Country* country_living = world_sim->getCountryByAbrev(country_abrev);
     character c(i++, row[ "name" ], row[ "birthdate" ], country_living);
     world_sim->addCharacter(c);
   }

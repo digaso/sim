@@ -60,7 +60,7 @@ void World::addProvince(Province p)
   this->provinces.push_back(p);
 }
 
-void World::addCountry(country c)
+void World::addCountry(Country c)
 {
   this->countries.push_back(c);
 }
@@ -70,7 +70,7 @@ const vector<Province> World::getProvinces() const
   return this->provinces;
 }
 
-const vector<country> World::getCountries() const
+const vector<Country> World::getCountries() const
 {
   return this->countries;
 }
@@ -82,7 +82,7 @@ void World::printCountries() {
 }
 
 void World::addCharacter(character c) {
-  country* ctry = c.get_country_living();
+  Country* ctry = c.get_country_living();
   if (ctry != nullptr) {
     ctry->add_character(c);
   }
