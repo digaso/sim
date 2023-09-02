@@ -245,6 +245,18 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
   cout << "No goods: " << count << endl;
 }
 
+
+void generate_religions(World* w) {
+  uint8_t num_religions = 10;
+}
+
+void set_religions(World* w) {
+
+}
+
+void populate_world(World* w) {
+
+}
 float** setup(int rows, int cols, float frequency, int seed, int octaves) {
 
   float** tiles = new float* [ rows ];
