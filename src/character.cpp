@@ -1,6 +1,6 @@
 #include "character.hpp"
 
-character::character(uint id, string name, string birth_date, country* country_living)
+character::character(uint id, string name, string birth_date, Country* country_living)
 {
   this->id = id;
   this->name = name;
@@ -22,7 +22,7 @@ character::~character()
 {
 }
 
-country* character::get_country_living()
+Country* character::get_country_living()
 {
   return this->country_living;
 }
