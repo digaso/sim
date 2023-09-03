@@ -81,6 +81,7 @@ vector<Province*> World::getNeighbours(Province* p)
   vector<Province*> neighbours;
   int x = p->get_x();
   int y = p->get_y();
+  //check cardinal directions
   if (x > 0 && this->getProvinceByCoords(x - 1, y)->get_type() != type_province::sea && this->getProvinceByCoords(x - 1, y)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x - 1, y)->get_type() != type_province::deep_sea) {
     neighbours.push_back(this->getProvinceByCoords(x - 1, y));
   }
@@ -136,9 +137,6 @@ vector<Province*> World::get_path_between_provinces(uint start, uint end) {
   visited.push_back(start);
   return path;
 }
-
-
-
 
 void World::addGood(Good g) {
   this->goods.push_back(g);

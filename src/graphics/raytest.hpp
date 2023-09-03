@@ -140,14 +140,14 @@ Texture2D renderPoliticalMap(World* w) {
       pixels[ index + 0 ] = (byte)c.r;
       pixels[ index + 1 ] = (byte)c.g;
       pixels[ index + 2 ] = (byte)c.b;
-      pixels[ index + 3 ] = (byte)c.a;
+      pixels[ index + 3 ] = (byte)200;
     }
     else
     {
       pixels[ index + 0 ] = (byte)255;
       pixels[ index + 1 ] = (byte)255;
       pixels[ index + 2 ] = (byte)255;
-      pixels[ index + 3 ] = (byte)0;
+      pixels[ index + 3 ] = (byte)80;
     }
   }
   Image img = {

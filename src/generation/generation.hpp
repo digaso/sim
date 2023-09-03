@@ -255,11 +255,10 @@ void generate_countries(World* w) {
     uint x = GetRandomValue(0, w->get_num_cols());
     uint y = GetRandomValue(0, w->get_num_rows());
     Province* p = w->getProvinceByCoords(x, y);
-    uint8_t num_provinces = GetRandomValue(1, 30);
+    uint8_t num_provinces = GetRandomValue(1, 90);
     vector<uint> provinces;
 
     if (p->get_type() != type_province::sea && p->get_type() != type_province::coastal_sea && p->get_type() != type_province::deep_sea && p->get_country_owner_id() == -1) {
-      cout << p->get_name() << endl;
       p->set_country_owner_id(i);
       Country c(i, generateCountryName());
       uint8_t color_id = GetRandomValue(0, 10);
@@ -270,27 +269,21 @@ void generate_countries(World* w) {
       for (uint8_t j = 0; j < num_provinces - 1; j++) {
         p = w->getProvinceById(provinces.at(GetRandomValue(0, provinces.size() - 1)));
         vector<Province*> neighbours = w->getNeighbours(p);
-        if (neighbours.size() > 0)
-        {
-          p = neighbours.at(GetRandomValue(0, neighbours.size() - 1));
+        for (auto n : neighbours) {
+          if (n->get_country_owner_id() == -1) {
+            n->set_country_owner_id(i);
+            c.add_province(n);
+            provinces.push_back(n->get_id());
+          }
         }
-        else {
-          continue;
-        }
-        if (p->get_type() != type_province::sea && p->get_type() != type_province::coastal_sea && p->get_type() != type_province::deep_sea && p->get_country_owner_id() == -1) {
-          p->set_country_owner_id(i);
-          c.add_province(p);
-          provinces.push_back(p->get_id());
-        }
-      }
 
+      }
       w->addCountry(c);
       i++;
     }
+
   }
-
 }
-
 
 void populate_world(World* w) {
   generate_countries(w);
