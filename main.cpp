@@ -6,7 +6,7 @@
 #include "src/world.hpp"
 //#include "src/graphics/window.hpp"
 #include "src/graphics/raytest.hpp"
-#define NUM_CHUNKS 10
+#define NUM_CHUNKS 3
 using namespace std;
 
 void print_memory_usage() {
@@ -19,15 +19,11 @@ void print_memory_usage() {
   }
 }
 
-
-
 int main() {
 
-  World w(1, 1, 1166);
   int cols = NUM_CHUNKS * CHUNKSIZE;
   int rows = NUM_CHUNKS / 1.5 * CHUNKSIZE;
-  w.set_num_cols(cols);
-  w.set_num_rows(rows);
+  World w(1, 1, 1166, cols, rows);
   run(&w);
 
   print_memory_usage();

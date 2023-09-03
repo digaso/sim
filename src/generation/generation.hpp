@@ -17,7 +17,7 @@ typedef struct province_properties {
 
 
 float** setup(int rows, int cols, float frequency, int seed, int octaves);
-
+void populate_world(World* w);
 void set_map_goods(World* w, float frequency, int seed, int octaves);
 
 vector<float> _generate_noise(int rows, int cols, float frequency, int seed, int octaves) {
@@ -147,13 +147,17 @@ province_properties* generate_map(World* w) {
       float moisture_level = moisture[ row ][ col ];
       province_properties props = get_province_type(height, moisture_level);
       prov_props[ row * cols + col ] = props;
-      Province p(id_count++, props.province_name, props.pop, row, col, height, props.type, moisture_level);
-      w->addProvince(p);
+      Province p(id_count++, props.province_name, props.pop, col, row, height, props.type, moisture_level);
+      w->addProvince(p, col, row);
     }
   }
   free(moisture);
   free(tiles);
+  cout << "Map generated" << endl;
   set_map_goods(w, frequency / 3, seed, octaves);
+  cout << "Goods generated" << endl;
+  populate_world(w);
+  cout << "World populated" << endl;
   return prov_props;
 }
 
@@ -218,31 +222,25 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
         }
       }
     }
-    //print bmap
-    //for (int row = 0; row < rows; row++) {
-    //  for (int col = 0; col < cols; col++) {
-    //    cout << bmap[ row * cols + col ] << " ";
-     // }
-     // cout << endl;
-   // }
+
 
     w->setGoodMapById(g.get_id(), bmap);
-    cout << g.get_name() << " " << count << endl;
+    //cout << g.get_name() << " " << count << endl;
   }
 
   maps.clear();
-  int count = 0;
-  for (int row = 0; row < rows; row++) {
-    for (int col = 0; col < cols; col++) {
-      Province* p = w->getProvinceById(row * cols + col);
-      if (p->get_goods().size() == 0)
-      {
-        count++;
-      }
-
-    }
-  }
-  cout << "No goods: " << count << endl;
+  //int count = 0;
+  //for (int row = 0; row < rows; row++) {
+  //  for (int col = 0; col < cols; col++) {
+  //    Province* p = w->getProvinceById(row * cols + col);
+  //    if (p->get_goods().size() == 0)
+  //    {
+  //      count++;
+  //    }
+//
+  //  }
+  //}
+  //cout << "No goods: " << count << endl;
 }
 
 
@@ -250,12 +248,34 @@ void generate_religions(World* w) {
   uint8_t num_religions = 10;
 }
 
-void set_religions(World* w) {
+void generate_countries(World* w) {
+  uint8_t num_countries = 50;
+  uint8_t i = 0;
+  while (i < num_countries) {
+    uint x = GetRandomValue(0, w->get_num_cols());
+    uint y = GetRandomValue(0, w->get_num_rows());
+    Province* p = w->getProvinceByCoords(x, y);
+
+    if (p->get_type() != type_province::sea && p->get_type() != type_province::coastal_sea && p->get_type() != type_province::deep_sea && p->get_country_owner_id() == -1) {
+      cout << p->get_name() << endl;
+      p->set_country_owner_id(i);
+      Country c(i, generateCountryName());
+      uint8_t color_id = GetRandomValue(0, 10);
+      c.set_color_id(color_id);
+      c.add_province(p);
+      c.set_capital_id(p->get_id());
+      w->addCountry(c);
+      i++;
+    }
+  }
 
 }
 
+
 void populate_world(World* w) {
 
+  generate_countries(w);
+  generate_religions(w);
 }
 float** setup(int rows, int cols, float frequency, int seed, int octaves) {
 

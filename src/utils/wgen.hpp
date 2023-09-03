@@ -4,6 +4,12 @@
 #include <ctime>
 #include <cctype>
 
+using namespace std;
+
+//list of words for constructing country names
+vector<string> words_beginning = { "Great", "Mighty","Holy Nation of", "Union of" };
+
+
 // List of syllables for constructing city names
 std::vector<std::string> syllables = {
     "al", "am", "an", "ar", "as", "ba", "bel", "ber", "bi", "bo", "br", "ca", "car", "ci", "co", "cor", "da",
@@ -33,6 +39,26 @@ std::string generateWord(int minSyllables, int maxSyllables) {
   word[ 0 ] = std::toupper(word[ 0 ]); // Capitalize the first letter
 
   return word;
+}
+
+
+
+std::string generateCountryName() {
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_int_distribution<> numWordsDist(1, 2); // Randomly select 1 or 2 words
+
+  int numWords = numWordsDist(gen);
+  std::string countryName;
+
+  for (int i = 0; i < numWords; ++i) {
+    countryName += generateWord(2, 4); // Generate word with 2 to 4syllables
+    if (i < numWords - 1) {
+      countryName += " ";
+    }
+  }
+
+  return countryName;
 }
 
 // City name generator function

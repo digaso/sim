@@ -7,15 +7,18 @@ string Province::get_name()
   return this->name;
 }
 
-Country* Province::get_country()
+
+
+void Province::set_country_owner_id(uint id)
 {
-  return this->country_owner;
+  this->country_owner_id = id;
 }
 
-void Province::set_country(Country* country_owner)
+int Province::get_country_owner_id() const
 {
-  this->country_owner = country_owner;
+  return this->country_owner_id;
 }
+
 
 uint Province::get_id()
 {
@@ -142,6 +145,6 @@ string Province::type_province_to_string(type_province type)
 
 ostream& operator<<(ostream& os, const Province& p)
 {
-  os << "Province: " << p.name << " Population: " << p.population_size << " Country: " << p.country_owner->get_name() << " Latitude: " << p.y << " Longitude: " << p.x;
+  os << "Province: " << p.name << " Population: " << p.population_size << " Country: " << p.get_country_owner_id() << " Latitude: " << p.y << " Longitude: " << p.x;
   return os;
 }

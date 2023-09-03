@@ -14,28 +14,27 @@ class Province;
 class Country
 {
   uint num_provinces = 0;
-  Province* provinces[ 100000 ];
+  vector<uint> provinces;
+  uint capital_id;
   vector<character> characters;
   uint id;
   string name;
-  string abrev;
+  uint color_id;
   bool is_player = false;
   float money;
 
 public:
 
   Country() {};
-  Country(uint id, string name, string abrev)
+  Country(uint id, string name)
   {
     this->id = id;
     this->name = name;
-    this->abrev = abrev;
   }
   ~Country() {};
   uint get_id();
   string get_name();
   void set_name(string name);
-  string get_abrev();
   string print();
   void add_province(Province* p);
   void remove_province(Province* p);
@@ -43,10 +42,13 @@ public:
   void remove_character(character c);
   void print_characters();
   void print_provinces();
+  void set_capital_id(uint id);
+  uint get_capital_id();
+  void set_color_id(uint id);
+  uint get_color_id();
   void set_player(bool is_player);
   bool player();
-  //static void setup_countries(World* w);
-  Province** get_provinces();
+  vector<uint> get_provinces();
   vector<character> get_characters();
   friend ostream& operator<<(ostream& os, const Country& c);
 };

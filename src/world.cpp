@@ -3,9 +3,12 @@
 
 
 
-World::World(int day, int month, int year)
+World::World(uint8_t day, uint8_t month, uint8_t year, uint cols, uint rows)
 {
   this->world_date = date(day, month, year);
+  provinces = new Province[ cols * rows ];
+  this->num_cols = cols;
+  this->num_rows = rows;
   Good good;
   good.set_goods(this);
 }
@@ -35,12 +38,14 @@ Good* World::getGoodById(uint id)
 
 Province* World::getProvinceByCoords(uint8_t x, uint8_t y)
 {
-  for (Province& p : this->provinces) {
-    if (p.get_x() == x && p.get_y() == y) {
-      return &p;
-    }
-  }
-  return nullptr;
+
+  return &provinces[ (y * this->num_cols) + x ];
+}
+
+Province* World::getProvinceById(uint id)
+{
+
+  return &provinces[ id ];
 }
 
 string World::getDateString()
@@ -55,9 +60,9 @@ void World::setDate(date d)
   this->world_date = d;
 }
 
-void World::addProvince(Province p)
+void World::addProvince(Province p, uint x, uint y)
 {
-  this->provinces.push_back(p);
+  this->provinces[ (y * this->num_cols) + x ] = p;
 }
 
 void World::addCountry(Country c)
@@ -65,10 +70,12 @@ void World::addCountry(Country c)
   this->countries.push_back(c);
 }
 
-const vector<Province> World::getProvinces() const
+Province* World::getProvinces()
 {
   return this->provinces;
 }
+
+
 
 const vector<Country> World::getCountries() const
 {
@@ -97,33 +104,8 @@ vector<Province*> World::get_path_between_provinces(uint start, uint end) {
   return path;
 }
 
-void World::printNeighbours(uint id) {
-  Province* p = this->getProvinceById(id);
-  int x = p->get_x();
-  int y = p->get_y();
-  for (Province& neighbor : this->provinces) {
-    if (neighbor.get_x() >= x - 1 && neighbor.get_x() <= x + 1 &&
-      neighbor.get_y() >= y - 1 && neighbor.get_y() <= y + 1 &&
-      !(neighbor.get_x() == x && neighbor.get_y() == y)) {
-      cout << neighbor.get_name() << endl;
-    }
-  }
-}
 
-vector<int> World::getNeighbours(uint id) {
-  vector<int> neighbours;
-  Province* p = this->getProvinceById(id);
-  int x = p->get_x();
-  int y = p->get_y();
-  for (Province& neighbor : this->provinces) {
-    if (neighbor.get_x() >= x - 1 && neighbor.get_x() <= x + 1 &&
-      neighbor.get_y() >= y - 1 && neighbor.get_y() <= y + 1 &&
-      !(neighbor.get_x() == x && neighbor.get_y() == y)) {
-      neighbours.push_back(neighbor.get_id());
-    }
-  }
-  return neighbours;
-}
+
 
 void World::addGood(Good g) {
   this->goods.push_back(g);

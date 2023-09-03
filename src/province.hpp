@@ -40,7 +40,7 @@ private:
   float height; //value between -1 and 1
   float moisture; //value between -1 and 1
   type_province type; //type of province
-  Country* country_owner; //pointer to country that owns the province
+  int country_owner_id; //id to country that owns the province
   float migration_atraction; //value between 0 and 1
   float tax_control; //value between 0 and 1
   bool trade_route_candidate = false; //becomes true if province has a marketplace or a port
@@ -58,6 +58,7 @@ public:
     this->population_size = population_size;
     this->y = y;
     this->x = x;
+    this->country_owner_id = -1;
     this->migration_atraction = 0;
     this->tax_control = 0.5;
     this->height = height;
@@ -70,10 +71,10 @@ public:
   uint get_population();
   float get_y();
   float get_x();
-  Country* get_country();
   type_province get_type();
   float get_moisture();
-  void set_country(Country* country_owner);
+  int get_country_owner_id() const;
+  void set_country_owner_id(uint id);
   float get_migration_atraction();
   float get_tax_control();
   float get_height();

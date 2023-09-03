@@ -4,7 +4,7 @@ using namespace std;
 
 
 void Country::add_province(Province* p) {
-  this->provinces[ this->num_provinces ] = p;
+  this->provinces.push_back(p->get_id());
   this->num_provinces++;
 }
 
@@ -13,29 +13,15 @@ void Country::add_character(character c) {
 }
 
 
-
-const int get_countryId_byAbrev(string abrev, vector<Country> countries)
-{
-  for (uint i = 0; i < countries.size(); i++)
-  {
-    if (countries.at(i).get_abrev() == abrev)
-      return i;
-  }
-  return -1;
-}
-
 string Country::get_name() {
   return this->name;
 }
 void Country::set_name(string name) {
   this->name = name;
 }
-string Country::get_abrev() {
-  return this->abrev;
-}
 
 string Country::print() {
-  return this->name + " (" + this->abrev + ")";
+  return this->name;
 }
 
 uint Country::get_id() {
@@ -50,7 +36,23 @@ bool Country::player() {
   return this->is_player;
 }
 
-Province** Country::get_provinces() {
+void Country::set_capital_id(uint id) {
+  this->capital_id = id;
+}
+
+uint Country::get_capital_id() {
+  return this->capital_id;
+}
+
+void Country::set_color_id(uint id) {
+  this->color_id = id;
+}
+
+uint Country::get_color_id() {
+  return this->color_id;
+}
+
+vector<uint> Country::get_provinces() {
   return this->provinces;
 }
 
@@ -68,21 +70,21 @@ void Country::print_characters() {
   }
 }
 
+
 void Country::print_provinces() {
   if (this->num_provinces == 0) {
     cout << "No provinces" << endl;
     return;
   }
-  //print the provinces
+
 
   for (uint i = 0; i < this->num_provinces; i++) {
-    cout << this->provinces[ i ]->get_name() << endl;
+    cout << this->provinces[ i ] << endl;
   }
 
 }
 
-
 ostream& operator<<(ostream& os, const Country& c) {
-  os << c.name << " (" << c.abrev << ")";
+  os << c.name;
   return os;
 }

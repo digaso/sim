@@ -12,13 +12,6 @@
 
 using namespace std;
 
-struct graph_node {
-  uint id;
-  vector<pair<uint, Province*>> neighbours;
-};
-
-
-
 class Good;
 
 class World
@@ -28,19 +21,19 @@ private:
   int num_rows;
   int num_cols;
   date world_date;
-  vector<Province> provinces;
+  Province* provinces;
   vector<Country> countries;
   vector<character> characters;
   vector<Religion> religions;
   vector<Good> goods;
 public:
-  World(int year, int month, int day);
+  World(uint8_t day, uint8_t month, uint8_t year, uint cols, uint rows);
   ~World();
   const date getDate() const;
   const string to_string() const;
   string getDateString();
   void setDate(date d);
-  void addProvince(Province p);
+  void addProvince(Province p, uint x, uint y);
   void addCountry(Country c);
   void addCharacter(character c);
   void printCountries();
@@ -54,24 +47,16 @@ public:
     this->goods.at(id).set_map(map);
   }
   bool advanceDate();
-  void printNeighbours(uint id);
-  vector<int> getNeighbours(uint id);
   Province* getProvinceByCoords(uint8_t x, uint8_t y);
   Country* getCountryById(uint id) {
-
     if (id < countries.size()) {
       return &countries.at(id);
     }
 
     return nullptr;
   }
-  Province* getProvinceById(uint id) {
-    if (id < provinces.size()) {
-      return &provinces.at(id);
-    }
-    return nullptr;
-  }
-  const vector<Province> getProvinces() const;
+  Province* getProvinceById(uint id);
+  Province* getProvinces();
   const vector<Country> getCountries() const;
   void set_num_rows(int num_rows) {
     this->num_rows = num_rows;
@@ -88,10 +73,6 @@ public:
   vector<Good> getGoods() {
     return this->goods;
   }
-  void printProvinces() {
-    for (auto row : this->provinces) {
-      cout << row.get_id() << " " << row.get_name() << " " << row.type_province_to_string(row.get_type()) << endl;
-    }
-  }
+  void printProvinces();
   vector<Province*> get_path_between_provinces(uint start, uint end);
 };
