@@ -29,6 +29,7 @@ private:
 public:
   World(uint8_t day, uint8_t month, uint8_t year, uint cols, uint rows);
   ~World();
+  vector<Province*> getNeighbours(Province* p);
   const date getDate() const;
   const string to_string() const;
   string getDateString();

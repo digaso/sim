@@ -48,7 +48,7 @@ Color* terrain_colors = new Color[ 16 ]{
   Mountain
 };
 
-Color* colors = new Color[ 10 ]{
+Color* colors = new Color[ 11 ]{
   { 255, 0, 0, 255 },
   { 0, 255, 0, 255 },
   { 0, 0, 255, 255 },
@@ -58,7 +58,8 @@ Color* colors = new Color[ 10 ]{
   { 123, 22,233, 255},
   {234,120,22,255},
   {22,234,120,255},
-  {120,22,234,255}
+  {120,22,234,255},
+  { 20, 255, 25, 255 }
 };
 
 Texture2D renderGeographicalMap(World* w, province_properties* p) {

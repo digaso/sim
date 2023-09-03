@@ -76,6 +76,39 @@ Province* World::getProvinces()
 }
 
 
+vector<Province*> World::getNeighbours(Province* p)
+{
+  vector<Province*> neighbours;
+  int x = p->get_x();
+  int y = p->get_y();
+  if (x > 0 && this->getProvinceByCoords(x - 1, y)->get_type() != type_province::sea && this->getProvinceByCoords(x - 1, y)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x - 1, y)->get_type() != type_province::deep_sea) {
+    neighbours.push_back(this->getProvinceByCoords(x - 1, y));
+  }
+  if (x < this->num_cols - 1 && this->getProvinceByCoords(x + 1, y)->get_type() != type_province::sea && this->getProvinceByCoords(x + 1, y)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x + 1, y)->get_type() != type_province::deep_sea) {
+    neighbours.push_back(this->getProvinceByCoords(x + 1, y));
+  }
+  if (y > 0 && this->getProvinceByCoords(x, y - 1)->get_type() != type_province::sea && this->getProvinceByCoords(x, y - 1)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x, y - 1)->get_type() != type_province::deep_sea) {
+    neighbours.push_back(this->getProvinceByCoords(x, y - 1));
+  }
+  if (y < this->num_rows - 1 && this->getProvinceByCoords(x, y + 1)->get_type() != type_province::sea && this->getProvinceByCoords(x, y + 1)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x, y + 1)->get_type() != type_province::deep_sea) {
+    neighbours.push_back(this->getProvinceByCoords(x, y + 1));
+  }
+  //check diagonals
+  if (x > 0 && y > 0 && this->getProvinceByCoords(x - 1, y - 1)->get_type() != type_province::sea && this->getProvinceByCoords(x - 1, y - 1)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x - 1, y - 1)->get_type() != type_province::deep_sea) {
+    neighbours.push_back(this->getProvinceByCoords(x - 1, y - 1));
+  }
+  if (x < this->num_cols - 1 && y > 0 && this->getProvinceByCoords(x + 1, y - 1)->get_type() != type_province::sea && this->getProvinceByCoords(x + 1, y - 1)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x + 1, y - 1)->get_type() != type_province::deep_sea) {
+    neighbours.push_back(this->getProvinceByCoords(x + 1, y - 1));
+  }
+  if (x > 0 && y < this->num_rows - 1 && this->getProvinceByCoords(x - 1, y + 1)->get_type() != type_province::sea && this->getProvinceByCoords(x - 1, y + 1)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x - 1, y + 1)->get_type() != type_province::deep_sea) {
+    neighbours.push_back(this->getProvinceByCoords(x - 1, y + 1));
+  }
+  if (x < this->num_cols - 1 && y < this->num_rows - 1 && this->getProvinceByCoords(x + 1, y + 1)->get_type() != type_province::sea && this->getProvinceByCoords(x + 1, y + 1)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x + 1, y + 1)->get_type() != type_province::deep_sea) {
+    neighbours.push_back(this->getProvinceByCoords(x + 1, y + 1));
+  }
+  return neighbours;
+}
+
 
 const vector<Country> World::getCountries() const
 {
