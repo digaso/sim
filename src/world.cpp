@@ -3,7 +3,7 @@
 
 
 
-World::World(uint8_t day, uint8_t month, uint8_t year, uint cols, uint rows)
+World::World(uint8_t day, uint8_t month, uint year, uint cols, uint rows)
 {
   this->world_date = date(day, month, year);
   provinces = new Province[ cols * rows ];
@@ -36,10 +36,10 @@ Good* World::getGoodById(uint id)
   return nullptr;
 }
 
-Province* World::getProvinceByCoords(uint8_t x, uint8_t y)
+Province* World::getProvinceByCoords(uint x, uint y)
 {
 
-  return &provinces[ (y * this->num_cols) + x ];
+  return &provinces[ (x * this->num_cols) + y ];
 }
 
 Province* World::getProvinceById(uint id)
@@ -76,11 +76,11 @@ Province* World::getProvinces()
 }
 
 
-vector<Province*> World::getNeighbours(Province* p)
+vector<Province*> World::getLandNeighbours(Province* p)
 {
   vector<Province*> neighbours;
-  int y = p->get_x();
-  int x = p->get_y();
+  int x = p->get_x();
+  int y = p->get_y();
   //check cardinal directions
   if (x > 0 && this->getProvinceByCoords(x - 1, y)->get_type() != type_province::sea && this->getProvinceByCoords(x - 1, y)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x - 1, y)->get_type() != type_province::deep_sea) {
     neighbours.push_back(this->getProvinceByCoords(x - 1, y));

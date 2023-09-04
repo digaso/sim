@@ -19,18 +19,24 @@ int Province::get_country_owner_id() const
   return this->country_owner_id;
 }
 
+uint Province::get_population_size() const
+{
+  uint population_size = 0;
+  for (auto& p : this->pops)
+  {
+    population_size += p.get_size();
+  }
+  return population_size;
+}
+
 
 uint Province::get_id()
 {
   return this->id;
 }
 
-uint Province::get_population()
-{
-  return this->population_size;
-}
 
-float Province::get_y()
+int Province::get_y()
 {
   return this->y;
 }
@@ -40,7 +46,7 @@ type_province Province::get_type()
   return this->type;
 }
 
-float Province::get_x()
+int Province::get_x()
 {
   return this->x;
 }
@@ -145,6 +151,6 @@ string Province::type_province_to_string(type_province type)
 
 ostream& operator<<(ostream& os, const Province& p)
 {
-  os << "Province: " << p.name << " Population: " << p.population_size << " Country: " << p.get_country_owner_id() << " Latitude: " << p.y << " Longitude: " << p.x;
+  os << "Province: " << p.name << " Population: " << p.get_population_size() << " Country: " << p.get_country_owner_id() << " Latitude: " << p.y << " Longitude: " << p.x;
   return os;
 }

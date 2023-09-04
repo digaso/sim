@@ -18,8 +18,8 @@ class World
 {
 private:
   /* data */
-  int num_rows;
-  int num_cols;
+  uint num_rows;
+  uint num_cols;
   date world_date;
   Province* provinces;
   vector<Country> countries;
@@ -27,9 +27,9 @@ private:
   vector<Religion> religions;
   vector<Good> goods;
 public:
-  World(uint8_t day, uint8_t month, uint8_t year, uint cols, uint rows);
+  World(uint8_t day, uint8_t month, uint year, uint cols, uint rows);
   ~World();
-  vector<Province*> getNeighbours(Province* p);
+  vector<Province*> getLandNeighbours(Province* p);
   const date getDate() const;
   const string to_string() const;
   string getDateString();
@@ -48,7 +48,7 @@ public:
     this->goods.at(id).set_map(map);
   }
   bool advanceDate();
-  Province* getProvinceByCoords(uint8_t x, uint8_t y);
+  Province* getProvinceByCoords(uint x, uint y);
   Country* getCountryById(uint id) {
     if (id < countries.size()) {
       return &countries.at(id);
@@ -59,16 +59,16 @@ public:
   Province* getProvinceById(uint id);
   Province* getProvinces();
   const vector<Country> getCountries() const;
-  void set_num_rows(int num_rows) {
+  void set_num_rows(uint num_rows) {
     this->num_rows = num_rows;
   }
-  void set_num_cols(int num_cols) {
+  void set_num_cols(uint num_cols) {
     this->num_cols = num_cols;
   };
-  int get_num_rows() {
+  uint get_num_rows() {
     return this->num_rows;
   }
-  int get_num_cols() {
+  uint get_num_cols() {
     return this->num_cols;
   }
   vector<Good> getGoods() {

@@ -10,7 +10,7 @@ uint population::get_id()
   return this->id;
 }
 
-uint population::get_size()
+uint population::get_size()const
 {
   return this->size;
 }

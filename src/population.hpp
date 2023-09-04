@@ -11,7 +11,7 @@ private:
   uint size;
   uint country_id;
   uint province_id;
-  culture* cult;
+  uint culture_id;
 public:
   population() {}
   population(uint id, string name, uint size, uint country_id, uint province_id)
@@ -25,7 +25,7 @@ public:
   ~population() {}
   string get_name();
   uint get_id();
-  uint get_size();
+  uint get_size() const;
   uint get_country_id();
   uint get_province_id();
 };

@@ -5,7 +5,11 @@
 #include "FastNoiseLite.h"
 #include "../utils/wgen.hpp"
 #include "../world.hpp"
+#include "random"
 
+#define MAXCOUNTRIES 150
+#define MAXRELIGIONS 10
+#define MAXPROVINCES 90
 
 
 typedef struct province_properties {
@@ -249,13 +253,15 @@ void generate_religions(World* w) {
 }
 
 void generate_countries(World* w) {
-  uint8_t num_countries = 80;
-  uint8_t i = 0;
+  uint num_countries = MAXCOUNTRIES;
+  uint i = 0;
   while (i < num_countries) {
-    uint x = GetRandomValue(0, w->get_num_cols());
-    uint y = GetRandomValue(0, w->get_num_rows());
+    //get random number between 0 and num_cols
+    uint y = GetRandomValue(0, w->get_num_cols() - 1);
+    //get random number between 0 and num_rows
+    uint x = GetRandomValue(0, w->get_num_rows() - 1);
     Province* p = w->getProvinceByCoords(x, y);
-    uint8_t num_provinces = GetRandomValue(1, 20);
+    uint num_provinces = GetRandomValue(1, MAXPROVINCES);
     uint8_t color_id = GetRandomValue(0, 10);
     vector<uint> provinces;
 
@@ -268,17 +274,16 @@ void generate_countries(World* w) {
       provinces.push_back(p->get_id());
       for (uint8_t j = 0; j < num_provinces - 1; j++) {
         p = w->getProvinceById(provinces.at(GetRandomValue(0, provinces.size() - 1)));
-        vector<Province*> neighbours = w->getNeighbours(p);
+        vector<Province*> neighbours = w->getLandNeighbours(p);
         for (auto n : neighbours) {
           if (n->get_country_owner_id() == -1) {
-            if (n->get_type() == grassland || n->get_type() == forest) {
+            if (n->get_type() == grassland || n->get_type() == forest || n->get_type() == tropical || n->get_type() == tropical_forest) {
               uint8_t chance = GetRandomValue(0, 100);
-              if (chance < 50) {
+              if (chance < 30) {
                 continue;
               }
             }
-
-            if (n->get_type() == hill || n->get_type() == mountain)
+            if (n->get_type() == hill || n->get_type() == mountain || n->get_type() == taiga || n->get_type() == tundra)
             {
               uint8_t chance = GetRandomValue(0, 100);
               if (chance < 80) {

@@ -31,12 +31,11 @@ enum type_province {
 class Country;
 class Province {
 private:
-  vector<population> populations; //vector of populations
+  vector<population> pops; //vector of populations
   uint id; //id of province
   string name; //name of province
-  uint population_size; //population size
-  float y;
-  float x;
+  uint y;
+  uint x;
   float height; //value between -1 and 1
   float moisture; //value between -1 and 1
   type_province type; //type of province
@@ -50,12 +49,10 @@ private:
 
 public:
   Province() {};
-  Province(uint id, string name, uint population_size, float y, float x, float height, type_province type, float moisture)
+  Province(uint id, string name, uint population_size, int y, int x, float height, type_province type, float moisture)
   {
-
     this->id = id;
     this->name = name;
-    this->population_size = population_size;
     this->y = y;
     this->x = x;
     this->country_owner_id = -1;
@@ -68,11 +65,11 @@ public:
   ~Province() {};
   string get_name();
   uint get_id();
-  uint get_population();
-  float get_y();
-  float get_x();
+  int get_y();
+  int get_x();
   type_province get_type();
   float get_moisture();
+  uint get_population_size() const;
   int get_country_owner_id() const;
   void set_country_owner_id(uint id);
   float get_migration_atraction();
