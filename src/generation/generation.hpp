@@ -249,19 +249,19 @@ void generate_religions(World* w) {
 }
 
 void generate_countries(World* w) {
-  uint8_t num_countries = 50;
+  uint8_t num_countries = 80;
   uint8_t i = 0;
   while (i < num_countries) {
     uint x = GetRandomValue(0, w->get_num_cols());
     uint y = GetRandomValue(0, w->get_num_rows());
     Province* p = w->getProvinceByCoords(x, y);
-    uint8_t num_provinces = GetRandomValue(1, 90);
+    uint8_t num_provinces = GetRandomValue(1, 20);
+    uint8_t color_id = GetRandomValue(0, 10);
     vector<uint> provinces;
 
     if (p->get_type() != type_province::sea && p->get_type() != type_province::coastal_sea && p->get_type() != type_province::deep_sea && p->get_country_owner_id() == -1) {
-      p->set_country_owner_id(i);
       Country c(i, generateCountryName());
-      uint8_t color_id = GetRandomValue(0, 10);
+      p->set_country_owner_id(i);
       c.set_color_id(color_id);
       c.add_province(p);
       c.set_capital_id(p->get_id());
@@ -271,12 +271,35 @@ void generate_countries(World* w) {
         vector<Province*> neighbours = w->getNeighbours(p);
         for (auto n : neighbours) {
           if (n->get_country_owner_id() == -1) {
+            if (n->get_type() == grassland || n->get_type() == forest) {
+              uint8_t chance = GetRandomValue(0, 100);
+              if (chance < 50) {
+                continue;
+              }
+            }
+
+            if (n->get_type() == hill || n->get_type() == mountain)
+            {
+              uint8_t chance = GetRandomValue(0, 100);
+              if (chance < 80) {
+                continue;
+              }
+            }
+
+            if (n->get_type() == desert || n->get_type() == bare)
+            {
+              uint8_t chance = GetRandomValue(0, 100);
+              if (chance < 80) {
+                continue;
+              }
+            }
+
             n->set_country_owner_id(i);
             c.add_province(n);
             provinces.push_back(n->get_id());
+            j++;
           }
         }
-
       }
       w->addCountry(c);
       i++;

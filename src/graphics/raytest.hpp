@@ -164,6 +164,7 @@ Texture2D renderPoliticalMap(World* w) {
 void run(World* w) {
   InitWindow(1200, 800, "SIM");
   SetTargetFPS(60);
+  SetTraceLogLevel(LOG_ERROR);
   bool map_changed = false;
   bool goods_map = false;
   bool political_map = false;
@@ -182,6 +183,7 @@ void run(World* w) {
   Vector2 prevMousePos = GetMousePosition();
   string path = "assets/songs";
   vector<Music> musics;
+  //remove ray printing info
   InitAudioDevice();
   for (const auto& entry : filesystem::directory_iterator(path)) {
     string s = entry.path().string();
