@@ -8,8 +8,8 @@
 #include "random"
 
 #define MAXCOUNTRIES 150
-#define MAXRELIGIONS 10
-#define MAXPROVINCES 90
+#define MAXRELIGIONS MAXCOUNTRIES / 2
+#define MAXPROVINCES 250
 
 
 typedef struct province_properties {
@@ -249,7 +249,31 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
 
 
 void generate_religions(World* w) {
-  uint8_t num_religions = 10;
+  uint8_t num_religions = MAXRELIGIONS;
+  uint8_t i = 0;
+  while (i < num_religions) {
+    uint8_t color_id = GetRandomValue(0, 10);
+    //chance to be polytheistic
+    uint8_t chance = GetRandomValue(0, 100);
+    if (chance < 80) {
+      Religion r(i, generateReligionName(), color_id, true);
+      uint8_t num_gods = GetRandomValue(4, 15);
+      uint8_t j = 0;
+      while (j < num_gods) {
+        God g(j, generateGodName(), i);
+        r.add_god(g);
+        j++;
+      }
+      w->addReligion(r);
+      i++;
+      continue;
+    }
+    Religion r(i, generateReligionName(), color_id, false);
+    God g(0, generateGodName(), i);
+    r.add_god(g);
+    w->addReligion(r);
+    i++;
+  }
 }
 
 void generate_countries(World* w) {
@@ -266,7 +290,8 @@ void generate_countries(World* w) {
     vector<uint> provinces;
 
     if (p->get_type() != type_province::sea && p->get_type() != type_province::coastal_sea && p->get_type() != type_province::deep_sea && p->get_country_owner_id() == -1) {
-      Country c(i, generateCountryName());
+      uint8_t religion_id = GetRandomValue(0, MAXRELIGIONS - 1);
+      Country c(i, generateCountryName(), religion_id);
       p->set_country_owner_id(i);
       c.set_color_id(color_id);
       c.add_province(p);
@@ -314,8 +339,8 @@ void generate_countries(World* w) {
 }
 
 void populate_world(World* w) {
-  generate_countries(w);
   generate_religions(w);
+  generate_countries(w);
 }
 
 float** setup(int rows, int cols, float frequency, int seed, int octaves) {
@@ -329,6 +354,7 @@ float** setup(int rows, int cols, float frequency, int seed, int octaves) {
   int index = 0;
   for (int row = 0; row < rows; row++) {
     for (int col = 0; col < cols; col++) {
+      //make boundaries ocean
       tiles[ row ][ col ] = noiseData[ index++ ];
     }
   }

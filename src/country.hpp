@@ -20,16 +20,18 @@ class Country
   uint id;
   string name;
   uint color_id;
+  uint8_t religion_id;
   bool is_player = false;
   float money;
 
 public:
 
   Country() {};
-  Country(uint id, string name)
+  Country(uint id, string name, uint8_t religion_id)
   {
     this->id = id;
     this->name = name;
+    this->religion_id = religion_id;
   }
   ~Country() {};
   uint get_id();

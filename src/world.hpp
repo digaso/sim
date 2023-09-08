@@ -40,6 +40,7 @@ public:
   void printCountries();
   void setupWorld();
   void addGood(Good g);
+  void addReligion(Religion r);
   Good* getGoodById(uint id);
   bool* getGoodMapById(uint id) {
     return this->goods.at(id).get_map();
@@ -75,5 +76,8 @@ public:
     return this->goods;
   }
   void printProvinces();
-  vector<Province*> get_path_between_provinces(uint start, uint end);
+  void printCharacters();
+  void printReligions();
+  Religion* getReligionById(uint id);
+  vector<Province*> get_path_between_provinces(uint start_id, uint end_id);
 };

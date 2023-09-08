@@ -22,7 +22,7 @@ void print_memory_usage() {
 int main() {
 
   uint cols = NUM_CHUNKS * CHUNKSIZE;
-  uint rows = NUM_CHUNKS / 1.5 * CHUNKSIZE;
+  uint rows = NUM_CHUNKS * CHUNKSIZE;
   World w(1, 1, 1166, cols, rows);
   cout << w.get_num_rows() << endl;
   cout << w.get_num_cols() << endl;
