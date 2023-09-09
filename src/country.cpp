@@ -8,10 +8,6 @@ void Country::add_province(Province* p) {
   this->num_provinces++;
 }
 
-void Country::add_character(character c) {
-  this->characters.push_back(c);
-}
-
 
 string Country::get_name() {
   return this->name;
@@ -56,27 +52,15 @@ vector<uint> Country::get_provinces() {
   return this->provinces;
 }
 
-vector<character> Country::get_characters() {
-  return this->characters;
-}
-
 void Country::print_characters() {
-  if (this->characters.size() == 0) {
-    cout << "No characters" << endl;
-    return;
-  }
-  for (auto row : this->characters) {
-    cout << row.get_name() << endl;
-  }
-}
 
+}
 
 void Country::print_provinces() {
   if (this->num_provinces == 0) {
     cout << "No provinces" << endl;
     return;
   }
-
 
   for (uint i = 0; i < this->num_provinces; i++) {
     cout << this->provinces[ i ] << endl;

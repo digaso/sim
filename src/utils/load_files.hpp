@@ -63,7 +63,7 @@ void load_characters(World* world_sim) {
   for (auto row : characters) {
     string country_abrev = row[ "country" ];
     Country* country_living = world_sim->getCountryByAbrev(country_abrev);
-    character c(i++, row[ "name" ], row[ "birthdate" ], country_living);
+    Character c(i++, row[ "name" ], row[ "birthdate" ], country_living);
     world_sim->addCharacter(c);
   }
   cout << "Characters loaded" << endl;

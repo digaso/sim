@@ -8,7 +8,7 @@
 using namespace std;
 
 
-class character;
+class Character;
 class Province;
 
 class Country
@@ -16,7 +16,8 @@ class Country
   uint num_provinces = 0;
   vector<uint> provinces;
   uint capital_id;
-  vector<character> characters;
+  vector<uint> characters;
+  uint king_id;
   uint id;
   string name;
   uint color_id;
@@ -40,8 +41,8 @@ public:
   string print();
   void add_province(Province* p);
   void remove_province(Province* p);
-  void add_character(character c);
-  void remove_character(character c);
+  void add_character(Character c);
+  void remove_character(Character c);
   void print_characters();
   void print_provinces();
   void set_capital_id(uint id);
@@ -52,7 +53,7 @@ public:
   void set_player(bool is_player);
   bool player();
   vector<uint> get_provinces();
-  vector<character> get_characters();
+  vector<uint> get_characters();
   friend ostream& operator<<(ostream& os, const Country& c);
 };
 

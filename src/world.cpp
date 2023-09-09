@@ -126,13 +126,6 @@ void World::printCountries() {
   }
 }
 
-void World::addCharacter(character c) {
-  Country* ctry = c.get_country_living();
-  if (ctry != nullptr) {
-    ctry->add_character(c);
-  }
-}
-
 vector<Province*> World::get_path_between_provinces(uint start_id, uint end_id) {
   vector<Province*> path;
   vector<uint> visited;

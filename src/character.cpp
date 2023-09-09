@@ -1,33 +1,33 @@
 #include "character.hpp"
 
-character::character(uint id, string name, string birth_date, Country* country_living)
+Character::Character(uint id, string name, date birth_date, uint country_living)
 {
   this->id = id;
   this->name = name;
   this->birth_date = birth_date;
-  this->country_living = country_living;
+  this->country_living_id = country_living;
 }
 
-std::string character::get_name()
+string Character::get_name()
 {
   return this->name;
 }
 
-string character::get_birth_date()
+date Character::get_birth_date()
 {
   return this->birth_date;
 }
 
-character::~character()
+Character::~Character()
 {
 }
 
-Country* character::get_country_living()
+uint Character::get_country_living()
 {
-  return this->country_living;
+  return this->country_living_id;
 }
 
-ostream& operator<<(ostream& os, const character& c)
+ostream& operator<<(ostream& os, const Character& c)
 {
   os << c.name << " (" << c.birth_date << ")";
   return os;

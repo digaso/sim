@@ -23,7 +23,7 @@ private:
   date world_date;
   Province* provinces;
   vector<Country> countries;
-  vector<character> characters;
+  vector<Character> characters;
   vector<Religion> religions;
   vector<Good> goods;
 public:
@@ -36,7 +36,7 @@ public:
   void setDate(date d);
   void addProvince(Province p, uint x, uint y);
   void addCountry(Country c);
-  void addCharacter(character c);
+  void addCharacter(Character c);
   void printCountries();
   void setupWorld();
   void addGood(Good g);

@@ -256,13 +256,12 @@ void run(World* w) {
       political_map = !political_map;
     }
 
-    //hover mouse over provinces with tilesize and show text
-    Vector2 mouse_pos = GetMousePosition();
-    cout << mouse_pos.x << " " << mouse_pos.y << endl;
-    Vector2 mouse_pos_world = GetScreenToWorld2D(mouse_pos, camera);
-    cout << mouse_pos_world.x << " " << mouse_pos_world.y << endl;
-    int x = (int)mouse_pos_world.x / TILESIZE;
-    int y = (int)mouse_pos_world.y / TILESIZE;
+    //hover mouse over provinces with tilesize and show text, but caring about zoom
+    Vector2 mousePos = GetMousePosition();
+    mousePos = GetScreenToWorld2D(mousePos, camera);
+    int x = (int)mousePos.x / (TILESIZE * camera.zoom);
+    int y = (int)mousePos.y / (TILESIZE * camera.zoom);
+
     if (x >= 0 && x < w->get_num_cols() && y >= 0 && y < w->get_num_rows()) {
       Province* prov = w->getProvinceByCoords(x, y);
       string s = prov->get_name();

@@ -7,9 +7,9 @@
 #include "../world.hpp"
 #include "random"
 
-#define MAXCOUNTRIES 150
+#define MAXCOUNTRIES 250
 #define MAXRELIGIONS MAXCOUNTRIES / 2
-#define MAXPROVINCES 250
+#define MAXPROVINCES 100
 
 
 typedef struct province_properties {
@@ -253,24 +253,10 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
 
 
     w->setGoodMapById(g.get_id(), bmap);
-    //cout << g.get_name() << " " << count << endl;
   }
 
   maps.clear();
-  //int count = 0;
-  //for (int row = 0; row < rows; row++) {
-  //  for (int col = 0; col < cols; col++) {
-  //    Province* p = w->getProvinceById(row * cols + col);
-  //    if (p->get_goods().size() == 0)
-  //    {
-  //      count++;
-  //    }
-//
-  //  }
-  //}
-  //cout << "No goods: " << count << endl;
 }
-
 
 void generate_religions(World* w) {
   uint8_t num_religions = MAXRELIGIONS;
@@ -305,9 +291,9 @@ void generate_countries(World* w) {
   uint i = 0;
   while (i < num_countries) {
     //get random number between 0 and num_cols
-    uint x = GetRandomValue(0, w->get_num_cols() - 1);
+    uint x = GetRandomValue(0, w->get_num_cols() - 1) * 0.85;
     //get random number between 0 and num_rows
-    uint y = GetRandomValue(0, w->get_num_rows() - 1);
+    uint y = GetRandomValue(0, w->get_num_rows() - 1) * 0.85;
     Province* p = w->getProvinceByCoords(x, y);
     uint num_provinces = GetRandomValue(1, MAXPROVINCES);
     uint8_t color_id = GetRandomValue(0, 10);
