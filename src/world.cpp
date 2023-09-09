@@ -39,7 +39,7 @@ Good* World::getGoodById(uint id)
 Province* World::getProvinceByCoords(uint x, uint y)
 {
 
-  return &provinces[ (x * this->num_cols) + y ];
+  return &provinces[ (y * this->num_cols) + x ];
 }
 
 Province* World::getProvinceById(uint id)
@@ -147,6 +147,12 @@ Religion* World::getReligionById(uint id) {
     return &religions.at(id);
   }
   return nullptr;
+}
+
+void World::printReligions() {
+  for (auto row : this->religions) {
+    cout << row.print() << endl;
+  }
 }
 
 void World::addGood(Good g) {

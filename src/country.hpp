@@ -48,6 +48,7 @@ public:
   uint get_capital_id();
   void set_color_id(uint id);
   uint get_color_id();
+  uint8_t get_religion_id();
   void set_player(bool is_player);
   bool player();
   vector<uint> get_provinces();

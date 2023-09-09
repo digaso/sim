@@ -193,6 +193,7 @@ void run(World* w) {
   float vol = 0.001;
   SetMusicVolume(musics[ music_id ], vol);
   PlayMusicStream(musics[ music_id ]);
+  //w->printReligions();
   while (!WindowShouldClose()) {
     float mouseDelta = GetMouseWheelMove();
     UpdateMusicStream(musics[ music_id ]);
@@ -255,8 +256,35 @@ void run(World* w) {
       political_map = !political_map;
     }
 
-    //slider to music volume
-
+    //hover mouse over provinces with tilesize and show text
+    Vector2 mouse_pos = GetMousePosition();
+    cout << mouse_pos.x << " " << mouse_pos.y << endl;
+    Vector2 mouse_pos_world = GetScreenToWorld2D(mouse_pos, camera);
+    cout << mouse_pos_world.x << " " << mouse_pos_world.y << endl;
+    int x = (int)mouse_pos_world.x / TILESIZE;
+    int y = (int)mouse_pos_world.y / TILESIZE;
+    if (x >= 0 && x < w->get_num_cols() && y >= 0 && y < w->get_num_rows()) {
+      Province* prov = w->getProvinceByCoords(x, y);
+      string s = prov->get_name();
+      string s2 = "Goods: ";
+      for (auto& g : prov->get_goods()) {
+        s2 += w->getGoodById(g)->get_name() + ", ";
+      }
+      string CountryName = "Country: ";
+      if (prov->get_country_owner_id() != -1) {
+        CountryName += w->getCountryById(prov->get_country_owner_id())->get_name();
+      }
+      else {
+        CountryName += "No owner";
+      }
+      string s3 = "Type: " + Province::type_province_to_string(prov->get_type());
+      string s4 = "Position x: " + to_string(prov->get_x()) + " y: " + to_string(prov->get_y());
+      DrawText(s.c_str(), 10, 130, 20, BLACK);
+      DrawText(s2.c_str(), 10, 160, 20, BLACK);
+      DrawText(CountryName.c_str(), 10, 190, 20, BLACK);
+      DrawText(s3.c_str(), 10, 220, 20, BLACK);
+      DrawText(s4.c_str(), 10, 250, 20, BLACK);
+    }
     EndDrawing();
   }
   CloseAudioDevice();

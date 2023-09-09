@@ -129,7 +129,6 @@ province_properties get_province_type(float height, float moisture) {
 
 }
 
-
 province_properties* generate_map(World* w) {
   srand((unsigned)time(NULL));
   int random = rand();
@@ -150,8 +149,8 @@ province_properties* generate_map(World* w) {
       float height = tiles[ row ][ col ];
       float moisture_level = moisture[ row ][ col ];
       province_properties props = get_province_type(height, moisture_level);
-      prov_props[ row * cols + col ] = props;
-      Province p(id_count++, props.province_name, props.pop, col, row, height, props.type, moisture_level);
+      prov_props[ id_count ] = props;
+      Province p(id_count++, props.province_name, props.pop, row, col, height, props.type, moisture_level);
       w->addProvince(p, col, row);
     }
   }
@@ -201,11 +200,40 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
             bmap[ row * cols + col ] = true;
           }
           else if (map[ row ][ col ] > 0.5 - (1.0 / g.get_base_value()) && (p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)) {
-            if (g.get_name() == "Ivory" && p->get_type() == type_province::temperate_desert || p->get_type() == type_province::coastal_desert || p->get_type() == type_province::tropical) {
+            if (g.get_name() == "Ivory" && (p->get_type() == type_province::temperate_desert || p->get_type() == type_province::coastal_desert || p->get_type() == type_province::tropical)) {
               p->add_goods(g.get_id()); count++;
               bmap[ row * cols + col ] = true;
               continue;
-
+            }
+            if (g.get_type() == plantable && (p->get_type() == mountain || p->get_type() == bare || p->get_type() == taiga || p->get_type() == tundra))
+            {
+              uint8_t chance = GetRandomValue(0, 100);
+              if (chance < 50) {
+                continue;
+              }
+              p->add_goods(g.get_id()); count++;
+              bmap[ row * cols + col ] = true;
+              continue;
+            }
+            if (g.get_type() == plantable && (p->get_type() == grassland || p->get_type() == forest || p->get_type() == tropical || p->get_type() == tropical_forest))
+            {
+              uint8_t chance = GetRandomValue(0, 100);
+              if (chance < 30) {
+                continue;
+              }
+              p->add_goods(g.get_id()); count++;
+              bmap[ row * cols + col ] = true;
+              continue;
+            }
+            if (g.get_name() == "Stone" && (p->get_type() == grassland || p->get_type() == forest || p->get_type() == tropical || p->get_type() == tropical_forest))
+            {
+              uint8_t chance = GetRandomValue(0, 100);
+              if (chance < 60) {
+                continue;
+              }
+              p->add_goods(g.get_id()); count++;
+              bmap[ row * cols + col ] = true;
+              continue;
             }
             if (g.get_type() == type_good::mineral && (p->get_type() == type_province::mountain || p->get_type() == type_province::hill || p->get_type() == bare || p->get_type() == tundra || p->get_type() == taiga) && p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)
             {
@@ -216,10 +244,6 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
             {
               p->add_goods(g.get_id()); count++;
 
-              bmap[ row * cols + col ] = true;
-            }
-            if (g.get_type() == catchable && !g.is_maritime()) {
-              p->add_goods(g.get_id()); count++;
               bmap[ row * cols + col ] = true;
             }
           }
@@ -281,9 +305,9 @@ void generate_countries(World* w) {
   uint i = 0;
   while (i < num_countries) {
     //get random number between 0 and num_cols
-    uint y = GetRandomValue(0, w->get_num_cols() - 1);
+    uint x = GetRandomValue(0, w->get_num_cols() - 1);
     //get random number between 0 and num_rows
-    uint x = GetRandomValue(0, w->get_num_rows() - 1);
+    uint y = GetRandomValue(0, w->get_num_rows() - 1);
     Province* p = w->getProvinceByCoords(x, y);
     uint num_provinces = GetRandomValue(1, MAXPROVINCES);
     uint8_t color_id = GetRandomValue(0, 10);
