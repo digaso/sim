@@ -98,7 +98,6 @@ date Character::get_death_date()
   return this->death_date;
 }
 
-
 ostream& operator<<(ostream& os, const Character& c)
 {
   os << c.first_name << " " << c.last_name << " (" << c.birth_date << ")";

@@ -21,12 +21,12 @@ class Country
   uint id;
   string name;
   uint color_id;
-  uint8_t religion_id;
+  uint culture_id;
+  uint religion_id;
   bool is_player = false;
   float money;
 
 public:
-
   Country() {};
   Country(uint id, string name, uint8_t religion_id)
   {
@@ -54,11 +54,12 @@ public:
   float get_money();
   void set_color_id(uint id);
   uint get_color_id();
-  uint8_t get_religion_id();
+  uint get_religion_id();
+  uint get_culture_id();
+  void set_culture_id(uint id);
   void set_player(bool is_player);
   bool player();
   vector<uint> get_provinces();
   vector<uint> get_characters();
   friend ostream& operator<<(ostream& os, const Country& c);
 };
-

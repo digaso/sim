@@ -14,12 +14,13 @@ vector<string> words_beginning = { "Great", "Mighty","Holy Nation of", "Union of
 std::vector<std::string> syllables = {
     "al", "am", "an", "ar", "as", "ba", "bel", "ber", "bi", "bo", "br", "ca", "car", "ci", "co", "cor", "da",
     "di", "do", "dor", "fa", "fel", "fi", "fo", "gal", "go", "gu", "hor", "ja", "je", "ji", "jo", "la", "le",
-    "li", "lo", "lou", "ma", "mar", "mi", "mo", "mor", "na", "ne", "ni", "no", "nor", "o", "or", "pa", "pel",
+    "li", "lo", "lou", "ma", "mar", "mi", "mo", "mor", "na", "ne", "ni", "no", "nor", "ol", "or", "pa", "pel",
     "pe", "pi", "po", "por", "qua", "ra", "re", "ri", "ro", "ru", "sa", "se", "si", "so", "son", "ta", "te",
-    "ti", "to", "tor", "u", "va", "ve", "vi", "vo", "vu", "xa", "xe", "xi", "xo", "za", "ze", "zi", "zo", "guim", "os", "mu", "mum",
+    "ti", "to", "tor", "ul", "va", "ve", "vi", "vo", "vu", "xa", "xe", "xi", "xo", "za", "ze", "zi", "zo", "guim", "os", "mu", "mum",
     "mus", "tul", "tum", "tus", "bu", "bum", "bus", "dum", "dus", "fum", "fus", "gum", "gus", "hum", "hus", "jum", "jus", "kum", "kus",
     "lum", "lus", "mum", "mus", "num", "nus", "pum", "pus", "qum", "qus", "rum", "rus", "sum", "sus", "tum", "tus", "vum", "vus", "wum","wa","we",
     "jha", "ya", "ye", "yi", "yo", "yu", "za", "ze", "zi", "zo", "zu", "sha", "she", "shi", "sho", "shu", "cha", "che", "chi", "cho", "chu",
+    "tha", "the", "thi", "tho", "thu", "pha", "phe", "phi", "pho", "phu", "gha", "ghe", "ghi", "gho", "ghu", "kha", "khe", "khi", "kho", "khu",
 };
 
 // Generate a random number of syllables between minSyllables and maxSyllables
@@ -42,14 +43,15 @@ std::string generateWord(int minSyllables, int maxSyllables) {
   return word;
 }
 
+string generateCultureName(string city) {
+  string cultureName = city + "ian";
+  return cultureName;
+}
 
 string generateGodName() {
-  int numWords = 1;
-  std::string godName;
 
-  for (int i = 0; i < numWords; ++i) {
-    godName += generateWord(1, 3); // Generate word with 1 to 3 syllables
-  }
+  string godName = generateWord(1, 3); // Generate word with 1 to 3 syllables
+
 
   return godName;
 }
@@ -71,9 +73,9 @@ string generateReligionName() {
 std::string generateCountryName() {
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_int_distribution<> numWordsDist(1, 2); // Randomly select 1 or 2 words
-
-  int numWords = numWordsDist(gen);
+  std::uniform_int_distribution<> numWordsDist(0, 10); // Randomly select 1 or 2 words
+  int chance = numWordsDist(gen);
+  int numWords = 1 * (chance < 7) + 2 * (chance >= 7);
   std::string countryName;
 
   for (int i = 0; i < numWords; ++i) {

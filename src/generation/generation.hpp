@@ -7,7 +7,7 @@
 #include "../world.hpp"
 #include "random"
 
-#define MAXCOUNTRIES 250
+#define MAXCOUNTRIES 500
 #define MAXRELIGIONS MAXCOUNTRIES / 2
 #define MAXPROVINCES 100
 
@@ -283,7 +283,7 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
 }
 
 void generate_religions(World* w) {
-  uint8_t num_religions = MAXRELIGIONS;
+  uint num_religions = MAXRELIGIONS;
   uint8_t i = 0;
   while (i < num_religions) {
     uint8_t color_id = GetRandomValue(0, 10);
@@ -310,9 +310,30 @@ void generate_religions(World* w) {
   }
 }
 
+void generate_characters(World* w) {
+
+}
+
+
+void generate_culture(World* w, Country* c, uint* cultures_count) {
+
+  uint chance = GetRandomValue(0, 100);
+  if (chance < 2 && *cultures_count >5) {
+    uint random_culture = GetRandomValue(0, *cultures_count - 1);
+    c->set_culture_id(random_culture);
+  }
+  else {
+    Culture culture(generateCultureName(c->get_name()), *cultures_count++);
+    c->set_culture_id(culture.get_id());
+    w->addCulture(culture);
+
+  }
+}
+
 void generate_countries(World* w) {
   uint num_countries = MAXCOUNTRIES;
   uint i = 0;
+  uint cultures_count = 0;
   while (i < num_countries) {
     //get random number between 0 and num_cols
     uint x = GetRandomValue(0, w->get_num_cols() - 1) * 0.80;
@@ -326,6 +347,7 @@ void generate_countries(World* w) {
     if (p->get_type() != type_province::sea && p->get_type() != type_province::coastal_sea && p->get_type() != type_province::deep_sea && p->get_country_owner_id() == -1) {
       uint8_t religion_id = GetRandomValue(0, MAXRELIGIONS - 1);
       Country c(i, generateCountryName(), religion_id);
+      generate_culture(w, &c, &cultures_count);
       p->set_country_owner_id(i);
       c.set_color_id(color_id);
       c.add_province(p);
@@ -371,10 +393,6 @@ void generate_countries(World* w) {
 
   }
 }
-
-void generate_characters(World* w) {}
-
-void generate_cultures(World* w) {}
 
 void populate_world(World* w) {
   generate_religions(w);

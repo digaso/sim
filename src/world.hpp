@@ -25,7 +25,7 @@ private:
   vector<Country> countries;
   vector<Character> characters;
   vector<Religion> religions;
-  vector<culture> cultures;
+  vector<Culture> cultures;
   vector<Good> goods;
 public:
   World(uint8_t day, uint8_t month, uint year, uint cols, uint rows);
@@ -42,6 +42,7 @@ public:
   void setupWorld();
   void addGood(Good g);
   void addReligion(Religion r);
+  void addCulture(Culture c);
   Good* getGoodById(uint id);
   bool* getGoodMapById(uint id) {
     return this->goods.at(id).get_map();

@@ -126,6 +126,14 @@ void World::printCountries() {
   }
 }
 
+void World::addCharacter(Character c) {
+  this->characters.push_back(c);
+}
+
+void World::addCulture(Culture c) {
+  this->cultures.push_back(c);
+}
+
 vector<Province*> World::get_path_between_provinces(uint start_id, uint end_id) {
   vector<Province*> path;
   vector<uint> visited;

@@ -68,8 +68,17 @@ float Country::get_money() {
   return this->money;
 }
 
-uint8_t Country::get_religion_id() {
+uint Country::get_religion_id() {
   return this->religion_id;
+}
+
+
+uint Country::get_culture_id() {
+  return this->culture_id;
+}
+
+void Country::set_culture_id(uint id) {
+  this->culture_id = id;
 }
 
 vector<uint> Country::get_provinces() {

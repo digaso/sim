@@ -23,7 +23,7 @@ int main() {
 
   uint cols = NUM_CHUNKS * CHUNKSIZE;
   uint rows = (NUM_CHUNKS * CHUNKSIZE) * 0.7;
-  World w(1, 1, 1166, cols, rows);
+  World w(1, 1, 822, cols, rows);
   cout << w.get_num_rows() << endl;
   cout << w.get_num_cols() << endl;
   run(&w);

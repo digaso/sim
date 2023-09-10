@@ -2,17 +2,25 @@
 #include <string>
 
 using namespace std;
-class culture
+class Culture
 {
 private:
   string name;
+  uint id;
 
 public:
 
-  culture(/* args */) {};
-  culture(string name) {
+  Culture(/* args */) {};
+  Culture(string name, uint id) {
     this->name = name;
+    this->id = id;
   };
-  ~culture() {};
+  string get_name() {
+    return this->name;
+  }
+  uint get_id() {
+    return this->id;
+  }
+  ~Culture() {};
 };
 
