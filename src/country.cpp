@@ -48,6 +48,30 @@ uint Country::get_color_id() {
   return this->color_id;
 }
 
+uint Country::get_num_provinces() {
+  return this->num_provinces;
+}
+
+void Country::set_king_id(uint id) {
+  this->king_id = id;
+}
+
+uint Country::get_king_id() {
+  return this->king_id;
+}
+
+void Country::set_money(float money) {
+  this->money = money;
+}
+
+float Country::get_money() {
+  return this->money;
+}
+
+uint8_t Country::get_religion_id() {
+  return this->religion_id;
+}
+
 vector<uint> Country::get_provinces() {
   return this->provinces;
 }

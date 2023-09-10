@@ -7,13 +7,21 @@ using namespace std;
 
 class Country;
 
+class CharacterTrait
+{
+private:
+  /* data */
+  string name;
+  string description;
+  uint8_t value;
+};
+
 class Character
 {
 protected:
   uint id;
   uint religion_id;
   uint culture_id;
-  uint dynasty_id;
   uint father_id;
   uint mother_id;
   uint spouse_id;
@@ -21,15 +29,33 @@ protected:
   uint country_born_id;
   uint province_born_id;
   uint province_living_id;
-  string name;
+  uint8_t military_skill;
+  uint8_t diplomacy_skill;
+  uint8_t economy_skill;
+  vector <CharacterTrait> traits;
+  string first_name;
+  string last_name;
   vector<uint> children;
   date birth_date;
   date death_date;
 public:
-  Character(uint id, std::string name, date birth_date, uint country_living);
+  Character(uint id, string first_name, string last_name, date birth_date, uint country_living);
   ~Character();
   string get_name();
   uint get_id();
+  uint get_religion();
+  uint get_culture();
+  uint get_father();
+  uint get_mother();
+  uint get_spouse();
+  uint get_province_living();
+  uint get_province_born();
+  uint8_t get_military_skill();
+  uint8_t get_diplomacy_skill();
+  uint8_t get_economy_skill();
+  vector <CharacterTrait> get_traits();
+  vector <uint> get_children();
+
   date get_birth_date();
   date get_death_date();
 

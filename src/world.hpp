@@ -25,6 +25,7 @@ private:
   vector<Country> countries;
   vector<Character> characters;
   vector<Religion> religions;
+  vector<culture> cultures;
   vector<Good> goods;
 public:
   World(uint8_t day, uint8_t month, uint year, uint cols, uint rows);
