@@ -5,11 +5,12 @@
 #include "FastNoiseLite.h"
 #include "../utils/wgen.hpp"
 #include "../world.hpp"
+#include "future"
 #include "random"
 
-#define MAXCOUNTRIES 500
-#define MAXRELIGIONS MAXCOUNTRIES / 2
-#define MAXPROVINCES 100
+#define MAXCOUNTRIES 250
+#define MAXRELIGIONS MAXCOUNTRIES / 3
+#define MAXPROVINCES 180
 
 
 typedef struct province_properties {
@@ -32,7 +33,7 @@ vector<float> _generate_noise(int rows, int cols, float frequency, int seed, int
   noise.SetFrequency(frequency);
   noise.SetFractalOctaves(octaves);
   noise.SetFractalLacunarity(2.0f);
-  noise.SetFractalGain(0.45f);
+  noise.SetFractalGain(0.47f);
   noise.SetFractalWeightedStrength(0.0f);
 
   vector<float> noiseData(rows * cols);
@@ -310,24 +311,28 @@ void generate_religions(World* w) {
   }
 }
 
-void generate_characters(World* w) {
+void generate_royalty(World* w, Country* c, Province* p) {
+  uint military = GetRandomValue(0, 20);
+  uint diplomacy = GetRandomValue(0, 20);
+  uint economy = GetRandomValue(0, 20);
+  uint religion_id = c->get_religion_id();
 
 }
-
 
 void generate_culture(World* w, Country* c, uint* cultures_count) {
 
   uint chance = GetRandomValue(0, 100);
-  if (chance < 2 && *cultures_count >5) {
-    uint random_culture = GetRandomValue(0, *cultures_count - 1);
-    c->set_culture_id(random_culture);
-  }
-  else {
-    Culture culture(generateCultureName(c->get_name()), *cultures_count++);
-    c->set_culture_id(culture.get_id());
-    w->addCulture(culture);
+  //if (chance < 5 && *cultures_count >5) {
+  //  uint random_culture = GetRandomValue(0, *cultures_count - 1);
+  //  c->set_culture_id(random_culture);
+  //  cout << "Culture " << random_culture << endl;
+  //  return;
+  //}
+  Culture culture(generateCultureName(c->get_name()), *cultures_count);
+  *cultures_count += 1;
+  c->set_culture_id(culture.get_id());
+  w->addCulture(culture);
 
-  }
 }
 
 void generate_countries(World* w) {
@@ -341,12 +346,13 @@ void generate_countries(World* w) {
     uint y = GetRandomValue(0, w->get_num_rows() - 1) * 0.80;
     Province* p = w->getProvinceByCoords(x, y);
     uint num_provinces = GetRandomValue(1, MAXPROVINCES);
-    uint8_t color_id = GetRandomValue(0, 10);
+    uint8_t color_id = GetRandomValue(0, 14);
     vector<uint> provinces;
 
     if (p->get_type() != type_province::sea && p->get_type() != type_province::coastal_sea && p->get_type() != type_province::deep_sea && p->get_country_owner_id() == -1) {
       uint8_t religion_id = GetRandomValue(0, MAXRELIGIONS - 1);
       Country c(i, generateCountryName(), religion_id);
+
       generate_culture(w, &c, &cultures_count);
       p->set_country_owner_id(i);
       c.set_color_id(color_id);
@@ -360,14 +366,14 @@ void generate_countries(World* w) {
           if (n->get_country_owner_id() == -1) {
             if (n->get_type() == grassland || n->get_type() == forest || n->get_type() == tropical || n->get_type() == tropical_forest) {
               uint8_t chance = GetRandomValue(0, 100);
-              if (chance < 30) {
+              if (chance < 15) {
                 continue;
               }
             }
             if (n->get_type() == hill || n->get_type() == mountain || n->get_type() == taiga || n->get_type() == tundra)
             {
               uint8_t chance = GetRandomValue(0, 100);
-              if (chance < 80) {
+              if (chance < 50) {
                 continue;
               }
             }
@@ -375,7 +381,7 @@ void generate_countries(World* w) {
             if (n->get_type() == desert || n->get_type() == bare)
             {
               uint8_t chance = GetRandomValue(0, 100);
-              if (chance < 80) {
+              if (chance < 55) {
                 continue;
               }
             }
@@ -395,8 +401,10 @@ void generate_countries(World* w) {
 }
 
 void populate_world(World* w) {
+  //auto fut = async(launch::async, generate_religions, w);
   generate_religions(w);
   generate_countries(w);
+  //fut.get();
 }
 
 float** setup(int rows, int cols, float frequency, int seed, int octaves) {

@@ -36,6 +36,7 @@ private:
   string name; //name of province
   uint y;
   uint x;
+  uint baron_id; //id of baron
   float height; //value between -1 and 1
   float moisture; //value between -1 and 1
   type_province type; //type of province
@@ -65,6 +66,8 @@ public:
   ~Province() {};
   string get_name();
   uint get_id();
+  uint get_baron_id();
+  void set_baron_id(uint id);
   int get_y();
   int get_x();
   type_province get_type();

@@ -4,6 +4,7 @@
 #include <vector>
 #include "character.hpp"
 #include "province.hpp"
+#include "agents/ai_character.hpp"
 
 using namespace std;
 
@@ -14,8 +15,8 @@ class Province;
 class Country
 {
   uint num_provinces = 0;
-  vector<uint> provinces;
   uint capital_id;
+  vector<uint> provinces;
   vector<uint> characters;
   uint king_id;
   uint id;
@@ -25,7 +26,6 @@ class Country
   uint religion_id;
   bool is_player = false;
   float money;
-
 public:
   Country() {};
   Country(uint id, string name, uint8_t religion_id)
@@ -33,7 +33,7 @@ public:
     this->id = id;
     this->name = name;
     this->religion_id = religion_id;
-  }
+  };
   ~Country() {};
   uint get_id();
   string get_name();

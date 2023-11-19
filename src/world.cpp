@@ -1,4 +1,5 @@
 #include "world.hpp"
+
 #include "economy/good.hpp"
 
 
@@ -98,19 +99,7 @@ vector<Province*> World::getLandNeighbours(Province* p)
   if (y < this->num_rows - 1 && this->getProvinceByCoords(x, y + 1)->get_type() != type_province::sea && this->getProvinceByCoords(x, y + 1)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x, y + 1)->get_type() != type_province::deep_sea) {
     neighbours.push_back(this->getProvinceByCoords(x, y + 1));
   }
-  //check diagonals
-  //if (x > 0 && y > 0 && this->getProvinceByCoords(x - 1, y - 1)->get_type() != type_province::sea && this->getProvinceByCoords(x - 1, y - 1)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x - 1, y - 1)->get_type() != type_province::deep_sea) {
-  //  neighbours.push_back(this->getProvinceByCoords(x - 1, y - 1));
-  //}
-  //if (x < this->num_cols - 1 && y > 0 && this->getProvinceByCoords(x + 1, y - 1)->get_type() != type_province::sea && this->getProvinceByCoords(x + 1, y - 1)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x + 1, y - 1)->get_type() != type_province::deep_sea) {
-  //  neighbours.push_back(this->getProvinceByCoords(x + 1, y - 1));
-  //}
-  //if (x > 0 && y < this->num_rows - 1 && this->getProvinceByCoords(x - 1, y + 1)->get_type() != type_province::sea && this->getProvinceByCoords(x - 1, y + 1)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x - 1, y + 1)->get_type() != type_province::deep_sea) {
-  //  neighbours.push_back(this->getProvinceByCoords(x - 1, y + 1));
-  //}
-  //if (x < this->num_cols - 1 && y < this->num_rows - 1 && this->getProvinceByCoords(x + 1, y + 1)->get_type() != type_province::sea && this->getProvinceByCoords(x + 1, y + 1)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x + 1, y + 1)->get_type() != type_province::deep_sea) {
-  //  neighbours.push_back(this->getProvinceByCoords(x + 1, y + 1));
-  //}
+
   return neighbours;
 }
 

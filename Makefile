@@ -1,5 +1,5 @@
-sim: ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/culture.o ./out/population.o ./out/province.o ./out/world.o ./out/date.o ./out/good.o
-		g++ -g  -Wall ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/culture.o ./out/population.o ./out/province.o ./out/world.o ./out/date.o ./out/good.o -o sim -lraylib -lGL -lm  -DRAUDIO_STANDALONE -DSUPPORT_FILEFORMAT_WAV -DSUPPORT_FILEFORMAT_OGG -lpthread -ldl -lrt -lX11 -DRAYGUI_IMPLEMENTATION -O2
+sim: ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/culture.o ./out/population.o ./out/province.o ./out/world.o ./out/date.o ./out/good.o ./out/ai_character.o
+		g++ -g -std=c++20 -Wall ./out/ai_character.o ./out/main.o ./out/building.o  ./out/country.o ./out/culture.o ./out/population.o ./out/character.o ./out/province.o ./out/world.o ./out/date.o ./out/good.o  -o sim -lraylib -lGL -lm  -DRAUDIO_STANDALONE -DSUPPORT_FILEFORMAT_WAV -DSUPPORT_FILEFORMAT_OGG -lpthread -ldl -lrt -lX11 -DRAYGUI_IMPLEMENTATION -O2
 
 ./out/main.o: main.cpp
 	g++ -g -Wall -c main.cpp -o ./out/main.o -O2
@@ -28,8 +28,11 @@ sim: ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/cultu
 ./out/date.o: ./src/utils/date.cpp
 	g++ -Wall -g -c ./src/utils/date.cpp -o ./out/date.o	-O2
 
-./out/good.o:
+./out/good.o: ./src/economy/good.cpp
 	g++ -Wall -g -c ./src/economy/good.cpp -o ./out/good.o	-O2
+
+./out/ai_character.o:
+	g++ -Wall -g -c ./src/agents/ai_character.cpp -o ./out/ai_character.o -O2
 
 clean:
 	rm -f ./out/*.o sim

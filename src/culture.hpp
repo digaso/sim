@@ -2,11 +2,22 @@
 #include <string>
 
 using namespace std;
+
+class CultureTrait
+{
+private:
+  /* data */
+public:
+  CultureTrait(/* args */) {};
+  ~CultureTrait() {};
+};
+
 class Culture
 {
 private:
   string name;
   uint id;
+  //vector<CultureTrait> traits;
 
 public:
 

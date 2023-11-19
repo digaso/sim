@@ -4,9 +4,12 @@
 #include <fstream>
 #include <string>
 #include "src/world.hpp"
-//#include "src/graphics/window.hpp"
 #include "src/graphics/raytest.hpp"
-#define NUM_CHUNKS 7
+#define INITIAL_YEAR 822
+#define INITIAL_MONTH 1
+#define INITIAL_DAY 1
+#define NUM_CHUNKS 5
+
 using namespace std;
 
 void print_memory_usage() {
@@ -23,9 +26,7 @@ int main() {
 
   uint cols = NUM_CHUNKS * CHUNKSIZE;
   uint rows = (NUM_CHUNKS * CHUNKSIZE) * 0.7;
-  World w(1, 1, 822, cols, rows);
-  cout << w.get_num_rows() << endl;
-  cout << w.get_num_cols() << endl;
+  World w(INITIAL_DAY, INITIAL_MONTH, INITIAL_YEAR, cols, rows);
   run(&w);
 
   print_memory_usage();
