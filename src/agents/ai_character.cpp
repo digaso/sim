@@ -1,19 +1,21 @@
 #include "ai_character.hpp"
-#include "../world.hpp"
 
-uint AI_Character::id_counter = 0;
 
-AI_Character::AI_Character()
+AI_Character::AI_Character(uint id, Character* c)
 {
-  id = id_counter++;
+  this->id = id;
+  this->c = c;
 }
+
+AI_Character::AI_Character() {}
+
 AI_Character::~AI_Character()
 {
 }
 
-void AI_Character::update(World* world)
+void AI_Character::update(World* w)
 {
-  this->world = world;
+
 
 }
 

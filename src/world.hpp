@@ -18,6 +18,7 @@ using namespace std;
 class Good;
 class AI_Character;
 class Character;
+class Country;
 class World
 {
 private:
@@ -49,6 +50,8 @@ public:
   void addGood(Good g);
   void addReligion(Religion r);
   void addCulture(Culture c);
+  void addAIAgent(AI_Character aic);
+  uint get_characters_size();
   Good* getGoodById(uint id);
   bool* getGoodMapById(uint id) { return this->goods.at(id).get_map(); }
   void setGoodMapById(uint id, bool* map) { this->goods.at(id).set_map(map); }

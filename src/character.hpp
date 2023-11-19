@@ -2,21 +2,25 @@
 #include <string>
 #include "country.hpp"
 #include "utils/date.hpp"
+#include "agents/ai_character.hpp"
 
 using namespace std;
 
 class Country;
+class World;
+class AI_Character;
 
 class Character
 {
 protected:
-  bool ruling = false;
+  bool man;
   uint id;
   uint religion_id;
   uint culture_id;
-  uint father_id;
-  uint mother_id;
-  uint spouse_id;
+  int father_id;
+  int mother_id;
+  int spouse_id;
+  int country_ruling;
   uint country_living_id;
   uint country_born_id;
   uint province_born_id;
@@ -29,8 +33,9 @@ protected:
   vector<uint> children;
   date birth_date;
   date death_date;
+  uint ai_agent;
 public:
-  Character(uint id, string first_name, string last_name, date birth_date, uint country_living, uint military_skill, uint diplomacy_skill, uint economy_skill, uint religion_id, uint culture_id, uint father_id, uint mother_id, uint spouse_id, uint province_born_id, uint province_living_id);
+  Character(uint id, string first_name, string last_name, date birth_date, uint country_living, uint military_skill, uint diplomacy_skill, uint economy_skill, uint religion_id, uint culture_id, int father_id, int mother_id, int spouse_id, uint province_born_id, uint province_living_id, bool ruling, bool man, World* w, int country_ruling);
   ~Character();
   string get_name();
   uint get_id();

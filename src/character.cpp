@@ -1,7 +1,8 @@
 
 #include "character.hpp"
+#include "agents/ai_character.hpp"
 
-Character::Character(uint id, string first_name, string last_name, date birth_date, uint country_living, uint military_skill, uint diplomacy_skill, uint economy_skill, uint religion_id, uint culture_id, uint father_id, uint mother_id, uint spouse_id, uint province_born_id, uint province_living_id)
+Character::Character(uint id, string first_name, string last_name, date birth_date, uint country_living, uint military_skill, uint diplomacy_skill, uint economy_skill, uint religion_id, uint culture_id, int father_id, int mother_id, int spouse_id, uint province_born_id, uint province_living_id, bool ruling, bool man, World* w, int country_ruling)
 {
   this->id = id;
   this->first_name = first_name;
@@ -18,6 +19,11 @@ Character::Character(uint id, string first_name, string last_name, date birth_da
   this->spouse_id = spouse_id;
   this->province_born_id = province_born_id;
   this->province_living_id = province_living_id;
+  this->man = man;
+  this->country_ruling = country_ruling;
+  this->ai_agent = id;
+  AI_Character aic(id, this);
+  w->addAIAgent(aic);
 }
 
 

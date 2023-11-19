@@ -18,6 +18,11 @@ World::~World()
 {
 }
 
+void World::addAIAgent(AI_Character aic) {
+
+  this->agents.push_back(aic);
+}
+
 const string World::to_string() const
 {
   ostringstream os;
@@ -35,6 +40,12 @@ Good* World::getGoodById(uint id)
     return &goods.at(id);
   }
   return nullptr;
+}
+
+
+uint World::get_characters_size() {
+
+  return this->characters.size();
 }
 
 Province* World::getProvinceByCoords(uint x, uint y)

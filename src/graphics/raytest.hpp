@@ -81,8 +81,8 @@ Texture2D renderGeographicalMap(World* w, province_properties* p) {
   }
   Image img = {
     .data = pixels,
-    .width = w->get_num_cols(),
-    .height = w->get_num_rows(),
+    .width = int(w->get_num_cols()),
+    .height = int(w->get_num_rows()),
     .mipmaps = 1,
     .format = 7
   };
@@ -331,7 +331,7 @@ void run(World* w) {
       int y = (int)mousePos.y / (TILESIZE * camera.zoom);
       Province* prov;
       string s, s2, CountryName, s3, s4;
-      if (IsMouseButtonPressed(0)) {
+      if (IsMouseButtonPressed(0) || show == true) {
         if (x >= 0 && x < w->get_num_cols() && y >= 0 && y < w->get_num_rows()) {
           show = true;
           prov = w->getProvinceByCoords(x, y);
@@ -341,19 +341,18 @@ void run(World* w) {
             s2 += w->getGoodById(g)->get_name() + ", ";
           }
           string CountryName = "Country: ";
+          string kingName = "King Name:";
           if (prov->get_country_owner_id() != -1) {
-            CountryName += w->getCountryById(prov->get_country_owner_id())->get_name();
+            Country* c = w->getCountryById(prov->get_country_owner_id());
+            CountryName += c->get_name();
+            kingName += c->get_king_id();
           }
           else {
             CountryName += "No owner";
           }
+
           string s3 = "Type: " + Province::type_province_to_string(prov->get_type());
           string s4 = "Position x: " + to_string(prov->get_x()) + " y: " + to_string(prov->get_y());
-
-
-        }
-        else if (show) {
-
           GuiPanel(Rectangle{ 10, 130, 310, 300 }, s.c_str());
           GuiLabel(Rectangle{ 15, 150, 310, 20 }, s2.c_str());
           GuiLabel(Rectangle{ 15, 170, 310, 20 }, CountryName.c_str());

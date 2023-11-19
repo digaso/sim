@@ -312,22 +312,64 @@ void generate_religions(World* w) {
 }
 
 void generate_royalty(World* w, Country* c, Province* p) {
+  //generate king
   uint military = GetRandomValue(0, 20);
   uint diplomacy = GetRandomValue(0, 20);
   uint economy = GetRandomValue(0, 20);
   uint religion_id = c->get_religion_id();
+  string firstName = generateWord(1, 3);
+  string lastName = generateWord(2, 4);
+  uint age = GetRandomValue(25, 40);
+  uint year = 822 - age;
+  uint month = GetRandomValue(1, 12);
+  uint day = GetRandomValue(1, 28);
+  date birth_date = date(day, month, year);
+  uint country_living = c->get_id();
+  uint culture_id = c->get_culture_id();
+  uint father_id = -1;
+  uint mother_id = -1;
+  uint spouse_id;
+  uint country_ruling = c->get_id();
+  bool man = true;
+  uint province_born = p->get_id();
+  uint province_living = p->get_id();
+  uint id = w->get_characters_size();
+
+
+  //generate queen
+  uint wife_military = GetRandomValue(0, 20);
+  uint wife_diplomacy = GetRandomValue(0, 20);
+  uint wife_economy = GetRandomValue(0, 20);
+  string wife_firstName = generateWord(1, 3);
+  string wife_lastName = generateWord(2, 4);
+  uint wife_age = GetRandomValue(25, 40);
+  uint wife_year = 822 - age;
+  uint wife_month = GetRandomValue(1, 12);
+  uint wife_day = GetRandomValue(1, 28);
+  date wife_birth_date = date(day, month, year);
+  uint wife_spouse_id = id;
+  uint wife_id = id + 1;
+  spouse_id = wife_id;
+  uint wife_country_ruling = -1;
+  bool wife_man = false;
+
+  Character king(id, firstName, lastName, birth_date, country_living, military, diplomacy, economy, religion_id, culture_id, father_id, mother_id, spouse_id, province_born, province_living, true, man, w, country_ruling);
+  Character queen(wife_id, wife_firstName, wife_lastName, wife_birth_date, country_living, wife_military, wife_diplomacy, wife_economy, religion_id, culture_id, father_id, mother_id, wife_spouse_id, province_born, province_living, false, wife_man, w, wife_country_ruling);
+  w->addCharacter(king);
+  w->addCharacter(queen);
+  c->set_king_id(id);
 
 }
 
 void generate_culture(World* w, Country* c, uint* cultures_count) {
 
   uint chance = GetRandomValue(0, 100);
-  //if (chance < 5 && *cultures_count >5) {
-  //  uint random_culture = GetRandomValue(0, *cultures_count - 1);
-  //  c->set_culture_id(random_culture);
-  //  cout << "Culture " << random_culture << endl;
-  //  return;
-  //}
+  if (chance < 5 && *cultures_count >5) {
+    uint random_culture = GetRandomValue(0, *cultures_count - 1);
+    c->set_culture_id(random_culture);
+    cout << "Culture " << random_culture << endl;
+    return;
+  }
   Culture culture(generateCultureName(c->get_name()), *cultures_count);
   *cultures_count += 1;
   c->set_culture_id(culture.get_id());
@@ -345,7 +387,7 @@ void generate_countries(World* w) {
     //get random number between 0 and num_rows
     uint y = GetRandomValue(0, w->get_num_rows() - 1) * 0.80;
     Province* p = w->getProvinceByCoords(x, y);
-    uint num_provinces = GetRandomValue(1, MAXPROVINCES);
+    uint num_provinces = GetRandomValue(10, MAXPROVINCES);
     uint8_t color_id = GetRandomValue(0, 14);
     vector<uint> provinces;
 
@@ -359,6 +401,7 @@ void generate_countries(World* w) {
       c.add_province(p);
       c.set_capital_id(p->get_id());
       provinces.push_back(p->get_id());
+      generate_royalty(w, &c, p);
       for (uint8_t j = 0; j < num_provinces - 1; j++) {
         p = w->getProvinceById(provinces.at(GetRandomValue(0, provinces.size() - 1)));
         vector<Province*> neighbours = w->getLandNeighbours(p);
@@ -401,10 +444,9 @@ void generate_countries(World* w) {
 }
 
 void populate_world(World* w) {
-  //auto fut = async(launch::async, generate_religions, w);
-  generate_religions(w);
+  auto fut = async(launch::async, generate_religions, w);
   generate_countries(w);
-  //fut.get();
+  fut.get();
 }
 
 float** setup(int rows, int cols, float frequency, int seed, int octaves) {

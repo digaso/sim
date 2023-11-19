@@ -2,11 +2,15 @@
 #include "../world.hpp"
 
 class Character;
+class World;
+class Country;
 
 class AI_Character
 {
+protected:
   int id;
 public:
+  AI_Character(uint id, Character* c);
   AI_Character();
   ~AI_Character();
   const std::string to_string() const;
@@ -15,8 +19,7 @@ public:
   void makeMilitaryDecision(Country* country, World* world);
   void makeSocialDecision(World* w);
   void makeCountryDecision(World* w);
-  void update(World* world);
+  void update(World* w);
 private:
-  static uint id_counter;
-  World* world;
+  Character* c;
 };
