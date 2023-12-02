@@ -1,15 +1,12 @@
 
-<<<<<<< HEAD
 #include "character.hpp"
 #include "agents/ai_character.hpp"
 
 Character::Character(uint id, string first_name, string last_name, date birth_date, uint country_living, uint military_skill, uint diplomacy_skill, uint economy_skill, uint religion_id, uint culture_id, int father_id, int mother_id, int spouse_id, uint province_born_id, uint province_living_id, bool ruling, bool man, World* w, int country_ruling)
-=======
-Character::Character(uint id, string name, date birth_date, uint country_living)
->>>>>>> parent of 8bb1725 (added UI to see info and started character generation)
 {
   this->id = id;
-  this->name = name;
+  this->first_name = first_name;
+  this->last_name = last_name;
   this->birth_date = birth_date;
   this->country_living_id = country_living;
   this->military_skill = military_skill;
@@ -32,7 +29,7 @@ Character::Character(uint id, string name, date birth_date, uint country_living)
 
 string Character::get_name()
 {
-  return this->name;
+  return this->first_name + " " + this->last_name;
 }
 
 date Character::get_birth_date()
@@ -49,7 +46,6 @@ uint Character::get_country_living()
   return this->country_living_id;
 }
 
-<<<<<<< HEAD
 uint Character::get_id()
 {
   return this->id;
@@ -116,10 +112,8 @@ date Character::get_death_date()
   return this->death_date;
 }
 
-=======
->>>>>>> parent of 8bb1725 (added UI to see info and started character generation)
 ostream& operator<<(ostream& os, const Character& c)
 {
-  os << c.name << " (" << c.birth_date << ")";
+  os << c.first_name << " " << c.last_name << " (" << c.birth_date << ")";
   return os;
 }

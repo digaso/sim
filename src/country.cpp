@@ -48,7 +48,6 @@ uint Country::get_color_id() {
   return this->color_id;
 }
 
-<<<<<<< HEAD
 uint Country::get_num_provinces() {
   return this->num_provinces;
 }
@@ -82,8 +81,6 @@ void Country::set_culture_id(uint id) {
   this->culture_id = id;
 }
 
-=======
->>>>>>> parent of 8bb1725 (added UI to see info and started character generation)
 vector<uint> Country::get_provinces() {
   return this->provinces;
 }

@@ -47,6 +47,11 @@ public:
   void print_provinces();
   void set_capital_id(uint id);
   uint get_capital_id();
+  uint get_num_provinces();
+  void set_king_id(uint id);
+  uint get_king_id();
+  void set_money(float money);
+  float get_money();
   void set_color_id(uint id);
   uint get_color_id();
   uint get_religion_id();
