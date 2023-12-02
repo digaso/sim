@@ -33,7 +33,11 @@ vector<float> _generate_noise(int rows, int cols, float frequency, int seed, int
   noise.SetFrequency(frequency);
   noise.SetFractalOctaves(octaves);
   noise.SetFractalLacunarity(2.0f);
+<<<<<<< HEAD
   noise.SetFractalGain(0.47f);
+=======
+  noise.SetFractalGain(0.5f);
+>>>>>>> parent of 8bb1725 (added UI to see info and started character generation)
   noise.SetFractalWeightedStrength(0.0f);
 
   vector<float> noiseData(rows * cols);
@@ -83,10 +87,6 @@ province_properties get_province_type(float height, float moisture) {
     if (moisture < -0.4) {
       color = 9;
       type = desert;
-    }
-    else if (moisture < -0.22) {
-      color = 10;
-      type = temperate_desert;
     }
     else if (moisture < 0.2) {
       color = 5;
@@ -138,7 +138,7 @@ province_properties* generate_map(World* w) {
   srand((unsigned)time(NULL));
   int random = rand();
   int seed = random % 100000;
-  float frequency = 0.015f;
+  float frequency = 0.011f;
   int octaves = 7;
   int cols = w->get_num_cols();
   int rows = w->get_num_rows();
@@ -205,44 +205,25 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
             bmap[ row * cols + col ] = true;
           }
           else if (map[ row ][ col ] > 0.5 - (1.0 / g.get_base_value()) && (p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)) {
-            if (g.get_name() == "Camels" && (p->get_type() == desert || p->get_type() == coastal_desert || p->get_type() == temperate_desert || p->get_type() == bare)) {
-              uint chance = GetRandomValue(0, 100);
-              if (chance < 30) {
-                continue;
-              }
-              p->add_goods(g.get_id()); count++;
-              bmap[ row * cols + col ] = true;
-              continue;
-            }
             if (g.get_name() == "Ivory" && (p->get_type() == type_province::temperate_desert || p->get_type() == type_province::coastal_desert || p->get_type() == type_province::tropical)) {
               p->add_goods(g.get_id()); count++;
               bmap[ row * cols + col ] = true;
               continue;
             }
-            if (g.get_type() == plantable && (p->get_type() == type_province::desert || p->get_type() == type_province::bare))
+            if (g.get_type() == plantable && (p->get_type() == mountain || p->get_type() == bare || p->get_type() == taiga || p->get_type() == tundra))
             {
               uint8_t chance = GetRandomValue(0, 100);
-              if (chance < 60) {
+              if (chance < 50) {
                 continue;
               }
               p->add_goods(g.get_id()); count++;
               bmap[ row * cols + col ] = true;
               continue;
             }
-            if (g.get_type() == plantable && (p->get_type() == mountain || p->get_type() == coastal_desert || p->get_type() == taiga || p->get_type() == tundra))
+            if (g.get_type() == plantable && (p->get_type() == grassland || p->get_type() == forest || p->get_type() == tropical || p->get_type() == tropical_forest))
             {
               uint8_t chance = GetRandomValue(0, 100);
-              if (chance < 45) {
-                continue;
-              }
-              p->add_goods(g.get_id()); count++;
-              bmap[ row * cols + col ] = true;
-              continue;
-            }
-            if (g.get_type() == plantable && (p->get_type() == grassland || p->get_type() == forest || p->get_type() == tropical || p->get_type() == tropical_forest || p->get_type() == temperate_desert))
-            {
-              uint8_t chance = GetRandomValue(0, 100);
-              if (chance < 20) {
+              if (chance < 30) {
                 continue;
               }
               p->add_goods(g.get_id()); count++;
@@ -252,7 +233,7 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
             if (g.get_name() == "Stone" && (p->get_type() == grassland || p->get_type() == forest || p->get_type() == tropical || p->get_type() == tropical_forest))
             {
               uint8_t chance = GetRandomValue(0, 100);
-              if (chance < 50) {
+              if (chance < 60) {
                 continue;
               }
               p->add_goods(g.get_id()); count++;
@@ -264,8 +245,7 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
               p->add_goods(g.get_id()); count++;
               bmap[ row * cols + col ] = true;
 
-            }
-            if (g.get_type() == type_good::plantable && p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)
+            } if (g.get_type() == type_good::plantable && p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)
             {
               p->add_goods(g.get_id()); count++;
 
@@ -383,9 +363,9 @@ void generate_countries(World* w) {
   uint cultures_count = 0;
   while (i < num_countries) {
     //get random number between 0 and num_cols
-    uint x = GetRandomValue(0, w->get_num_cols() - 1) * 0.80;
+    uint x = GetRandomValue(0, w->get_num_cols() - 1) * 0.85;
     //get random number between 0 and num_rows
-    uint y = GetRandomValue(0, w->get_num_rows() - 1) * 0.80;
+    uint y = GetRandomValue(0, w->get_num_rows() - 1) * 0.85;
     Province* p = w->getProvinceByCoords(x, y);
     uint num_provinces = GetRandomValue(10, MAXPROVINCES);
     uint8_t color_id = GetRandomValue(0, 14);
@@ -460,7 +440,7 @@ float** setup(int rows, int cols, float frequency, int seed, int octaves) {
   int index = 0;
   for (int row = 0; row < rows; row++) {
     for (int col = 0; col < cols; col++) {
-      //make boundaries ocean smoothly
+      //make boundaries ocean
       tiles[ row ][ col ] = noiseData[ index++ ];
     }
   }

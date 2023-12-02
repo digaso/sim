@@ -63,7 +63,6 @@ void Good::set_goods(World* world)
   world->addGood(Good(26, "Tobacco", 3.5, plantable));
   world->addGood(Good(27, "Cocoa", 3.5, plantable));
   world->addGood(Good(28, "Ivory", 4.9, catchable));
-  world->addGood(Good(29, "Camels", 1.5, catchable));
 
 }
 

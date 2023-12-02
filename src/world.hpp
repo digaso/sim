@@ -30,7 +30,10 @@ private:
   vector<Country> countries;
   vector<Character> characters;
   vector<Religion> religions;
+<<<<<<< HEAD
   vector<Culture> cultures;
+=======
+>>>>>>> parent of 8bb1725 (added UI to see info and started character generation)
   vector<Good> goods;
   vector<AI_Character> agents;
 

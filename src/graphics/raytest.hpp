@@ -7,7 +7,7 @@
 #include "../generation/generation.hpp"
 #include <filesystem>
 
-#define TILESIZE 10
+#define TILESIZE 8
 #define CHUNKSIZE 64
 
 using namespace std;
@@ -22,7 +22,7 @@ Color Forest = { 30, 136, 117, 255 };
 Color Tropical = { 30, 255, 30, 255 };
 Color TropicalForest = { 0, 100, 0, 255 };
 Color Desert = { 253, 253, 150, 255 };
-Color TemperateDesert = { 220, 255, 130, 255 };
+Color TemperateDesert = { 200, 200, 0, 255 };
 Color Hill = { 96, 108, 129, 255 };
 Color Tundra = { 171, 219, 227, 255 };
 Color Bare = { 234, 182, 118, 255 };
@@ -228,7 +228,8 @@ Texture2D renderBordersMap(World* w) {
 void run(World* w) {
   InitWindow(1200, 800, "SIM");
   SetTargetFPS(60);
-  bool show = false;
+  SetTraceLogLevel(LOG_ERROR);
+  bool map_changed = false;
   bool goods_map = false;
   bool political_map = false;
   uint id_good = 0;
@@ -248,6 +249,7 @@ void run(World* w) {
   Vector2 prevMousePos = GetMousePosition();
   string path = "assets/songs";
   vector<Music> musics;
+  //remove ray printing info
   InitAudioDevice();
   for (const auto& entry : filesystem::directory_iterator(path)) {
     string s = entry.path().string();
@@ -324,49 +326,36 @@ void run(World* w) {
         political_map = !political_map;
       }
 
-      //mouse click over provinces with tilesize and show text, but caring about zoom
+      //hover mouse over provinces with tilesize and show text, but caring about zoom
       Vector2 mousePos = GetMousePosition();
       mousePos = GetScreenToWorld2D(mousePos, camera);
       int x = (int)mousePos.x / (TILESIZE * camera.zoom);
       int y = (int)mousePos.y / (TILESIZE * camera.zoom);
-      Province* prov;
-      string s, s2, CountryName, s3, s4;
-      if (IsMouseButtonPressed(0) || show == true) {
-        if (x >= 0 && x < w->get_num_cols() && y >= 0 && y < w->get_num_rows()) {
-          show = true;
-          prov = w->getProvinceByCoords(x, y);
-          s = prov->get_name();
-          s2 = "Goods: ";
-          for (auto& g : prov->get_goods()) {
-            s2 += w->getGoodById(g)->get_name() + ", ";
-          }
-          string CountryName = "Country: ";
-          string kingName = "King Name:";
-          if (prov->get_country_owner_id() != -1) {
-            Country* c = w->getCountryById(prov->get_country_owner_id());
-            CountryName += c->get_name();
-            kingName += c->get_king_id();
-          }
-          else {
-            CountryName += "No owner";
-          }
 
-          string s3 = "Type: " + Province::type_province_to_string(prov->get_type());
-          string s4 = "Position x: " + to_string(prov->get_x()) + " y: " + to_string(prov->get_y());
-          GuiPanel(Rectangle{ 10, 130, 310, 300 }, s.c_str());
-          GuiLabel(Rectangle{ 15, 150, 310, 20 }, s2.c_str());
-          GuiLabel(Rectangle{ 15, 170, 310, 20 }, CountryName.c_str());
-          GuiLabel(Rectangle{ 15, 190, 310, 20 }, s3.c_str());
-          GuiLabel(Rectangle{ 15, 210, 310, 20 }, s4.c_str());
+      if (x >= 0 && x < w->get_num_cols() && y >= 0 && y < w->get_num_rows()) {
+        Province* prov = w->getProvinceByCoords(x, y);
+        string s = prov->get_name();
+        string s2 = "Goods: ";
+        for (auto& g : prov->get_goods()) {
+          s2 += w->getGoodById(g)->get_name() + ", ";
+        }
+        string CountryName = "Country: ";
+        if (prov->get_country_owner_id() != -1) {
+          CountryName += w->getCountryById(prov->get_country_owner_id())->get_name();
         }
         else {
-          show = false;
+          CountryName += "No owner";
         }
-
+        string s3 = "Type: " + Province::type_province_to_string(prov->get_type());
+        string s4 = "Position x: " + to_string(prov->get_x()) + " y: " + to_string(prov->get_y());
+        DrawText(s.c_str(), 10, 130, 20, BLACK);
+        DrawText(s2.c_str(), 10, 160, 20, BLACK);
+        DrawText(CountryName.c_str(), 10, 190, 20, BLACK);
+        DrawText(s3.c_str(), 10, 220, 20, BLACK);
+        DrawText(s4.c_str(), 10, 250, 20, BLACK);
       }
+      EndDrawing();
     }
-    EndDrawing();
+    CloseAudioDevice();
+    CloseWindow();
   }
-  CloseAudioDevice();
-  CloseWindow();
-}
