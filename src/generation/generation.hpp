@@ -1,5 +1,6 @@
 #include <iostream>
 #include <random>
+#include <raylib.h>
 #include <vector>
 #include <list>
 #include "FastNoiseLite.h"
@@ -131,7 +132,6 @@ province_properties get_province_type(float height, float moisture) {
     province_name = generateCityName();
   }
   return { pop, province_name, type, color };
-
 }
 
 province_properties* generate_map(World* w) {
@@ -364,7 +364,7 @@ void generate_royalty(World* w, Country* c, Province* p) {
 void generate_culture(World* w, Country* c, uint* cultures_count) {
 
   uint chance = GetRandomValue(0, 100);
-  if (chance < 5 && *cultures_count >5) {
+  if (chance < 10 && *cultures_count >5) {
     uint random_culture = GetRandomValue(0, *cultures_count - 1);
     c->set_culture_id(random_culture);
     cout << "Culture " << random_culture << endl;
