@@ -1,13 +1,13 @@
 #include <raylib.h>
 #include <rlgl.h>
+#include <filesystem>
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 #include <raymath.h>
 #include "../world.hpp"
 #include "../generation/generation.hpp"
-#include <filesystem>
 
-#define TILESIZE 10
+#define TILESIZE 16
 #define CHUNKSIZE 64
 
 using namespace std;
@@ -367,6 +367,13 @@ void run(World* w) {
     }
     EndDrawing();
   }
+
+  UnloadTexture(Geomap);
+  UnloadTexture(map);
+  UnloadTexture(borders);
+  //for (uint i = 0; i < w->getGoods().size(); i++) {
+  //  UnloadTexture(texgoods[ i ]);
+  //}
   CloseAudioDevice();
   CloseWindow();
 }

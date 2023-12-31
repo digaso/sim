@@ -1,7 +1,5 @@
 #include "world.hpp"
 
-#include "economy/good.hpp"
-
 
 
 World::World(uint8_t day, uint8_t month, uint year, uint cols, uint rows)

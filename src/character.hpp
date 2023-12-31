@@ -52,6 +52,7 @@ public:
   vector <uint> get_children();
   date get_birth_date();
   date get_death_date();
+  string to_string();
 
   uint get_country_living();
 

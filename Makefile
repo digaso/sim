@@ -31,7 +31,7 @@ sim: ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/cultu
 ./out/good.o: ./src/economy/good.cpp
 	g++ -Wall -g -c ./src/economy/good.cpp -o ./out/good.o	-O2
 
-./out/ai_character.o:
+./out/ai_character.o: ./src/agents/ai_character.cpp
 	g++ -Wall -g -c ./src/agents/ai_character.cpp -o ./out/ai_character.o -O2
 
 clean:

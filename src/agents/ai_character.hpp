@@ -20,6 +20,8 @@ public:
   void makeSocialDecision(World* w);
   void makeCountryDecision(World* w);
   void update(World* w);
+  friend ostream& operator<<(ostream& os, const AI_Character& aic);
+
 private:
   Character* c;
 };

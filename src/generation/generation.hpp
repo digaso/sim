@@ -1,18 +1,18 @@
 #include <iostream>
 #include <random>
-#include <raylib.h>
 #include <vector>
 #include <list>
+#include "../world.hpp"
+#include <raylib.h>
 #include "FastNoiseLite.h"
 #include "../utils/wgen.hpp"
-#include "../world.hpp"
 #include "future"
 #include "random"
 
 #define MAXCOUNTRIES 250
-#define MAXRELIGIONS MAXCOUNTRIES / 3
-#define MAXPROVINCES 180
-
+#define MAXRELIGIONS MAXCOUNTRIES / 10
+#define MAXPROVINCES 290
+#define MINPROVINCES 30
 
 typedef struct province_properties {
   uint pop;
@@ -383,11 +383,11 @@ void generate_countries(World* w) {
   uint cultures_count = 0;
   while (i < num_countries) {
     //get random number between 0 and num_cols
-    uint x = GetRandomValue(0, w->get_num_cols() - 1) * 0.80;
+    uint x = GetRandomValue(64, w->get_num_cols() - 1 - 64);
     //get random number between 0 and num_rows
-    uint y = GetRandomValue(0, w->get_num_rows() - 1) * 0.80;
+    uint y = GetRandomValue(64, w->get_num_rows() - 1 - 64);
     Province* p = w->getProvinceByCoords(x, y);
-    uint num_provinces = GetRandomValue(10, MAXPROVINCES);
+    uint num_provinces = GetRandomValue(MINPROVINCES, MAXPROVINCES);
     uint8_t color_id = GetRandomValue(0, 14);
     vector<uint> provinces;
 
@@ -402,29 +402,27 @@ void generate_countries(World* w) {
       c.set_capital_id(p->get_id());
       provinces.push_back(p->get_id());
       generate_royalty(w, &c, p);
-      for (uint8_t j = 0; j < num_provinces - 1; j++) {
+      for (uint j = 0; j < num_provinces - 1; j++) {
         p = w->getProvinceById(provinces.at(GetRandomValue(0, provinces.size() - 1)));
         vector<Province*> neighbours = w->getLandNeighbours(p);
         for (auto n : neighbours) {
-          if (n->get_country_owner_id() == -1) {
+          if (n->get_country_owner_id() == -1 && n->get_type() != type_province::sea && n->get_type() != type_province::coastal_sea && n->get_type() != type_province::deep_sea) {
             if (n->get_type() == grassland || n->get_type() == forest || n->get_type() == tropical || n->get_type() == tropical_forest) {
               uint8_t chance = GetRandomValue(0, 100);
-              if (chance < 15) {
-                continue;
-              }
+              if (chance < 1) continue;
             }
-            if (n->get_type() == hill || n->get_type() == mountain || n->get_type() == taiga || n->get_type() == tundra)
-            {
+            if (n->get_type() == hill || n->get_type() == mountain || n->get_type() == taiga || n->get_type() == tundra) {
               uint8_t chance = GetRandomValue(0, 100);
-              if (chance < 50) {
-                continue;
-              }
-            }
+              if (chance < 5) {
 
-            if (n->get_type() == desert || n->get_type() == bare)
-            {
+                continue;
+
+              };
+            }
+            if (n->get_type() == desert || n->get_type() == bare) {
               uint8_t chance = GetRandomValue(0, 100);
-              if (chance < 55) {
+              if (chance < 10) {
+
                 continue;
               }
             }

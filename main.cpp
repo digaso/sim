@@ -5,10 +5,13 @@
 #include <string>
 #include "src/world.hpp"
 #include "src/graphics/raytest.hpp"
+#include "src/province.hpp"
+#include "src/country.hpp"
+
 #define INITIAL_YEAR 822
 #define INITIAL_MONTH 1
 #define INITIAL_DAY 1
-#define NUM_CHUNKS 5
+#define NUM_CHUNKS 7
 
 using namespace std;
 

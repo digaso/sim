@@ -3,9 +3,9 @@
 #include <vector>
 #include "utils/date.hpp"
 #include <utility>
-#include "country.hpp"
 #include <queue>
 #include <list>
+#include "country.hpp"
 #include "economy/trade_route.hpp"
 #include "economy/good.hpp"
 #include "religion.hpp"

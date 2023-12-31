@@ -1,4 +1,3 @@
-
 #include "character.hpp"
 #include "agents/ai_character.hpp"
 
@@ -114,6 +113,11 @@ date Character::get_death_date()
 
 ostream& operator<<(ostream& os, const Character& c)
 {
-  os << c.first_name << " " << c.last_name << " (" << c.birth_date << ")";
+  os << c.first_name << " " << c.last_name << " (" << c.birth_date << ")" << c.diplomacy_skill << " " << c.economy_skill << " " << c.military_skill << endl;
   return os;
+}
+
+string Character::to_string()
+{
+  return this->first_name + " " + this->last_name + " " + std::to_string(this->diplomacy_skill) + " " + std::to_string(this->economy_skill) + " " + std::to_string(this->military_skill);
 }
