@@ -11,6 +11,13 @@ enum type_good {
   manufactured,
 };
 
+enum class_good {
+  basic_need,
+  raw_material,
+  luxury,
+  military
+};
+
 class Province;
 class World;
 
@@ -21,15 +28,19 @@ private:
   string name;
   float base_value;
   type_good type;
+  class_good good_class;
   bool maritime = false;
   bool* map;
 public:
   void static set_goods(World* world);
   Good(/* args */);
-  Good(uint id, string name, float base_value, type_good type);
+  Good(uint id, string name, float base_value, type_good type, class_good good_class);
   ~Good();
   uint get_id();
   type_good get_type();
+
+
+
   bool is_maritime() {
     return maritime;
   }
