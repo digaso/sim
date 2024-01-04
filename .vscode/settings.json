@@ -53,5 +53,12 @@
     "typeinfo": "cpp",
     "filesystem": "cpp",
     "iomanip": "cpp"
-  }
+  },
+  "makefile.launchConfigurations": [
+    {
+      "cwd": "/home/digaso/dev/sim",
+      "binaryPath": "/home/digaso/dev/sim/sim",
+      "binaryArgs": []
+    }
+  ]
 }

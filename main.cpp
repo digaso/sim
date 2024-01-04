@@ -3,8 +3,8 @@
 #include <ios>
 #include <fstream>
 #include <string>
-#include "src/world.hpp"
 #include "src/graphics/raytest.hpp"
+#include "src/world.hpp"
 #include "src/province.hpp"
 #include "src/country.hpp"
 
@@ -26,7 +26,6 @@ void print_memory_usage() {
 }
 
 int main() {
-
   uint cols = NUM_CHUNKS * CHUNKSIZE;
   uint rows = (NUM_CHUNKS * CHUNKSIZE) * 0.7;
   World w(INITIAL_DAY, INITIAL_MONTH, INITIAL_YEAR, cols, rows);

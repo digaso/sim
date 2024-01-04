@@ -9,16 +9,20 @@
 #include "economy/trade_route.hpp"
 #include "economy/good.hpp"
 #include "religion.hpp"
+#include "building.hpp"
 #include "culture.hpp"
 #include "character.hpp"
 #include "agents/ai_character.hpp"
 
 using namespace std;
 
+class Building;
 class Good;
 class AI_Character;
 class Character;
 class Country;
+
+
 class World
 {
 private:
@@ -32,6 +36,7 @@ private:
   vector<Religion> religions;
   vector<Culture> cultures;
   vector<Good> goods;
+  vector<Building> buildings;
   vector<AI_Character> agents;
 
 public:
@@ -50,6 +55,7 @@ public:
   void addGood(Good g);
   void addReligion(Religion r);
   void addCulture(Culture c);
+  void addBuilding(Building b);
   void addAIAgent(AI_Character aic);
   uint get_characters_size();
   Good* getGoodById(uint id);
@@ -87,4 +93,10 @@ public:
   Religion* getReligionById(uint id);
   vector<Province*> get_path_between_provinces(uint start_id, uint end_id);
   const AI_Character& getAgentById(uint id) const;
+  void updateAgents();
+  void updateCharacters();
+  void updateCountries();
+  void updateProvinces();
+  void updateReligions();
+  void updateWorld();
 };

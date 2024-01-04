@@ -21,6 +21,10 @@ void World::addAIAgent(AI_Character aic) {
   this->agents.push_back(aic);
 }
 
+void World::addBuilding(Building b) {
+  this->buildings.push_back(b);
+}
+
 const string World::to_string() const
 {
   ostringstream os;
@@ -167,3 +171,12 @@ bool World::advanceDate() {
   return false;
 }
 
+void World::updateAgents() {
+  for (AI_Character agent : this->agents) {
+    agent.update(this);
+  }
+}
+
+void  World::updateWorld() {
+  updateAgents();
+}

@@ -12,14 +12,29 @@ AI_Character::AI_Character() {}
 AI_Character::~AI_Character() {}
 
 
-void AI_Character::makeDiplomacyDecision(Country*, World* world) {
+
+void AI_Character::makeCountryDecision(World* w) {
+  Country* country = w->getCountryById(this->c->get_country_living());
+  this->makeDiplomacyDecision(country, w);
+  this->makeTradeDecision(country, w);
+  this->makeMilitaryDecision(country, w);
 }
+
+void AI_Character::makeDiplomacyDecision(Country*, World* world) {
+
+}
+void AI_Character::makeMilitaryDecision(Country*, World* world) {}
 
 void AI_Character::makeTradeDecision(Country* country, World* world) {
 }
 
-void AI_Character::update(World* w) {
+void AI_Character::makeSocialDecision(World* world) {};
 
+void AI_Character::update(World* w) {
+  if (this->c->get_country_living() != -1) {
+    this->makeCountryDecision(w);
+  }
+  this->makeSocialDecision(w);
 }
 
 ostream& operator<<(ostream& os, const AI_Character& aic)

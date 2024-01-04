@@ -7,7 +7,7 @@
 #include "../world.hpp"
 #include "../generation/generation.hpp"
 
-#define TILESIZE 16
+#define TILESIZE 14
 #define CHUNKSIZE 64
 
 using namespace std;
@@ -48,7 +48,7 @@ Color* terrain_colors = new Color[ 16 ]{
   Mountain
 };
 
-Color* colors = new Color[ 14 ]{
+Color* colors = new Color[]{
   { 255, 0, 0, 255 },
   { 0, 255, 0, 255 },
   { 0, 0, 255, 255 },
@@ -62,7 +62,22 @@ Color* colors = new Color[ 14 ]{
   { 120, 255, 25, 255 },
   { 25, 255, 255, 255 },
   { 255, 25, 10, 255 },
-  { 255, 255, 25, 255 }
+  { 255, 255, 25, 255 },
+  { 255, 95, 255, 255 },
+  { 255, 255, 95, 255 },
+  { 95, 255, 255, 255 },
+  { 255, 95, 95, 255 },
+  { 95, 255, 95, 255 },
+  { 95, 95, 255, 255 },
+  {230, 76,98, 255},
+  {76,230,98, 255},
+  {76,98,230, 255},
+  {230,98,76, 255},
+  {98,76,230, 255},
+  {98,230,76, 255},
+  { 30, 255, 30, 255 },
+  { 171, 219, 227, 255 }
+
 };
 
 Texture2D renderGeographicalMap(World* w, province_properties* p) {

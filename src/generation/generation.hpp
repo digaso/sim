@@ -313,9 +313,11 @@ void generate_religions(World* w) {
 
 void generate_royalty(World* w, Country* c, Province* p) {
   //generate king
-  uint military = GetRandomValue(0, 20);
-  uint diplomacy = GetRandomValue(0, 20);
-  uint economy = GetRandomValue(0, 20);
+  uint conscientiousness = GetRandomValue(0, 100);
+  uint agreeableness = GetRandomValue(0, 100);
+  uint neuroticism = GetRandomValue(0, 100);
+  uint openness = GetRandomValue(0, 100);
+  uint extraversion = GetRandomValue(0, 100);
   uint religion_id = c->get_religion_id();
   string firstName = generateWord(1, 3);
   string lastName = generateWord(2, 4);
@@ -337,9 +339,11 @@ void generate_royalty(World* w, Country* c, Province* p) {
 
 
   //generate queen
-  uint wife_military = GetRandomValue(0, 20);
-  uint wife_diplomacy = GetRandomValue(0, 20);
-  uint wife_economy = GetRandomValue(0, 20);
+  uint wife_conscientiousness = GetRandomValue(0, 100);
+  uint wife_agreeableness = GetRandomValue(0, 100);
+  uint wife_neuroticism = GetRandomValue(0, 100);
+  uint wife_openness = GetRandomValue(0, 100);
+  uint wife_extraversion = GetRandomValue(0, 100);
   string wife_firstName = generateWord(1, 3);
   string wife_lastName = generateWord(2, 4);
   uint wife_age = GetRandomValue(25, 40);
@@ -353,8 +357,8 @@ void generate_royalty(World* w, Country* c, Province* p) {
   uint wife_country_ruling = -1;
   bool wife_man = false;
 
-  Character king(id, firstName, lastName, birth_date, country_living, military, diplomacy, economy, religion_id, culture_id, father_id, mother_id, spouse_id, province_born, province_living, true, man, w, country_ruling);
-  Character queen(wife_id, wife_firstName, wife_lastName, wife_birth_date, country_living, wife_military, wife_diplomacy, wife_economy, religion_id, culture_id, father_id, mother_id, wife_spouse_id, province_born, province_living, false, wife_man, w, wife_country_ruling);
+  Character king(id, firstName, lastName, birth_date, country_living, conscientiousness, agreeableness, neuroticism, openness, extraversion, religion_id, culture_id, father_id, mother_id, spouse_id, province_born, province_living, true, man, w, country_ruling);
+  Character queen(wife_id, wife_firstName, wife_lastName, wife_birth_date, country_living, wife_conscientiousness, wife_agreeableness, wife_neuroticism, wife_openness, wife_extraversion, religion_id, culture_id, father_id, mother_id, wife_spouse_id, province_born, province_living, false, wife_man, w, wife_country_ruling);
   w->addCharacter(king);
   w->addCharacter(queen);
   c->set_king_id(id);
@@ -364,12 +368,6 @@ void generate_royalty(World* w, Country* c, Province* p) {
 void generate_culture(World* w, Country* c, uint* cultures_count) {
 
   uint chance = GetRandomValue(0, 100);
-  if (chance < 10 && *cultures_count >5) {
-    uint random_culture = GetRandomValue(0, *cultures_count - 1);
-    c->set_culture_id(random_culture);
-    cout << "Culture " << random_culture << endl;
-    return;
-  }
   Culture culture(generateCultureName(c->get_name()), *cultures_count);
   *cultures_count += 1;
   c->set_culture_id(culture.get_id());
@@ -385,10 +383,10 @@ void generate_countries(World* w) {
     //get random number between 0 and num_cols
     uint x = GetRandomValue(64, w->get_num_cols() - 1 - 64);
     //get random number between 0 and num_rows
-    uint y = GetRandomValue(64, w->get_num_rows() - 1 - 64);
+    uint y = GetRandomValue(64, w->get_num_rows() - 1 - 90);
     Province* p = w->getProvinceByCoords(x, y);
     uint num_provinces = GetRandomValue(MINPROVINCES, MAXPROVINCES);
-    uint8_t color_id = GetRandomValue(0, 14);
+    uint8_t color_id = GetRandomValue(0, 25);
     vector<uint> provinces;
 
     if (p->get_type() != type_province::sea && p->get_type() != type_province::coastal_sea && p->get_type() != type_province::deep_sea && p->get_country_owner_id() == -1) {
@@ -413,18 +411,11 @@ void generate_countries(World* w) {
             }
             if (n->get_type() == hill || n->get_type() == mountain || n->get_type() == taiga || n->get_type() == tundra) {
               uint8_t chance = GetRandomValue(0, 100);
-              if (chance < 5) {
-
-                continue;
-
-              };
+              if (chance < 5) continue;
             }
             if (n->get_type() == desert || n->get_type() == bare) {
               uint8_t chance = GetRandomValue(0, 100);
-              if (chance < 10) {
-
-                continue;
-              }
+              if (chance < 10) continue;
             }
 
             n->set_country_owner_id(i);

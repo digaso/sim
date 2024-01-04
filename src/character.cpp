@@ -1,16 +1,18 @@
 #include "character.hpp"
 #include "agents/ai_character.hpp"
 
-Character::Character(uint id, string first_name, string last_name, date birth_date, uint country_living, uint military_skill, uint diplomacy_skill, uint economy_skill, uint religion_id, uint culture_id, int father_id, int mother_id, int spouse_id, uint province_born_id, uint province_living_id, bool ruling, bool man, World* w, int country_ruling)
+Character::Character(uint id, string first_name, string last_name, date birth_date, uint country_living, uint8_t conscientiousness, uint8_t agreeableness, uint8_t neuroticism, uint8_t openness, uint8_t extraversion, uint religion_id, uint culture_id, int father_id, int mother_id, int spouse_id, uint province_born_id, uint province_living_id, bool ruling, bool man, World* w, int country_ruling)
 {
   this->id = id;
   this->first_name = first_name;
   this->last_name = last_name;
   this->birth_date = birth_date;
   this->country_living_id = country_living;
-  this->military_skill = military_skill;
-  this->diplomacy_skill = diplomacy_skill;
-  this->economy_skill = economy_skill;
+  this->conscientiousness = conscientiousness;
+  this->agreeableness = agreeableness;
+  this->neuroticism = neuroticism;
+  this->openness = openness;
+  this->extraversion = extraversion;
   this->religion_id = religion_id;
   this->culture_id = culture_id;
   this->father_id = father_id;
@@ -87,17 +89,22 @@ uint Character::get_province_born()
 
 uint8_t Character::get_military_skill()
 {
-  return this->military_skill;
+  return this->conscientiousness;
 }
 
 uint8_t Character::get_diplomacy_skill()
 {
-  return this->diplomacy_skill;
+  return this->agreeableness;
 }
 
 uint8_t Character::get_economy_skill()
 {
-  return this->economy_skill;
+  return this->neuroticism;
+}
+
+uint Character::get_country_ruling()
+{
+  return this->country_ruling;
 }
 
 
@@ -113,11 +120,11 @@ date Character::get_death_date()
 
 ostream& operator<<(ostream& os, const Character& c)
 {
-  os << c.first_name << " " << c.last_name << " (" << c.birth_date << ")" << c.diplomacy_skill << " " << c.economy_skill << " " << c.military_skill << endl;
+  os << c.first_name << " " << c.last_name << " (" << c.birth_date << ")" << c.agreeableness << " " << c.neuroticism << " " << c.conscientiousness << endl;
   return os;
 }
 
 string Character::to_string()
 {
-  return this->first_name + " " + this->last_name + " " + std::to_string(this->diplomacy_skill) + " " + std::to_string(this->economy_skill) + " " + std::to_string(this->military_skill);
+  return this->first_name + " " + this->last_name + " " + std::to_string(this->agreeableness) + " " + std::to_string(this->neuroticism) + " " + std::to_string(this->conscientiousness);
 }

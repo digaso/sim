@@ -69,7 +69,7 @@ void Good::set_goods(World* world)
   world->addGood(Good(31, "Meat", 1.5, manufactured, basic_need));
   world->addGood(Good(32, "Fur", 1.5, catchable, luxury));
   world->addGood(Good(33, "Leather", 1.5, catchable, raw_material));
-  world->addGood(Good(38, "Gems", 5.5, mineral, luxury));
+  world->addGood(Good(34, "Gems", 5.5, mineral, luxury));
 
 }
 

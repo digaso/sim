@@ -1,5 +1,5 @@
-sim: ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/culture.o ./out/population.o ./out/province.o ./out/world.o ./out/date.o ./out/good.o ./out/ai_character.o
-		g++ -g -std=c++20 -Wall ./out/ai_character.o ./out/main.o ./out/building.o  ./out/country.o ./out/culture.o ./out/population.o ./out/character.o ./out/province.o ./out/world.o ./out/date.o ./out/good.o  -o sim -lraylib -lGL -lm  -DRAUDIO_STANDALONE -DSUPPORT_FILEFORMAT_WAV -DSUPPORT_FILEFORMAT_OGG -lpthread -ldl -lrt -lX11 -DRAYGUI_IMPLEMENTATION -O2
+sim: ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/culture.o ./out/population.o ./out/province.o ./out/world.o ./out/date.o ./out/good.o ./out/ai_character.o ./out/diplomacy.o
+		g++ -g -std=c++20 -Wall ./out/ai_character.o ./out/main.o ./out/building.o ./out/diplomacy.o ./out/country.o ./out/culture.o ./out/population.o ./out/character.o ./out/province.o ./out/world.o ./out/date.o ./out/good.o  -o sim -lraylib -lGL -lm  -DRAUDIO_STANDALONE -DSUPPORT_FILEFORMAT_WAV -DSUPPORT_FILEFORMAT_OGG -lpthread -ldl -lrt -lX11 -DRAYGUI_IMPLEMENTATION -O2
 
 ./out/main.o: main.cpp
 	g++ -g -Wall -c main.cpp -o ./out/main.o -O2
@@ -33,6 +33,12 @@ sim: ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/cultu
 
 ./out/ai_character.o: ./src/agents/ai_character.cpp
 	g++ -Wall -g -c ./src/agents/ai_character.cpp -o ./out/ai_character.o -O2
+
+./out/building.o: ./src/building.cpp
+	g++ -Wall -g -c ./src/building.cpp -o ./out/building.o -O2
+
+./out/diplomacy.o: ./src/diplomacy.cpp
+	g++ -Wall -g -c ./src/diplomacy.cpp -o ./out/diplomacy.o -O2
 
 clean:
 	rm -f ./out/*.o sim

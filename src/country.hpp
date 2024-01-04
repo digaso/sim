@@ -4,6 +4,7 @@
 #include <vector>
 #include "character.hpp"
 #include "province.hpp"
+#include "diplomacy.hpp"
 #include "agents/ai_character.hpp"
 
 using namespace std;
@@ -18,9 +19,16 @@ class Country
   uint capital_id;
   vector<uint> provinces;
   vector<uint> characters;
+  vector<uint> provinces_known;
   uint king_id;
   uint id;
   string name;
+  vector<Allie> allies;
+  vector<Subject> subjects;
+  vector<Truce> truces;
+  vector<MilitaryAccess> military_access;
+  vector<TradePartner> trade_partners;
+  vector<Guarantee> guarantees;
   uint color_id;
   uint culture_id;
   uint religion_id;
