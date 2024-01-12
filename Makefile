@@ -34,9 +34,6 @@ sim: ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/cultu
 ./out/ai_character.o: ./src/agents/ai_character.cpp
 	g++ -Wall -g -c ./src/agents/ai_character.cpp -o ./out/ai_character.o -O2
 
-./out/building.o: ./src/building.cpp
-	g++ -Wall -g -c ./src/building.cpp -o ./out/building.o -O2
-
 ./out/diplomacy.o: ./src/diplomacy.cpp
 	g++ -Wall -g -c ./src/diplomacy.cpp -o ./out/diplomacy.o -O2
 

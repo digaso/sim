@@ -214,7 +214,26 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
               bmap[ row * cols + col ] = true;
               continue;
             }
-            if (g.get_name() == "Ivory" && (p->get_type() == type_province::temperate_desert || p->get_type() == type_province::coastal_desert || p->get_type() == type_province::tropical)) {
+            if (g.get_name() == "Cattle" && (p->get_type() == grassland || p->get_type() == forest || p->get_type() == tropical || p->get_type() == tropical_forest || p->get_type() == temperate_desert)) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 10) {
+                continue;
+              }
+              p->add_goods(g.get_id()); count++;
+              bmap[ row * cols + col ] = true;
+              continue;
+            }
+            if (g.get_name() == "Horses" && (p->get_type() == grassland || p->get_type() == forest || p->get_type() == tropical || p->get_type() == tropical_forest || p->get_type() == temperate_desert)) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 10) {
+                continue;
+              }
+              p->add_goods(g.get_id()); count++;
+              bmap[ row * cols + col ] = true;
+              continue;
+            }
+
+            if (g.get_name() == "Elephants" && (p->get_type() == type_province::temperate_desert || p->get_type() == type_province::coastal_desert || p->get_type() == type_province::tropical || p->get_type() == type_province::tropical_forest)) {
               p->add_goods(g.get_id()); count++;
               bmap[ row * cols + col ] = true;
               continue;
@@ -222,7 +241,7 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
             if (g.get_type() == plantable && (p->get_type() == type_province::desert || p->get_type() == type_province::bare))
             {
               uint8_t chance = GetRandomValue(0, 100);
-              if (chance < 60) {
+              if (chance < 30) {
                 continue;
               }
               p->add_goods(g.get_id()); count++;
@@ -232,7 +251,7 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
             if (g.get_type() == plantable && (p->get_type() == mountain || p->get_type() == coastal_desert || p->get_type() == taiga || p->get_type() == tundra))
             {
               uint8_t chance = GetRandomValue(0, 100);
-              if (chance < 45) {
+              if (chance < 30) {
                 continue;
               }
               p->add_goods(g.get_id()); count++;
@@ -252,7 +271,7 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
             if (g.get_name() == "Stone" && (p->get_type() == grassland || p->get_type() == forest || p->get_type() == tropical || p->get_type() == tropical_forest))
             {
               uint8_t chance = GetRandomValue(0, 100);
-              if (chance < 50) {
+              if (chance < 30) {
                 continue;
               }
               p->add_goods(g.get_id()); count++;
@@ -275,8 +294,7 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
         }
       }
     }
-
-
+    cout << g.get_name() << " " << count << endl;
     w->setGoodMapById(g.get_id(), bmap);
   }
 

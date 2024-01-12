@@ -38,13 +38,9 @@ public:
   ~Good();
   uint get_id();
   type_good get_type();
-
-
-
   bool is_maritime() {
     return maritime;
   }
-
   void set_map(bool* map) {
     this->map = map;
   }
