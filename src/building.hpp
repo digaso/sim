@@ -7,6 +7,7 @@ using namespace std;
 enum type_building {
   agriculture,
   mineral_building,
+  maritime,
   manufactury,
   military_building,
   infrastructure,
@@ -52,7 +53,6 @@ public:
     this->name = name;
     this->func = func;
     this->production = building_production;
-
   }
   uint get_id() { return this->id; };
   string get_name() { return this->name; };

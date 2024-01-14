@@ -52,12 +52,12 @@ province_properties get_province_type(float height, float moisture) {
   string province_name;
   type_province type = sea;
   int color = 0;
-  if (height < -0.15f) {
+  if (height < -0.20f) {
     color = 0;
     type = deep_sea;
     pop = 0;
   }
-  else if (height < 0.05f) {
+  else if (height < 0.04f) {
     color = 1;
     type = sea;
     pop = 0;
@@ -194,6 +194,11 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
           float** map = maps[ i ];
           Province* p = w->getProvinceById(row * cols + col);
           if (g.get_name() == "Salt" && (p->get_type() == coastal_desert || p->get_type() == coast)) {
+            p->add_goods(g.get_id()); count++;
+            bmap[ row * cols + col ] = true;
+            continue;
+          }
+          if (g.get_name() == "Timber" && (p->get_type() == forest || p->get_type() == tropical_forest || p->get_type() == tropical || p->get_type() == grassland || p->get_type() == taiga) && GetRandomValue(0, 100) < 90) {
             p->add_goods(g.get_id()); count++;
             bmap[ row * cols + col ] = true;
             continue;
@@ -437,6 +442,7 @@ void generate_countries(World* w) {
             }
 
             n->set_country_owner_id(i);
+            n->add_population(Population(0, GetRandomValue(300, 600), i, n->get_id(), c.get_culture_id(), population_class::peasants));
             c.add_province(n);
             provinces.push_back(n->get_id());
             j++;

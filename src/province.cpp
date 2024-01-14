@@ -149,6 +149,29 @@ string Province::type_province_to_string(type_province type)
   return "None";
 }
 
+void Province::add_population(Population pop)
+{
+  this->pops.push_back(pop);
+}
+
+vector<Population>* Province::get_pops()
+{
+  return &(this->pops);
+}
+
+void Province::add_building(uint_fast8_t building_id)
+{
+  for (auto& b : this->buildings)
+  {
+    if (b.id == building_id)
+    {
+      b.amount++;
+      return;
+    }
+  }
+  this->buildings.push_back({ building_id, 1 });
+}
+
 ostream& operator<<(ostream& os, const Province& p)
 {
   os << "Province: " << p.name << " Population: " << p.get_population_size() << " Country: " << p.get_country_owner_id() << " Latitude: " << p.y << " Longitude: " << p.x;

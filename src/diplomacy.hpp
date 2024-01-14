@@ -46,3 +46,4 @@ typedef struct TradePartner {
   Country* country;
   date start_date;
 } TradePartner;
+

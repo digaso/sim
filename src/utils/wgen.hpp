@@ -75,7 +75,7 @@ std::string generateCountryName() {
   std::mt19937 gen(rd());
   std::uniform_int_distribution<> numWordsDist(0, 10); // Randomly select 1 or 2 words
   int chance = numWordsDist(gen);
-  int numWords = 1 * (chance < 7) + 2 * (chance >= 7);
+  int numWords = 1 * (chance < 9) + 2 * (chance >= 9);
   std::string countryName;
 
   for (int i = 0; i < numWords; ++i) {

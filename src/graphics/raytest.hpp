@@ -7,7 +7,7 @@
 #include "../world.hpp"
 #include "../generation/generation.hpp"
 
-#define TILESIZE 14
+#define TILESIZE 10
 #define CHUNKSIZE 64
 
 using namespace std;
@@ -102,7 +102,9 @@ Texture2D renderGeographicalMap(World* w, province_properties* p) {
     .format = 7
   };
   ImageResizeNN(&img, w->get_num_cols() * TILESIZE, w->get_num_rows() * TILESIZE);
-  return LoadTextureFromImage(img);
+  Texture2D tex = LoadTextureFromImage(img);
+  delete img.data;
+  return tex;
 }
 
 Texture2D* renderGoodMap(World* w) {
@@ -138,6 +140,7 @@ Texture2D* renderGoodMap(World* w) {
     };
     ImageResizeNN(&img, cols * TILESIZE, rows * TILESIZE);
     tex[ i ] = LoadTextureFromImage(img);
+    delete img.data;
 
   }
   return tex;
@@ -176,10 +179,10 @@ Texture2D renderPoliticalMap(World* w) {
     .format = 7
   };
   ImageResizeNN(&img, cols * TILESIZE, rows * TILESIZE);
-  return LoadTextureFromImage(img);
+  Texture2D tex = LoadTextureFromImage(img);
+  delete img.data;
+  return tex;
 }
-
-
 
 Texture2D renderBordersMap(World* w) {
   int cols = w->get_num_cols();
@@ -235,9 +238,11 @@ Texture2D renderBordersMap(World* w) {
     .mipmaps = 1,
     .format = 7
   };
-  return LoadTextureFromImage(img);
-}
 
+  Texture2D tex = LoadTextureFromImage(img);
+  delete img.data;
+  return tex;
+}
 
 
 void run(World* w) {
@@ -254,7 +259,7 @@ void run(World* w) {
   camera.zoom = 1.0f;
 
   province_properties* p = generate_map(w);
-  //Texture2D* texgoods = renderGoodMap(w);
+  Texture2D* texgoods = renderGoodMap(w);
 
   Texture2D Geomap = renderGeographicalMap(w, p);
   Texture2D map = renderPoliticalMap(w);
@@ -298,18 +303,18 @@ void run(World* w) {
     if (IsKeyDown(KEY_D))
       camera.offset.x -= 10 / camera.zoom;
 
-
     BeginDrawing();
     {
 
       BeginMode2D(camera);
       ClearBackground(RAYWHITE);
       DrawTexturePro(Geomap, { 0, 0, (float)Geomap.width, (float)Geomap.height }, { 0, 0, Geomap.width * camera.zoom, Geomap.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
-      //if (goods_map) {
-      //  DrawTexturePro(texgoods[ id_good ], { 0, 0, (float)texgoods[ id_good ].width, (float)texgoods[ id_good ].height }, { 0, 0, texgoods[ id_good ].width * camera.zoom, texgoods[ id_good ].height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
-      //}
-      if (political_map) {
-
+      if (goods_map) {
+        political_map = false;
+        DrawTexturePro(texgoods[ id_good ], { 0, 0, (float)texgoods[ id_good ].width, (float)texgoods[ id_good ].height }, { 0, 0, texgoods[ id_good ].width * camera.zoom, texgoods[ id_good ].height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
+      }
+      else if (political_map) {
+        goods_map = false;
         DrawTexturePro(map, { 0, 0, (float)map.width, (float)map.height }, { 0, 0, map.width * camera.zoom, map.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
         DrawTexturePro(borders, { 0, 0, (float)borders.width, (float)borders.height }, { 0, 0, borders.width * camera.zoom, borders.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
       }
@@ -386,9 +391,9 @@ void run(World* w) {
   UnloadTexture(Geomap);
   UnloadTexture(map);
   UnloadTexture(borders);
-  //for (uint i = 0; i < w->getGoods().size(); i++) {
-  //  UnloadTexture(texgoods[ i ]);
-  //}
+  for (uint i = 0; i < w->getGoods().size(); i++) {
+    UnloadTexture(texgoods[ i ]);
+  }
   CloseAudioDevice();
   CloseWindow();
 }

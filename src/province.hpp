@@ -3,11 +3,10 @@
 #include "population.hpp"
 #include "country.hpp"
 #include "economy/good.hpp"
+#include "economy/market.hpp"
 #include <vector>
 
-
 using namespace std;
-
 
 enum type_province {
   deep_sea = 0,
@@ -28,10 +27,16 @@ enum type_province {
   coastal_desert = 15,
 };
 
+
+typedef struct buildings_stats {
+  uint_fast8_t id;
+  uint_fast8_t amount;
+} BuildingStats;
+
 class Country;
 class Province {
 private:
-  vector<population> pops; //vector of populations
+  vector<Population> pops; //vector of populations
   uint id; //id of province
   string name; //name of province
   uint y;
@@ -45,7 +50,8 @@ private:
   float tax_control; //value between 0 and 1
   bool trade_route_candidate = false; //becomes true if province has a marketplace or a port
   vector<uint_fast8_t> goods; //id of goods
-  vector<uint_fast8_t> buildings; //id of buildings
+  vector<BuildingStats> buildings; //id of buildings
+  Market market;
 
 
 public:
@@ -84,5 +90,9 @@ public:
   void add_goods(uint_fast8_t good_id);
   vector<uint_fast8_t> get_goods();
   friend ostream& operator<<(ostream& os, const Province& p);
+  void add_building(uint_fast8_t building_id);
+  vector<uint_fast8_t> get_buildings();
+  void add_population(Population pop);
+  vector<Population>* get_pops();
 
 };

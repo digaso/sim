@@ -34,10 +34,10 @@ type_good Good::get_type()
 }
 void Good::set_goods(World* world)
 {
-  world->addGood(Good(0, "Grain", 1.5, plantable, basic_need));
+  world->addGood(Good(0, "Grain", 1.4, plantable, basic_need));
   world->addGood(Good(1, "Wine", 2.5, plantable, luxury));
   world->addGood(Good(2, "Salt", 2.3, mineral, basic_need));
-  world->addGood(Good(3, "Fish", 1.2, catchable, basic_need));
+  world->addGood(Good(3, "Fish", 1.4, catchable, basic_need));
   world->getGoodById(3)->set_maritime(true);
   world->addGood(Good(4, "Cotton", 2, plantable, raw_material));
   world->addGood(Good(5, "Clothes", 2.5, manufactured, basic_need));
@@ -59,36 +59,34 @@ void Good::set_goods(World* world)
   world->addGood(Good(21, "Gold", 7.5, mineral, luxury));
   world->addGood(Good(22, "Silver", 4, mineral, luxury));
   world->addGood(Good(23, "Spices", 4.8, plantable, luxury));
-  world->addGood(Good(24, "Opioum", 4, plantable, luxury));
+  world->addGood(Good(24, "Opioum", 4.5, plantable, luxury));
   world->addGood(Good(25, "Fruit", 1.6, plantable, basic_need));
   world->addGood(Good(26, "Tobacco", 3.5, plantable, luxury));
   world->addGood(Good(27, "Cocoa", 3.5, plantable, luxury));
   world->addGood(Good(28, "Ivory", 4.9, manufactured, luxury));
   world->addGood(Good(29, "Camels", 2, catchable, military));
-  world->addGood(Good(30, "Cattle", 2, catchable, basic_need));
-  world->addGood(Good(31, "Meat", 1.7, manufactured, basic_need));
-  world->addGood(Good(32, "Fur", 2, catchable, luxury));
-  world->addGood(Good(33, "Leather", 1.7, catchable, raw_material));
-  world->addGood(Good(34, "Gems", 5.5, mineral, luxury));
-  world->addGood(Good(35, "Spears", 2, manufactured, military));
-  world->addGood(Good(36, "Swords", 4, manufactured, military));
-  world->addGood(Good(37, "Bows", 2, manufactured, military));
-  world->addGood(Good(38, "Crossbows", 4, manufactured, military));
-  world->addGood(Good(39, "Pikes", 5, manufactured, military));
-  world->addGood(Good(40, "Cannons", 5.5, manufactured, military));
-  world->addGood(Good(41, "Musket", 5.5, manufactured, military));
-  world->addGood(Good(42, "Leather Armour", 2, manufactured, military));
-  world->addGood(Good(43, "Chainmail", 4, manufactured, military));
-  world->addGood(Good(44, "Plate Armour", 5.5, manufactured, military));
-  world->addGood(Good(45, "Elephants", 3, catchable, military));
-  world->addGood(Good(46, "Cogs", 5.5, manufactured, military));
-  world->addGood(Good(47, "Galleys", 5.5, manufactured, military));
-  world->addGood(Good(48, "Caravels", 5.5, manufactured, military));
-  world->addGood(Good(49, "Carracks", 5.5, manufactured, military));
-  world->addGood(Good(50, "Nau", 5.5, manufactured, military));
+  world->addGood(Good(30, "Meat", 1.7, manufactured, basic_need));
+  world->addGood(Good(31, "Fur", 2, catchable, luxury));
+  world->addGood(Good(32, "Leather", 1.7, catchable, raw_material));
+  world->addGood(Good(33, "Gems", 5.5, mineral, luxury));
+  world->addGood(Good(34, "Spears", 2, manufactured, military));
+  world->addGood(Good(35, "Swords", 4, manufactured, military));
+  world->addGood(Good(36, "Bows", 2, manufactured, military));
+  world->addGood(Good(37, "Crossbows", 4, manufactured, military));
+  world->addGood(Good(38, "Pikes", 5, manufactured, military));
+  world->addGood(Good(39, "Cannons", 7.5, manufactured, military));
+  world->addGood(Good(40, "Musket", 5.5, manufactured, military));
+  world->addGood(Good(41, "Leather Armour", 2, manufactured, military));
+  world->addGood(Good(42, "Chainmail", 4, manufactured, military));
+  world->addGood(Good(43, "Plate Armour", 5.5, manufactured, military));
+  world->addGood(Good(44, "Elephants", 3, catchable, military));
+  world->addGood(Good(45, "Coques", 5, manufactured, military));
+  world->addGood(Good(46, "Galleys", 7, manufactured, military));
+  world->addGood(Good(47, "Caravelas", 9.5, manufactured, military));
+  world->addGood(Good(48, "Carracks", 12.5, manufactured, military));
+  world->addGood(Good(49, "Naus", 12.5, manufactured, military));
   //TODO: add more ships and military units
 }
-
 
 ostream& operator<<(ostream& os, const Good& g)
 {
