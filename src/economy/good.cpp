@@ -56,7 +56,7 @@ void Good::set_goods(World* world)
   world->addGood(Good(18, "Glass", 3.0, manufactured, raw_material));
   world->addGood(Good(19, "Paper", 3.0, manufactured, raw_material));
   world->addGood(Good(20, "Incense", 3.5, plantable, luxury));
-  world->addGood(Good(21, "Gold", 7.5, mineral, luxury));
+  world->addGood(Good(21, "Gold", 9, mineral, luxury));
   world->addGood(Good(22, "Silver", 4, mineral, luxury));
   world->addGood(Good(23, "Spices", 4.8, plantable, luxury));
   world->addGood(Good(24, "Opioum", 4.5, plantable, luxury));

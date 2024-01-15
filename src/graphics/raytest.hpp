@@ -7,7 +7,7 @@
 #include "../world.hpp"
 #include "../generation/generation.hpp"
 
-#define TILESIZE 10
+#define TILESIZE 4
 #define CHUNKSIZE 64
 
 using namespace std;
@@ -144,6 +144,7 @@ Texture2D* renderGoodMap(World* w) {
 
   }
   return tex;
+  delete[] tex;
 }
 
 Texture2D renderPoliticalMap(World* w) {
@@ -200,8 +201,8 @@ Texture2D renderBordersMap(World* w) {
   for (Country country : countries) {
     // Iterate over each province in the country
     for (int i : country.get_provinces()) {
-      int x = (i % cols) * TILESIZE; // Unadjusted position for borders
-      int y = (i / cols) * TILESIZE; // Unadjusted position for borders
+      int x = (i % cols); // Unadjusted position for borders
+      int y = (i / cols); // Unadjusted position for borders
 
       // Check neighboring provinces for borders
       for (int j = -1; j <= 1; j++) {
@@ -212,16 +213,11 @@ Texture2D renderBordersMap(World* w) {
               Province* neighborProv = w->getProvinceById(neighborIndex);
               if (country.get_id() != neighborProv->get_country_owner_id()) {
                 // Draw a border between the two provinces
-                for (int l = 0; l < TILESIZE; l++) {
-                  for (int m = 0; m < TILESIZE; m++) {
-                    int index = ((y + l) * (cols * TILESIZE) + (x + m)) * 4;
-                    pixels[ index + 0 ] = (byte)borderColor.r;
-                    pixels[ index + 1 ] = (byte)borderColor.g;
-                    pixels[ index + 2 ] = (byte)borderColor.b;
-                    pixels[ index + 3 ] = (byte)borderColor.a;
-                  }
-                }
-
+                int index = ((y) * (cols)+(x)) * 4;
+                pixels[ index + 0 ] = (byte)borderColor.r;
+                pixels[ index + 1 ] = (byte)borderColor.g;
+                pixels[ index + 2 ] = (byte)borderColor.b;
+                pixels[ index + 3 ] = (byte)borderColor.a;
 
               }
             }
@@ -233,24 +229,155 @@ Texture2D renderBordersMap(World* w) {
 
   Image img = {
     .data = pixels,
-    .width = cols * TILESIZE, // Unadjusted width for borders
-    .height = rows * TILESIZE, // Unadjusted height for borders
+    .width = cols , // Unadjusted width for borders
+    .height = rows , // Unadjusted height for borders
     .mipmaps = 1,
     .format = 7
   };
-
+  ImageResizeNN(&img, cols * TILESIZE, rows * TILESIZE);
   Texture2D tex = LoadTextureFromImage(img);
   delete img.data;
   return tex;
 }
 
+enum screen {
+  STARTING_LOAD,
+  MENU,
+  GAME
+};
+
+void draw_loading_screen() {
+  BeginDrawing();
+  {
+    ClearBackground(RAYWHITE);
+    DrawText("Loading...", 100, 100, 20, GRAY);
+  }
+  EndDrawing();
+}
+
+
+void draw_game_screen(Camera2D camera, World* w, Texture2D Geomap, Texture2D* texgoods, Texture2D map, Texture2D borders, bool* goods_map, bool* political_map, uint* id_good, bool* show, int music_id, vector<Music> musics, float vol) {
+  BeginDrawing();
+  {
+    BeginMode2D(camera);
+    ClearBackground(RAYWHITE);
+    DrawTexturePro(Geomap, { 0, 0, (float)Geomap.width, (float)Geomap.height }, { 0, 0, Geomap.width * camera.zoom, Geomap.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
+    if (*political_map) {
+      *goods_map = false;
+      DrawTexturePro(map, { 0, 0, (float)map.width, (float)map.height }, { 0, 0, map.width * camera.zoom, map.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
+      DrawTexturePro(borders, { 0, 0, (float)borders.width, (float)borders.height }, { 0, 0, borders.width * camera.zoom, borders.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
+    }
+    else if (*goods_map) {
+      *political_map = false;
+      DrawTexturePro(texgoods[ *id_good ], { 0, 0, (float)texgoods[ *id_good ].width, (float)texgoods[ *id_good ].height }, { 0, 0, texgoods[ *id_good ].width * camera.zoom, texgoods[ *id_good ].height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
+    }
+
+    EndMode2D();
+    DrawText(TextFormat("Good: %s", w->getGoodById(*id_good)->get_name().c_str()), 120, 10, 20, BLACK);
+    if (GuiButton(Rectangle{ 10, 10, 100, 20 }, "Change good")) {
+      *id_good += 1;
+      if (*id_good >= w->getGoods().size())
+        *id_good = 0;
+    }
+
+    if (GuiButton(Rectangle{ 10, 40, 100, 20 }, "Change music")) {
+      StopMusicStream(musics[ music_id ]);
+      music_id += 1;
+      if (music_id >= musics.size())
+        music_id = 0;
+      SetMusicVolume(musics[ music_id ], vol);
+      PlayMusicStream(musics[ music_id ]);
+    }
+
+    if (GuiButton(Rectangle{ 10, 70, 100, 20 }, "Toggle goods map")) {
+      *goods_map = !*goods_map;
+    }
+
+    if (GuiButton(Rectangle{ 10, 100, 100, 20 }, "Toggle political map")) {
+      *political_map = !*political_map;
+    }
+
+    //mouse click over provinces with tilesize and show text, but caring about zoom
+    Vector2 mousePos = GetMousePosition();
+    mousePos = GetScreenToWorld2D(mousePos, camera);
+    int x = (int)mousePos.x / (TILESIZE * camera.zoom);
+    int y = (int)mousePos.y / (TILESIZE * camera.zoom);
+    Province* prov;
+    string s, s2, CountryName, s3, s4;
+    if (IsMouseButtonPressed(0) || *show == true) {
+      if (x >= 0 && x < w->get_num_cols() && y >= 0 && y < w->get_num_rows()) {
+        *show = true;
+        prov = w->getProvinceByCoords(x, y);
+        s = prov->get_name();
+        s2 = "Goods: ";
+        for (auto& g : prov->get_goods()) {
+          s2 += w->getGoodById(g)->get_name() + ", ";
+        }
+        string CountryName = "Country: ";
+        string kingName = "King Name:";
+        if (prov->get_country_owner_id() != -1) {
+          Country* c = w->getCountryById(prov->get_country_owner_id());
+          CountryName += c->get_name();
+          kingName += c->get_king_id();
+        }
+        else {
+          CountryName += "No owner";
+        }
+
+        string s3 = "Type: " + Province::type_province_to_string(prov->get_type());
+        string s4 = "Position x: " + to_string(prov->get_x()) + " y: " + to_string(prov->get_y());
+        GuiPanel(Rectangle{ 10, 130, 310, 300 }, s.c_str());
+        GuiLabel(Rectangle{ 15, 150, 310, 20 }, s2.c_str());
+        GuiLabel(Rectangle{ 15, 170, 310, 20 }, CountryName.c_str());
+        GuiLabel(Rectangle{ 15, 190, 310, 20 }, s3.c_str());
+        GuiLabel(Rectangle{ 15, 210, 310, 20 }, s4.c_str());
+      }
+      else {
+        *show = false;
+      }
+
+    }
+  }
+  EndDrawing();
+}
+
+void camera_move(Camera2D* camera, Vector2* prevMousePos, int music_id, vector<Music> musics) {
+
+  float mouseDelta = GetMouseWheelMove();
+  UpdateMusicStream(musics[ music_id ]);
+  float newZoom = camera->zoom + mouseDelta * 0.01f;
+  if (newZoom <= 0)
+    newZoom = 0.01f;
+
+  camera->zoom = newZoom;
+
+
+  Vector2 thisPos = GetMousePosition();
+
+  Vector2 delta = Vector2Subtract(*prevMousePos, thisPos);
+  *prevMousePos = thisPos;
+
+  if (IsMouseButtonDown(0))
+    camera->target = GetScreenToWorld2D(Vector2Add(camera->offset, delta), *camera);
+
+  if (IsKeyDown(KEY_W))
+    camera->offset.y += 10 / camera->zoom;
+  if (IsKeyDown(KEY_S))
+    camera->offset.y -= 10 / camera->zoom;
+  if (IsKeyDown(KEY_A))
+    camera->offset.x += 10 / camera->zoom;
+  if (IsKeyDown(KEY_D))
+    camera->offset.x -= 10 / camera->zoom;
+
+}
 
 void run(World* w) {
   InitWindow(1200, 800, "SIM");
   SetTargetFPS(60);
   bool show = false;
-  bool goods_map = false;
   bool political_map = false;
+  bool goods_map = false;
+  screen current_screen = STARTING_LOAD;
   uint id_good = 0;
   Camera2D camera = { 0 };
   camera.target = { 0 };
@@ -258,12 +385,12 @@ void run(World* w) {
   camera.rotation = 0.0f;
   camera.zoom = 1.0f;
 
-  province_properties* p = generate_map(w);
-  Texture2D* texgoods = renderGoodMap(w);
+  province_properties* p;
+  Texture2D* texgoods;
 
-  Texture2D Geomap = renderGeographicalMap(w, p);
-  Texture2D map = renderPoliticalMap(w);
-  Texture2D borders = renderBordersMap(w);
+  Texture2D Geomap;
+  Texture2D map;
+  Texture2D borders;
   SetTraceLogLevel(LOG_ERROR);
   Vector2 prevMousePos = GetMousePosition();
   string path = "assets/songs";
@@ -277,115 +404,30 @@ void run(World* w) {
   float vol = 0.009;
   SetMusicVolume(musics[ music_id ], vol);
   PlayMusicStream(musics[ music_id ]);
+
   while (!WindowShouldClose()) {
-    float mouseDelta = GetMouseWheelMove();
-    UpdateMusicStream(musics[ music_id ]);
-    float newZoom = camera.zoom + mouseDelta * 0.01f;
-    if (newZoom <= 0)
-      newZoom = 0.01f;
 
-    camera.zoom = newZoom;
-
-    Vector2 thisPos = GetMousePosition();
-
-    Vector2 delta = Vector2Subtract(prevMousePos, thisPos);
-    prevMousePos = thisPos;
-
-    if (IsMouseButtonDown(0))
-      camera.target = GetScreenToWorld2D(Vector2Add(camera.offset, delta), camera);
-
-    if (IsKeyDown(KEY_W))
-      camera.offset.y += 10 / camera.zoom;
-    if (IsKeyDown(KEY_S))
-      camera.offset.y -= 10 / camera.zoom;
-    if (IsKeyDown(KEY_A))
-      camera.offset.x += 10 / camera.zoom;
-    if (IsKeyDown(KEY_D))
-      camera.offset.x -= 10 / camera.zoom;
-
-    BeginDrawing();
+    switch (current_screen)
     {
+    case STARTING_LOAD:
+      draw_loading_screen();
+      p = generate_map(w);
+      texgoods = renderGoodMap(w);
+      Geomap = renderGeographicalMap(w, p);
+      map = renderPoliticalMap(w);
+      borders = renderBordersMap(w);
+      current_screen = GAME;
 
-      BeginMode2D(camera);
-      ClearBackground(RAYWHITE);
-      DrawTexturePro(Geomap, { 0, 0, (float)Geomap.width, (float)Geomap.height }, { 0, 0, Geomap.width * camera.zoom, Geomap.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
-      if (goods_map) {
-        political_map = false;
-        DrawTexturePro(texgoods[ id_good ], { 0, 0, (float)texgoods[ id_good ].width, (float)texgoods[ id_good ].height }, { 0, 0, texgoods[ id_good ].width * camera.zoom, texgoods[ id_good ].height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
-      }
-      else if (political_map) {
-        goods_map = false;
-        DrawTexturePro(map, { 0, 0, (float)map.width, (float)map.height }, { 0, 0, map.width * camera.zoom, map.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
-        DrawTexturePro(borders, { 0, 0, (float)borders.width, (float)borders.height }, { 0, 0, borders.width * camera.zoom, borders.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
-      }
-
-      EndMode2D();
-      DrawText(TextFormat("Good: %s", w->getGoodById(id_good)->get_name().c_str()), 120, 10, 20, BLACK);
-      if (GuiButton(Rectangle{ 10, 10, 100, 20 }, "Change good")) {
-        id_good += 1;
-        if (id_good >= w->getGoods().size())
-          id_good = 0;
-      }
-
-      if (GuiButton(Rectangle{ 10, 40, 100, 20 }, "Change music")) {
-        StopMusicStream(musics[ music_id ]);
-        music_id += 1;
-        if (music_id >= musics.size())
-          music_id = 0;
-        SetMusicVolume(musics[ music_id ], vol);
-        PlayMusicStream(musics[ music_id ]);
-      }
-
-      if (GuiButton(Rectangle{ 10, 70, 100, 20 }, "Toggle goods map")) {
-        goods_map = !goods_map;
-      }
-
-      if (GuiButton(Rectangle{ 10, 100, 100, 20 }, "Toggle political map")) {
-        political_map = !political_map;
-      }
-
-      //mouse click over provinces with tilesize and show text, but caring about zoom
-      Vector2 mousePos = GetMousePosition();
-      mousePos = GetScreenToWorld2D(mousePos, camera);
-      int x = (int)mousePos.x / (TILESIZE * camera.zoom);
-      int y = (int)mousePos.y / (TILESIZE * camera.zoom);
-      Province* prov;
-      string s, s2, CountryName, s3, s4;
-      if (IsMouseButtonPressed(0) || show == true) {
-        if (x >= 0 && x < w->get_num_cols() && y >= 0 && y < w->get_num_rows()) {
-          show = true;
-          prov = w->getProvinceByCoords(x, y);
-          s = prov->get_name();
-          s2 = "Goods: ";
-          for (auto& g : prov->get_goods()) {
-            s2 += w->getGoodById(g)->get_name() + ", ";
-          }
-          string CountryName = "Country: ";
-          string kingName = "King Name:";
-          if (prov->get_country_owner_id() != -1) {
-            Country* c = w->getCountryById(prov->get_country_owner_id());
-            CountryName += c->get_name();
-            kingName += c->get_king_id();
-          }
-          else {
-            CountryName += "No owner";
-          }
-
-          string s3 = "Type: " + Province::type_province_to_string(prov->get_type());
-          string s4 = "Position x: " + to_string(prov->get_x()) + " y: " + to_string(prov->get_y());
-          GuiPanel(Rectangle{ 10, 130, 310, 300 }, s.c_str());
-          GuiLabel(Rectangle{ 15, 150, 310, 20 }, s2.c_str());
-          GuiLabel(Rectangle{ 15, 170, 310, 20 }, CountryName.c_str());
-          GuiLabel(Rectangle{ 15, 190, 310, 20 }, s3.c_str());
-          GuiLabel(Rectangle{ 15, 210, 310, 20 }, s4.c_str());
-        }
-        else {
-          show = false;
-        }
-
-      }
+      break;
+    case MENU:
+      break;
+    case GAME:
+      camera_move(&camera, &prevMousePos, music_id, musics);
+      draw_game_screen(camera, w, Geomap, texgoods, map, borders, &goods_map, &political_map, &id_good, &show, music_id, musics, vol);
+      break;
+    default:
+      break;
     }
-    EndDrawing();
   }
 
   UnloadTexture(Geomap);

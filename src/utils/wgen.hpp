@@ -73,9 +73,9 @@ string generateReligionName() {
 std::string generateCountryName() {
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_int_distribution<> numWordsDist(0, 10); // Randomly select 1 or 2 words
+  std::uniform_int_distribution<> numWordsDist(0, 12); // Randomly select 1 or 2 words
   int chance = numWordsDist(gen);
-  int numWords = 1 * (chance < 9) + 2 * (chance >= 9);
+  int numWords = 1 * (chance < 10) + 2 * (chance >= 10);
   std::string countryName;
 
   for (int i = 0; i < numWords; ++i) {
@@ -92,9 +92,9 @@ std::string generateCountryName() {
 std::string generateCityName() {
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_int_distribution<> numWordsDist(1, 2); // Randomly select 1 or 2 words
-
-  int numWords = numWordsDist(gen);
+  std::uniform_int_distribution<> numWordsDist(0, 10); // Randomly select 1 or 2 words
+  int chance = numWordsDist(gen);
+  int numWords = 1 * (chance < 7) + 2 * (chance >= 7);
   std::string cityName;
 
   for (int i = 0; i < numWords; ++i) {
