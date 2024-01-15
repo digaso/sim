@@ -93,6 +93,7 @@ public:
   Religion* getReligionById(uint id);
   vector<Province*> get_path_between_provinces(uint start_id, uint end_id);
   const AI_Character& getAgentById(uint id) const;
+  vector<Province*> get_neighbours(Province* p);
   void updateAgents();
   void updateCharacters();
   void updateCountries();

@@ -172,6 +172,23 @@ void Province::add_building(uint_fast8_t building_id)
   this->buildings.push_back({ building_id, 1 });
 }
 
+void Province::set_type(type_province type)
+{
+  this->type = type;
+}
+
+uint Province::get_building_amount(uint_fast8_t building_id)
+{
+  for (auto& b : this->buildings)
+  {
+    if (b.id == building_id)
+    {
+      return b.amount;
+    }
+  }
+  return 0;
+}
+
 ostream& operator<<(ostream& os, const Province& p)
 {
   os << "Province: " << p.name << " Population: " << p.get_population_size() << " Country: " << p.get_country_owner_id() << " Latitude: " << p.y << " Longitude: " << p.x;

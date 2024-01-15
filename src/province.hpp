@@ -84,6 +84,7 @@ public:
   float get_migration_atraction();
   float get_tax_control();
   float get_height();
+  void set_type(type_province type);
   void set_migration_atraction(float migration_atraction);
   void set_tax_control(float tax_control);
   static string type_province_to_string(type_province type);
@@ -93,6 +94,7 @@ public:
   void add_building(uint_fast8_t building_id);
   vector<uint_fast8_t> get_buildings();
   void add_population(Population pop);
+  uint get_building_amount(uint_fast8_t building_id);
   vector<Population>* get_pops();
 
 };

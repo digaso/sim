@@ -52,12 +52,12 @@ province_properties get_province_type(float height, float moisture) {
   string province_name;
   type_province type = sea;
   int color = 0;
-  if (height < -0.20f) {
+  if (height < -0.25) {
     color = 0;
     type = deep_sea;
     pop = 0;
   }
-  else if (height < 0.04f) {
+  else if (height < 0.02f) {
     color = 1;
     type = sea;
     pop = 0;
@@ -134,6 +134,37 @@ province_properties get_province_type(float height, float moisture) {
   return { pop, province_name, type, color };
 }
 
+void fix_mistakes(World* w, province_properties* prov_props) {
+  uint cols = w->get_num_cols();
+  uint rows = w->get_num_rows();
+  for (uint row = 0; row < rows; row++) {
+    for (uint col = 0; col < cols; col++) {
+      Province* p = w->getProvinceById(row * cols + col);
+      type_province type = p->get_type();
+      if (type == coastal_desert || type == coast) {
+        vector<Province*> neighbours = w->get_neighbours(p);
+        bool flag = false;
+        for (auto n : neighbours) {
+          if (n->get_type() == type_province::sea || n->get_type() == type_province::coastal_sea) {
+            flag = true;
+            break;
+          }
+        }
+        if (type == coastal_desert && !flag) {
+          p->set_type(type_province::desert);
+          prov_props[ row * cols + col ].type = type_province::desert;
+          prov_props[ row * cols + col ].color_id = 9;
+        }
+        else if (type == coast && !flag) {
+          p->set_type(type_province::grassland);
+          prov_props[ row * cols + col ].type = type_province::grassland;
+          prov_props[ row * cols + col ].color_id = 5;
+        }
+      }
+    }
+  }
+}
+
 province_properties* generate_map(World* w) {
   srand((unsigned)time(NULL));
   int random = rand();
@@ -161,7 +192,9 @@ province_properties* generate_map(World* w) {
   }
   free(moisture);
   free(tiles);
+
   cout << "Map generated" << endl;
+  fix_mistakes(w, prov_props);
   set_map_goods(w, frequency / 3, seed, octaves);
   cout << "Goods generated" << endl;
   populate_world(w);
@@ -443,6 +476,8 @@ void generate_countries(World* w) {
 
             n->set_country_owner_id(i);
             n->add_population(Population(0, GetRandomValue(300, 600), i, n->get_id(), c.get_culture_id(), population_class::peasants));
+            n->add_population(Population(1, GetRandomValue(100, 300), i, n->get_id(), c.get_culture_id(), population_class::citizens));
+            n->add_population(Population(2, GetRandomValue(10, 100), i, n->get_id(), c.get_culture_id(), population_class::elite));
             c.add_province(n);
             provinces.push_back(n->get_id());
             j++;
