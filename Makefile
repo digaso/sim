@@ -1,44 +1,44 @@
 sim: ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/culture.o ./out/population.o ./out/province.o ./out/world.o ./out/date.o ./out/good.o ./out/ai_character.o ./out/diplomacy.o ./out/market.o
-		g++ -g -std=c++20 -Wall ./out/ai_character.o ./out/main.o ./out/building.o ./out/market.o ./out/diplomacy.o ./out/country.o ./out/culture.o ./out/population.o ./out/character.o ./out/province.o ./out/world.o ./out/date.o ./out/good.o  -o sim -lraylib -lGL -lm  -DRAUDIO_STANDALONE -DSUPPORT_FILEFORMAT_WAV -DSUPPORT_FILEFORMAT_OGG -lpthread -ldl -lrt -lX11 -DRAYGUI_IMPLEMENTATION -O2
+		g++ -g -std=c++20 -Wall ./out/ai_character.o ./out/main.o ./out/building.o ./out/market.o ./out/diplomacy.o ./out/country.o ./out/culture.o ./out/population.o ./out/character.o ./out/province.o ./out/world.o ./out/date.o ./out/good.o  -o sim -lraylib -lGL -lm  -DRAUDIO_STANDALONE -DSUPPORT_FILEFORMAT_WAV -DSUPPORT_FILEFORMAT_OGG -lpthread -ldl -lrt -lX11 -DRAYGUI_IMPLEMENTATION -O3
 
 ./out/main.o: main.cpp
-	g++ -g -Wall -c main.cpp -o ./out/main.o -O2
+	g++ -g -Wall -c main.cpp -o ./out/main.o -O3
 
 ./out/building.o: ./src/building.cpp
-	g++ -Wall -g -c ./src/building.cpp -o ./out/building.o -O2
+	g++ -Wall -g -c ./src/building.cpp -o ./out/building.o -O3
 
 ./out/character.o: ./src/character.cpp
-	g++ -Wall -g -c ./src/character.cpp -o ./out/character.o -O2
+	g++ -Wall -g -c ./src/character.cpp -o ./out/character.o -O3
 
 ./out/country.o: ./src/country.cpp
-	g++ -Wall -g -c ./src/country.cpp -o ./out/country.o -O2
+	g++ -Wall -g -c ./src/country.cpp -o ./out/country.o -O3
 
 ./out/culture.o: ./src/culture.cpp
-	g++ -Wall -g -c ./src/culture.cpp -o ./out/culture.o	-O2
+	g++ -Wall -g -c ./src/culture.cpp -o ./out/culture.o	-O3
 
 ./out/population.o: ./src/population.cpp
-	g++ -Wall -g -c ./src/population.cpp -o ./out/population.o	-O2
+	g++ -Wall -g -c ./src/population.cpp -o ./out/population.o	-O3
 
 ./out/province.o: ./src/province.cpp
-	g++ -Wall -g -c ./src/province.cpp -o ./out/province.o	-O2
+	g++ -Wall -g -c ./src/province.cpp -o ./out/province.o	-O3
 
 ./out/world.o: ./src/world.cpp
-	g++ -Wall -g -c ./src/world.cpp -o ./out/world.o	-O2
+	g++ -Wall -g -c ./src/world.cpp -o ./out/world.o	-O3
 
 ./out/date.o: ./src/utils/date.cpp
-	g++ -Wall -g -c ./src/utils/date.cpp -o ./out/date.o	-O2
+	g++ -Wall -g -c ./src/utils/date.cpp -o ./out/date.o	-O3
 
 ./out/good.o: ./src/economy/good.cpp
-	g++ -Wall -g -c ./src/economy/good.cpp -o ./out/good.o	-O2
+	g++ -Wall -g -c ./src/economy/good.cpp -o ./out/good.o	-O3
 
 ./out/ai_character.o: ./src/agents/ai_character.cpp
-	g++ -Wall -g -c ./src/agents/ai_character.cpp -o ./out/ai_character.o -O2
+	g++ -Wall -g -c ./src/agents/ai_character.cpp -o ./out/ai_character.o -O3
 
 ./out/diplomacy.o: ./src/diplomacy.cpp
-	g++ -Wall -g -c ./src/diplomacy.cpp -o ./out/diplomacy.o -O2
+	g++ -Wall -g -c ./src/diplomacy.cpp -o ./out/diplomacy.o -O3
 
 ./out/market.o: ./src/economy/market.cpp
-	g++ -Wall -g -c ./src/economy/market.cpp -o ./out/market.o -O2
+	g++ -Wall -g -c ./src/economy/market.cpp -o ./out/market.o -O3
 
 clean:
 	rm -f ./out/*.o sim

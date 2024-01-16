@@ -140,8 +140,8 @@ void renderGoodMap(World* w, Texture2D* tex) {
     ImageResizeNN(&img, cols * TILESIZE, rows * TILESIZE);
     tex[ i ] = LoadTextureFromImage(img);
     delete img.data;
-
   }
+  //delete pixels;
 }
 
 Texture2D renderPoliticalMap(World* w) {
@@ -353,7 +353,7 @@ void camera_move(Camera2D* camera, Vector2* prevMousePos, int music_id, vector<M
 
   float mouseDelta = GetMouseWheelMove();
   UpdateMusicStream(musics[ music_id ]);
-  float newZoom = camera->zoom + mouseDelta * 0.01f;
+  float newZoom = camera->zoom + mouseDelta * 0.02f;
   if (newZoom <= 0)
     newZoom = 0.01f;
 
@@ -407,6 +407,7 @@ void run(World* w) {
   PlayMusicStream(musics[ music_id ]);
   while (!WindowShouldClose()) {
     camera_move(&camera, &prevMousePos, music_id, musics);
+    w->updateWorld();
     BeginDrawing();
     {
       BeginMode2D(camera);
@@ -423,6 +424,8 @@ void run(World* w) {
       }
 
       EndMode2D();
+      //draw fps top right
+      DrawFPS(GetRenderHeight() - 50, GetRenderWidth() - 50);
       DrawText(TextFormat("Good: %s", w->getGoodById(id_good)->get_name().c_str()), 120, 10, 20, BLACK);
       if (GuiButton(Rectangle{ 10, 10, 100, 20 }, "Change good")) {
         id_good += 1;

@@ -35,7 +35,7 @@ vector<float> _generate_noise(int rows, int cols, float frequency, int seed, int
   noise.SetFractalOctaves(octaves);
   noise.SetFractalLacunarity(2.0f);
   noise.SetFractalGain(0.47f);
-  noise.SetFractalWeightedStrength(0.0f);
+  noise.SetFractalWeightedStrength(0.1f);
 
   vector<float> noiseData(rows * cols);
   int index = 0;
@@ -112,11 +112,11 @@ province_properties get_province_type(float height, float moisture) {
       color = 13;
       type = bare;
     }
-    else if (moisture < 0.1) {
+    else if (moisture < 0.0) {
       color = 14;
       type = taiga;
     }
-    else if (moisture < 0.4) {
+    else if (moisture < 0.3) {
       color = 12;
       type = tundra;
     }
@@ -170,7 +170,7 @@ province_properties* generate_map(World* w) {
   int random = rand();
   int seed = random % 100000;
   float frequency = 0.015f;
-  int octaves = 7;
+  int octaves = 10;
   int cols = w->get_num_cols();
   int rows = w->get_num_rows();
 
@@ -186,12 +186,12 @@ province_properties* generate_map(World* w) {
       float moisture_level = moisture[ row ][ col ];
       province_properties props = get_province_type(height, moisture_level);
       prov_props[ id_count ] = props;
-      Province p(id_count++, props.province_name, props.pop, row, col, height, props.type, moisture_level);
+      Province p(id_count++, props.province_name, props.pop, row, col, height, props.type, moisture_level, w);
       w->addProvince(p, col, row);
     }
   }
-  free(moisture);
-  free(tiles);
+  delete[] tiles;
+  delete[] moisture;
 
   cout << "Map generated" << endl;
   fix_mistakes(w, prov_props);

@@ -85,7 +85,9 @@ void Good::set_goods(World* world)
   world->addGood(Good(47, "Caravelas", 9.5, manufactured, military));
   world->addGood(Good(48, "Carracks", 12.5, manufactured, military));
   world->addGood(Good(49, "Naus", 12.5, manufactured, military));
+  world->addGood(Good(50, "Beer", 2, manufactured, basic_need));
   //TODO: add more ships and military units
+
 }
 
 ostream& operator<<(ostream& os, const Good& g)

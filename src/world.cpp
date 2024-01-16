@@ -215,5 +215,6 @@ void World::updateAgents() {
 }
 
 void  World::updateWorld() {
+  advanceDate();
   updateAgents();
 }

@@ -56,7 +56,7 @@ private:
 
 public:
   Province() {};
-  Province(uint id, string name, uint population_size, int y, int x, float height, type_province type, float moisture)
+  Province(uint id, string name, uint population_size, int y, int x, float height, type_province type, float moisture, World* w)
   {
     this->id = id;
     this->name = name;
@@ -68,6 +68,7 @@ public:
     this->height = height;
     this->type = type;
     this->moisture = moisture;
+    this->market = Market(id, w);
   }
   ~Province() {};
   string get_name();
