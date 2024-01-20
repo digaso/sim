@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -31,6 +32,10 @@ private:
 public:
 
   Culture(/* args */) {};
+  Culture(string name, uint id) {
+    this->name = name;
+    this->id = id;
+  };
   Culture(string name, uint id, vector<uint> homelands, vector<uint> goods_obsession, PopConsumption pop_consumption) {
     this->name = name;
     this->id = id;

@@ -1,7 +1,6 @@
 #include "market.hpp"
 #include "../world.hpp"
 
-Market::Market() {}
 
 Market::Market(uint province_id, World* w) {
   this->province_id = province_id;

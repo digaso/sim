@@ -48,7 +48,7 @@ Color* terrain_colors = new Color[ 16 ]{
   Mountain
 };
 
-Color* colors = new Color[]{
+Color* colors = new Color[ 28 ]{
   { 255, 0, 0, 255 },
   { 0, 255, 0, 255 },
   { 0, 0, 255, 255 },
@@ -77,7 +77,6 @@ Color* colors = new Color[]{
   {98,230,76, 255},
   { 30, 255, 30, 255 },
   { 171, 219, 227, 255 }
-
 };
 
 Texture2D renderGeographicalMap(World* w, province_properties* p) {
@@ -185,40 +184,25 @@ Texture2D renderPoliticalMap(World* w) {
 Texture2D renderBordersMap(World* w) {
   int cols = w->get_num_cols();
   int rows = w->get_num_rows();
-
-  // Increased size to account for borders
-  byte* pixels = new byte[ (rows * TILESIZE) * (cols * TILESIZE) * 4 ];
-
-  // Fixed color for drawing borders (black in this case)
+  byte* pixels = new byte[ rows * cols * 4 ]();
   Color borderColor = { 0, 0, 0, 60 };
 
   vector<Country> countries = w->getCountries();
-
   // Iterate over each country
   for (Country country : countries) {
-    // Iterate over each province in the country
     for (int i : country.get_provinces()) {
-      int x = (i % cols); // Unadjusted position for borders
-      int y = (i / cols); // Unadjusted position for borders
 
-      // Check neighboring provinces for borders
-      for (int j = -1; j <= 1; j++) {
-        for (int k = -1; k <= 1; k++) {
-          int neighborIndex = (i / cols + j) * cols + (i % cols + k);
-          if (j != 0 || k != 0) {  // Exclude the center province
-            if (neighborIndex >= 0 && neighborIndex < rows * cols) {
-              Province* neighborProv = w->getProvinceById(neighborIndex);
-              if (country.get_id() != neighborProv->get_country_owner_id()) {
-                // Draw a border between the two provinces
-                int index = ((y) * (cols)+(x)) * 4;
-                pixels[ index + 0 ] = (byte)borderColor.r;
-                pixels[ index + 1 ] = (byte)borderColor.g;
-                pixels[ index + 2 ] = (byte)borderColor.b;
-                pixels[ index + 3 ] = (byte)borderColor.a;
+      Province* prov = w->getProvinceById(i);
+      for (Province* p : w->get_neighbours(prov)) {
 
-              }
-            }
-          }
+        if (p->get_country_owner_id() != prov->get_country_owner_id())
+        {
+          // Calculate the position of the border
+          int index = (prov->get_y() * cols + prov->get_x()) * 4;
+          pixels[ index + 0 ] = (byte)borderColor.r;
+          pixels[ index + 1 ] = (byte)borderColor.g;
+          pixels[ index + 2 ] = (byte)borderColor.b;
+          pixels[ index + 3 ] = (byte)borderColor.a;
         }
       }
     }
@@ -233,7 +217,7 @@ Texture2D renderBordersMap(World* w) {
   };
   ImageResizeNN(&img, cols * TILESIZE, rows * TILESIZE);
   Texture2D tex = LoadTextureFromImage(img);
-  delete img.data;
+  delete[] img.data;
   return tex;
 }
 
@@ -270,6 +254,7 @@ void draw_game_screen(Camera2D camera, World* w, Texture2D Geomap, Texture2D* te
     }
 
     EndMode2D();
+    DrawFPS(130, 100);
     DrawText(TextFormat("Good: %s", w->getGoodById(*id_good)->get_name().c_str()), 120, 10, 20, BLACK);
     if (GuiButton(Rectangle{ 10, 10, 100, 20 }, "Change good")) {
       *id_good += 1;
@@ -315,7 +300,7 @@ void draw_game_screen(Camera2D camera, World* w, Texture2D Geomap, Texture2D* te
         if (prov->get_country_owner_id() != -1) {
           Country* c = w->getCountryById(prov->get_country_owner_id());
           CountryName += c->get_name();
-          kingName += c->get_king_id();
+          kingName += w->getCharacter(c->get_king_id())->get_name();
         }
         else {
           CountryName += "No owner";
@@ -323,11 +308,14 @@ void draw_game_screen(Camera2D camera, World* w, Texture2D Geomap, Texture2D* te
 
         string s3 = "Type: " + Province::type_province_to_string(prov->get_type());
         string s4 = "Position x: " + to_string(prov->get_x()) + " y: " + to_string(prov->get_y());
+        string s5 = "Population: " + to_string(prov->get_population_size());
         GuiPanel(Rectangle{ 10, 130, 310, 300 }, s.c_str());
         GuiLabel(Rectangle{ 15, 150, 310, 20 }, s2.c_str());
         GuiLabel(Rectangle{ 15, 170, 310, 20 }, CountryName.c_str());
         GuiLabel(Rectangle{ 15, 190, 310, 20 }, s3.c_str());
         GuiLabel(Rectangle{ 15, 210, 310, 20 }, s4.c_str());
+        GuiLabel(Rectangle{ 15, 230, 310, 20 }, s5.c_str());
+        GuiLabel(Rectangle{ 15, 250, 310, 20 }, kingName.c_str());
       }
       else {
         *show = false;
@@ -408,95 +396,8 @@ void run(World* w) {
   while (!WindowShouldClose()) {
     camera_move(&camera, &prevMousePos, music_id, musics);
     w->updateWorld();
-    BeginDrawing();
-    {
-      BeginMode2D(camera);
-      ClearBackground(RAYWHITE);
-      DrawTexturePro(Geomap, { 0, 0, (float)Geomap.width, (float)Geomap.height }, { 0, 0, Geomap.width * camera.zoom, Geomap.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
-      if (goods_map) {
-        political_map = false;
-        DrawTexturePro(texgoods[ id_good ], { 0, 0, (float)texgoods[ id_good ].width, (float)texgoods[ id_good ].height }, { 0, 0, texgoods[ id_good ].width * camera.zoom, texgoods[ id_good ].height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
-      }
-      else if (political_map) {
-        goods_map = false;
-        DrawTexturePro(map, { 0, 0, (float)map.width, (float)map.height }, { 0, 0, map.width * camera.zoom, map.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
-        DrawTexturePro(borders, { 0, 0, (float)borders.width, (float)borders.height }, { 0, 0, borders.width * camera.zoom, borders.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
-      }
-
-      EndMode2D();
-      //draw fps top right
-      DrawFPS(GetRenderHeight() - 50, GetRenderWidth() - 50);
-      DrawText(TextFormat("Good: %s", w->getGoodById(id_good)->get_name().c_str()), 120, 10, 20, BLACK);
-      if (GuiButton(Rectangle{ 10, 10, 100, 20 }, "Change good")) {
-        id_good += 1;
-        if (id_good >= w->getGoods().size())
-          id_good = 0;
-      }
-
-      if (GuiButton(Rectangle{ 10, 40, 100, 20 }, "Change music")) {
-        StopMusicStream(musics[ music_id ]);
-        music_id += 1;
-        if (music_id >= musics.size())
-          music_id = 0;
-        SetMusicVolume(musics[ music_id ], vol);
-        PlayMusicStream(musics[ music_id ]);
-      }
-
-      if (GuiButton(Rectangle{ 10, 70, 100, 20 }, "Toggle goods map")) {
-        goods_map = !goods_map;
-      }
-
-      if (GuiButton(Rectangle{ 10, 100, 100, 20 }, "Toggle political map")) {
-        political_map = !political_map;
-      }
-
-      //mouse click over provinces with tilesize and show text, but caring about zoom
-      Vector2 mousePos = GetMousePosition();
-      mousePos = GetScreenToWorld2D(mousePos, camera);
-      int x = (int)mousePos.x / (TILESIZE * camera.zoom);
-      int y = (int)mousePos.y / (TILESIZE * camera.zoom);
-      Province* prov;
-      string s, s2, CountryName, s3, s4;
-      if (IsMouseButtonPressed(0) || show == true) {
-        if (x >= 0 && x < w->get_num_cols() && y >= 0 && y < w->get_num_rows()) {
-          show = true;
-          prov = w->getProvinceByCoords(x, y);
-          s = prov->get_name();
-          s2 = "Goods: ";
-          for (auto& g : prov->get_goods()) {
-            s2 += w->getGoodById(g)->get_name() + ", ";
-          }
-          string CountryName = "Country: ";
-          string kingName = "King Name:";
-          if (prov->get_country_owner_id() != -1) {
-            Country* c = w->getCountryById(prov->get_country_owner_id());
-            CountryName += c->get_name();
-            kingName += w->getCharacter(c->get_king_id())->get_name();
-          }
-          else {
-            CountryName += "No owner";
-          }
-
-          string s3 = "Type: " + Province::type_province_to_string(prov->get_type());
-          string s4 = "Position x: " + to_string(prov->get_x()) + " y: " + to_string(prov->get_y());
-          string s5 = "Population: " + to_string(prov->get_population_size());
-          GuiPanel(Rectangle{ 10, 130, 310, 300 }, s.c_str());
-          GuiLabel(Rectangle{ 15, 150, 310, 20 }, s2.c_str());
-          GuiLabel(Rectangle{ 15, 170, 310, 20 }, CountryName.c_str());
-          GuiLabel(Rectangle{ 15, 190, 310, 20 }, s3.c_str());
-          GuiLabel(Rectangle{ 15, 210, 310, 20 }, s4.c_str());
-          GuiLabel(Rectangle{ 15, 230, 310, 20 }, kingName.c_str());
-          GuiLabel(Rectangle{ 15, 250, 310, 20 }, s5.c_str());
-        }
-        else {
-          show = false;
-        }
-
-      }
-    }
-    EndDrawing();
+    draw_game_screen(camera, w, Geomap, texgoods, map, borders, &goods_map, &political_map, &id_good, &show, music_id, musics, vol);
   }
-
   UnloadTexture(Geomap);
   UnloadTexture(map);
   UnloadTexture(borders);
@@ -505,4 +406,5 @@ void run(World* w) {
   }
   CloseAudioDevice();
   CloseWindow();
+
 }

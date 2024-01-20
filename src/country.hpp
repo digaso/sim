@@ -6,6 +6,7 @@
 #include "province.hpp"
 #include "diplomacy.hpp"
 #include "agents/ai_character.hpp"
+#include "economy/market.hpp"
 
 using namespace std;
 
@@ -40,6 +41,7 @@ class Country
   uint color_id;
   uint culture_id;
   uint religion_id;
+  vector<Market> markets;
   bool is_player = false;
   float money;
 public:

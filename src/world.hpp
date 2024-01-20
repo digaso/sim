@@ -42,7 +42,7 @@ private:
 public:
   World(uint8_t day, uint8_t month, uint year, uint cols, uint rows);
   ~World();
-  vector<Province*> getLandNeighbours(Province* p);
+  vector<Province*> get_land_neighbours(Province* p);
   const date getDate() const;
   const string to_string() const;
   string getDateString();
@@ -94,6 +94,7 @@ public:
   vector<Province*> get_path_between_provinces(uint start_id, uint end_id);
   const AI_Character& getAgentById(uint id) const;
   vector<Province*> get_neighbours(Province* p);
+  vector<Province*> get_neighbours_without_diagonal(Province* p);
   void updateAgents();
   void updateCharacters();
   void updateCountries();

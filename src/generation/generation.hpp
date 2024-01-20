@@ -14,6 +14,8 @@
 #define MAXPROVINCES 290
 #define MINPROVINCES 30
 
+
+
 typedef struct province_properties {
   uint pop;
   string province_name;
@@ -34,8 +36,8 @@ vector<float> _generate_noise(int rows, int cols, float frequency, int seed, int
   noise.SetFrequency(frequency);
   noise.SetFractalOctaves(octaves);
   noise.SetFractalLacunarity(2.0f);
-  noise.SetFractalGain(0.47f);
-  noise.SetFractalWeightedStrength(0.1f);
+  noise.SetFractalGain(0.48f);
+  noise.SetFractalWeightedStrength(0.0f);
 
   vector<float> noiseData(rows * cols);
   int index = 0;
@@ -52,7 +54,7 @@ province_properties get_province_type(float height, float moisture) {
   string province_name;
   type_province type = sea;
   int color = 0;
-  if (height < -0.25) {
+  if (height < -0.22) {
     color = 0;
     type = deep_sea;
     pop = 0;
@@ -62,7 +64,7 @@ province_properties get_province_type(float height, float moisture) {
     type = sea;
     pop = 0;
   }
-  else if (height < 0.18f) {
+  else if (height < 0.175f) {
     color = 2;
     type = coastal_sea;
     pop = 0;
@@ -142,7 +144,7 @@ void fix_mistakes(World* w, province_properties* prov_props) {
       Province* p = w->getProvinceById(row * cols + col);
       type_province type = p->get_type();
       if (type == coastal_desert || type == coast) {
-        vector<Province*> neighbours = w->get_neighbours(p);
+        vector<Province*> neighbours = w->get_neighbours_without_diagonal(p);
         bool flag = false;
         for (auto n : neighbours) {
           if (n->get_type() == type_province::sea || n->get_type() == type_province::coastal_sea) {
@@ -458,7 +460,7 @@ void generate_countries(World* w) {
       generate_royalty(w, &c, p);
       for (uint j = 0; j < num_provinces - 1; j++) {
         p = w->getProvinceById(provinces.at(GetRandomValue(0, provinces.size() - 1)));
-        vector<Province*> neighbours = w->getLandNeighbours(p);
+        vector<Province*> neighbours = w->get_land_neighbours(p);
         for (auto n : neighbours) {
           if (n->get_country_owner_id() == -1 && n->get_type() != type_province::sea && n->get_type() != type_province::coastal_sea && n->get_type() != type_province::deep_sea) {
             if (n->get_type() == grassland || n->get_type() == forest || n->get_type() == tropical || n->get_type() == tropical_forest) {

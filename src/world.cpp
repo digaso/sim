@@ -94,7 +94,7 @@ void World::addReligion(Religion r)
   this->religions.push_back(r);
 }
 
-vector<Province*> World::getLandNeighbours(Province* p)
+vector<Province*> World::get_land_neighbours(Province* p)
 {
   vector<Province*> neighbours;
   int x = p->get_x();
@@ -181,18 +181,44 @@ vector<Province*> World::get_neighbours(Province* p) {
     neighbours.push_back(this->getProvinceByCoords(x, y + 1));
   }
   //check diagonal directions
- // if (x < this->num_cols - 1 && y > 0) {
- //   neighbours.push_back(this->getProvinceByCoords(x + 1, y - 1));
- // }
- // if (x > 0 && y > 0) {
- //   neighbours.push_back(this->getProvinceByCoords(x - 1, y - 1));
- // }
- // if (x > 0 && y < this->num_rows - 1) {
- //   neighbours.push_back(this->getProvinceByCoords(x - 1, y + 1));
- // }
- // if (x < this->num_cols - 1 && y < this->num_rows - 1) {
- //   neighbours.push_back(this->getProvinceByCoords(x + 1, y + 1));
- // }
+  if (x < this->num_cols - 1 && y > 0) {
+    neighbours.push_back(this->getProvinceByCoords(x + 1, y - 1));
+  }
+  if (x > 0 && y > 0) {
+    neighbours.push_back(this->getProvinceByCoords(x - 1, y - 1));
+  }
+  if (x > 0 && y < this->num_rows - 1) {
+    neighbours.push_back(this->getProvinceByCoords(x - 1, y + 1));
+  }
+  if (x < this->num_cols - 1 && y < this->num_rows - 1) {
+    neighbours.push_back(this->getProvinceByCoords(x + 1, y + 1));
+  }
+
+
+  return neighbours;
+
+}
+
+
+vector<Province*> World::get_neighbours_without_diagonal(Province* p) {
+
+  vector<Province*> neighbours;
+  int x = p->get_x();
+  int y = p->get_y();
+  //check cardinal directions
+  if (x < this->num_cols - 1) {
+    neighbours.push_back(this->getProvinceByCoords(x + 1, y));
+  }
+  if (y > 0) {
+    neighbours.push_back(this->getProvinceByCoords(x, y - 1));
+  }
+  if (x > 0) {
+    neighbours.push_back(this->getProvinceByCoords(x - 1, y));
+  }
+  if (y < this->num_rows - 1) {
+    neighbours.push_back(this->getProvinceByCoords(x, y + 1));
+  }
+
 
 
   return neighbours;
