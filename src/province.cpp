@@ -19,6 +19,21 @@ int Province::get_country_owner_id() const
   return this->country_owner_id;
 }
 
+void Province::set_region_id(int id)
+{
+  this->region_id = id;
+}
+
+int Province::get_region_id()
+{
+  return this->region_id;
+}
+
+bool Province::is_land()
+{
+  return this->type != deep_sea && this->type != sea && this->type != coastal_sea;
+}
+
 uint Province::get_population_size() const
 {
   uint population_size = 0;

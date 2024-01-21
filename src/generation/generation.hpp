@@ -1,18 +1,14 @@
 #include <iostream>
 #include <random>
 #include <vector>
+#include "future"
+#include "random"
 #include <list>
 #include "../world.hpp"
 #include <raylib.h>
 #include "FastNoiseLite.h"
 #include "../utils/wgen.hpp"
-#include "future"
-#include "random"
-
-#define MAXCOUNTRIES 250
-#define MAXRELIGIONS MAXCOUNTRIES / 10
-#define MAXPROVINCES 290
-#define MINPROVINCES 30
+#include "../configs.h"
 
 
 
@@ -167,6 +163,43 @@ void fix_mistakes(World* w, province_properties* prov_props) {
   }
 }
 
+void find_regions(World* w) {
+  bool* visited = new bool[ w->get_num_rows() * w->get_num_cols() ];
+  for (uint i = 0; i < w->get_num_rows() * w->get_num_cols(); i++) {
+    visited[ i ] = false;
+  }
+  uint id = 0;
+  for (uint row = 0; row < w->get_num_rows(); row++) {
+    for (uint col = 0; col < w->get_num_cols(); col++) {
+      Province* p = w->getProvinceById(row * w->get_num_cols() + col);
+      if (!visited[ row * w->get_num_cols() + col ] && p->get_type() != type_province::sea && p->get_type() != type_province::coastal_sea && p->get_type() != type_province::deep_sea) {
+        Region r;
+        r.id = id++;
+        r.name = generateWord(2, 5);
+        r.color_id = GetRandomValue(0, 25);
+        queue<Province*> q;
+        q.push(p);
+        visited[ row * w->get_num_cols() + col ] = true;
+        while (!q.empty()) {
+          Province* p = q.front();
+          q.pop();
+          r.provinces.push_back(p);
+          p->set_region_id(r.id);
+          vector<Province*> neighbours = w->get_land_neighbours_diagonal(p);
+          for (auto n : neighbours) {
+            if (!visited[ n->get_y() * w->get_num_cols() + n->get_x() ]) {
+              q.push(n);
+              visited[ n->get_y() * w->get_num_cols() + n->get_x() ] = true;
+            }
+          }
+        }
+        w->addRegion(r);
+      }
+    }
+  }
+
+}
+
 province_properties* generate_map(World* w) {
   srand((unsigned)time(NULL));
   int random = rand();
@@ -196,7 +229,10 @@ province_properties* generate_map(World* w) {
   delete[] moisture;
 
   cout << "Map generated" << endl;
+  find_regions(w);
+  cout << "Regions found" << endl;
   fix_mistakes(w, prov_props);
+  cout << "Mistakes fixed" << endl;
   set_map_goods(w, frequency / 3, seed, octaves);
   cout << "Goods generated" << endl;
   populate_world(w);
@@ -234,6 +270,15 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
             continue;
           }
           if (g.get_name() == "Timber" && (p->get_type() == forest || p->get_type() == tropical_forest || p->get_type() == tropical || p->get_type() == grassland || p->get_type() == taiga) && GetRandomValue(0, 100) < 90) {
+            p->add_goods(g.get_id()); count++;
+            bmap[ row * cols + col ] = true;
+            continue;
+          }
+          if (g.get_name() == "Gold" && p->is_land()) {
+            uint8_t chance = GetRandomValue(0, 100);
+            if (chance < 99) {
+              continue;
+            }
             p->add_goods(g.get_id()); count++;
             bmap[ row * cols + col ] = true;
             continue;
@@ -395,7 +440,6 @@ void generate_royalty(World* w, Country* c, Province* p) {
   uint province_living = p->get_id();
   uint id = w->get_characters_size();
 
-
   //generate queen
   uint wife_conscientiousness = GetRandomValue(0, 100);
   uint wife_agreeableness = GetRandomValue(0, 100);
@@ -408,7 +452,7 @@ void generate_royalty(World* w, Country* c, Province* p) {
   uint wife_year = 822 - age;
   uint wife_month = GetRandomValue(1, 12);
   uint wife_day = GetRandomValue(1, 28);
-  date wife_birth_date = date(day, month, year);
+  date wife_birth_date = date(wife_day, wife_month, wife_year);
   uint wife_spouse_id = id;
   uint wife_id = id + 1;
   spouse_id = wife_id;
@@ -444,7 +488,7 @@ void generate_countries(World* w) {
     uint y = GetRandomValue(64, w->get_num_rows() - 1 - 90);
     Province* p = w->getProvinceByCoords(x, y);
     uint num_provinces = GetRandomValue(MINPROVINCES, MAXPROVINCES);
-    uint8_t color_id = GetRandomValue(0, 25);
+    uint8_t color_id = GetRandomValue(0, 116);
     vector<uint> provinces;
 
     if (p->get_type() != type_province::sea && p->get_type() != type_province::coastal_sea && p->get_type() != type_province::deep_sea && p->get_country_owner_id() == -1) {
@@ -465,7 +509,7 @@ void generate_countries(World* w) {
           if (n->get_country_owner_id() == -1 && n->get_type() != type_province::sea && n->get_type() != type_province::coastal_sea && n->get_type() != type_province::deep_sea) {
             if (n->get_type() == grassland || n->get_type() == forest || n->get_type() == tropical || n->get_type() == tropical_forest) {
               uint8_t chance = GetRandomValue(0, 100);
-              if (chance < 1) continue;
+              if (chance < 2) continue;
             }
             if (n->get_type() == hill || n->get_type() == mountain || n->get_type() == taiga || n->get_type() == tundra) {
               uint8_t chance = GetRandomValue(0, 100);
@@ -477,9 +521,9 @@ void generate_countries(World* w) {
             }
 
             n->set_country_owner_id(i);
-            n->add_population(Population(0, GetRandomValue(300, 600), i, n->get_id(), c.get_culture_id(), population_class::peasants));
-            n->add_population(Population(1, GetRandomValue(100, 300), i, n->get_id(), c.get_culture_id(), population_class::citizens));
-            n->add_population(Population(2, GetRandomValue(10, 100), i, n->get_id(), c.get_culture_id(), population_class::elite));
+            n->add_population(Population(0, GetRandomValue(250, 900), i, n->get_id(), c.get_culture_id(), population_class::peasants));
+            n->add_population(Population(1, GetRandomValue(150, 250), i, n->get_id(), c.get_culture_id(), population_class::citizens));
+            n->add_population(Population(2, GetRandomValue(50, 150), i, n->get_id(), c.get_culture_id(), population_class::elite));
             c.add_province(n);
             provinces.push_back(n->get_id());
             j++;

@@ -41,6 +41,7 @@ private:
   string name; //name of province
   uint y;
   uint x;
+  int region_id = -1; //id of region
   uint baron_id; //id of baron
   float height; //value between -1 and 1
   float moisture; //value between -1 and 1
@@ -48,7 +49,6 @@ private:
   int country_owner_id; //id to country that owns the province
   float migration_atraction; //value between 0 and 1
   float tax_control; //value between 0 and 1
-  bool trade_route_candidate = false; //becomes true if province has a marketplace or a port
   vector<uint_fast8_t> goods; //id of goods
   vector<BuildingStats> buildings; //id of buildings
   Market market;
@@ -78,6 +78,8 @@ public:
   int get_y();
   int get_x();
   type_province get_type();
+  void set_region_id(int id);
+  int get_region_id();
   float get_moisture();
   uint get_population_size() const;
   int get_country_owner_id() const;
@@ -95,6 +97,7 @@ public:
   void add_building(uint_fast8_t building_id);
   vector<uint_fast8_t> get_buildings();
   void add_population(Population pop);
+  bool is_land();
   uint get_building_amount(uint_fast8_t building_id);
   vector<Population>* get_pops();
 

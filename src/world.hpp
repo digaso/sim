@@ -23,6 +23,13 @@ class Character;
 class Country;
 
 
+typedef struct region {
+  uint id;
+  string name;
+  uint8_t color_id;
+  vector<Province*> provinces;
+} Region;
+
 class World
 {
 private:
@@ -38,6 +45,7 @@ private:
   vector<Good> goods;
   vector<Building> buildings;
   vector<AI_Character> agents;
+  vector<Region> regions;
 
 public:
   World(uint8_t day, uint8_t month, uint year, uint cols, uint rows);
@@ -57,11 +65,13 @@ public:
   void addCulture(Culture c);
   void addBuilding(Building b);
   void addAIAgent(AI_Character aic);
+  void addRegion(Region r);
   uint get_characters_size();
   Good* getGoodById(uint id);
   bool* getGoodMapById(uint id) { return this->goods.at(id).get_map(); }
   void setGoodMapById(uint id, bool* map) { this->goods.at(id).set_map(map); }
   bool advanceDate();
+  vector<Province*> get_land_neighbours_diagonal(Province* p);
   Province* getProvinceByCoords(uint x, uint y);
   Country* getCountryById(uint id) {
     if (id < countries.size()) {
@@ -69,6 +79,7 @@ public:
     }
     return nullptr;
   };
+  Region getRegionById(int id);
   Province* getProvinceById(uint id);
   Province* getProvinces();
   vector<Religion> getReligions() { return this->religions; }
@@ -81,6 +92,8 @@ public:
     }
     return nullptr;
   }
+  bool ProvConnectedLand(Province* p1, Province* p2);
+
   const vector<Country> getCountries() const;
   void set_num_rows(uint num_rows) { this->num_rows = num_rows; }
   void set_num_cols(uint num_cols) { this->num_cols = num_cols; }
