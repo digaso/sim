@@ -30,6 +30,7 @@ private:
   type_good type;
   class_good good_class;
   bool maritime = false;
+  uint initial_amoount;
   bool* map;
 public:
   void static set_goods(World* world);
@@ -38,25 +39,17 @@ public:
   ~Good();
   uint get_id();
   type_good get_type();
-  bool is_maritime() {
-    return maritime;
-  }
-  void set_map(bool* map) {
-    this->map = map;
-  }
+  class_good get_class();
+  bool is_maritime();
+  void set_map(bool* map);
 
-  bool* get_map() {
-    return map;
-  }
-
-  void set_maritime(bool maritime) {
-    this->maritime = maritime;
-  }
+  bool* get_map();
+  uint get_initial_amount();
+  void set_initial_amount(uint initial_amount);
+  void set_maritime(bool maritime);
 
   float get_base_value();
 
-  string get_name() {
-    return name;
-  }
+  string get_name();
   friend ostream& operator<<(ostream& os, const Good& g);
 };

@@ -1,13 +1,38 @@
+#include <map>
 #include "country.hpp"
-
+#include "world.hpp"
+#include "province.hpp"
 using namespace std;
 
+
+Country::Country(uint id, string name, uint8_t religion_id)
+{
+  this->id = id;
+  this->name = name;
+  this->religion_id = religion_id;
+};
 
 void Country::add_province(Province* p) {
   this->provinces.push_back(p->get_id());
   this->num_provinces++;
 }
+void Country::remove_province(Province* p) {
+  for (uint i = 0; i < this->num_provinces; i++) {
+    if (this->provinces[ i ] == p->get_id()) {
+      this->provinces.erase(this->provinces.begin() + i);
+      this->num_provinces--;
+      return;
+    }
+  }
+}
 
+void Country::add_market(Market m) {
+  this->markets.push_back(m);
+}
+
+vector<Market> Country::get_markets() {
+  return this->markets;
+}
 
 string Country::get_name() {
   return this->name;
@@ -39,6 +64,7 @@ void Country::set_capital_id(uint id) {
 uint Country::get_capital_id() {
   return this->capital_id;
 }
+
 
 void Country::set_color_id(uint id) {
   this->color_id = id;

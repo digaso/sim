@@ -10,7 +10,7 @@ enum type_building {
   maritime,
   manufactury,
   military_building,
-  infrastructure,
+  infrastructure_building,
   commerce,
   culture,
   religion,
@@ -41,19 +41,18 @@ class Building
   uint price;
   string name;
   type_building type;
-  uint size_workers;
+  uint size_workers; //per level
   Production production;
+  float upkeep;
+  uint build_time;
+  uint build_cost;
+
 
 public:
-  void (*func) (World*, uint, uint8_t);
-  ~Building() {};
-  Building() {};
-  Building(uint id, string name, Production building_production, type_building building_type, void (*func) (World*, uint, uint8_t)) {
-    this->id = id;
-    this->name = name;
-    this->func = func;
-    this->production = building_production;
-  }
+  void (*func) (World*, uint, uint8_t, Production);
+  ~Building();
+  Building();
+  Building(uint id, string name, Production building_production, type_building building_type, void (*func) (World*, uint, uint8_t, Production));
   uint get_id() { return this->id; };
   string get_name() { return this->name; };
   uint get_size_workers() { return this->size_workers; };

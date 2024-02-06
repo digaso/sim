@@ -42,16 +42,21 @@ class Country
   uint culture_id;
   uint religion_id;
   vector<Market> markets;
+  vector<uint> cultures_accepted;
   bool is_player = false;
   float money;
+  float income;
+  float expenses;
+  float tax_income;
+  float trade_income;
+  float production_income;
+  float army_maintenance;
+  float navy_maintenance;
+  float fort_maintenance;
+
 public:
   Country() {};
-  Country(uint id, string name, uint8_t religion_id)
-  {
-    this->id = id;
-    this->name = name;
-    this->religion_id = religion_id;
-  };
+  Country(uint id, string name, uint8_t religion_id);
   ~Country() {};
   uint get_id();
   string get_name();
@@ -63,6 +68,8 @@ public:
   void remove_character(Character c);
   void print_characters();
   void print_provinces();
+  void print_provinces_known();
+  void add_province_known(uint id);
   void set_capital_id(uint id);
   uint get_capital_id();
   uint get_num_provinces();
@@ -76,7 +83,13 @@ public:
   uint get_culture_id();
   void set_culture_id(uint id);
   void set_player(bool is_player);
+  void set_cultures_accepted(vector<uint> cultures_accepted);
+  vector<uint> get_cultures_accepted();
+  bool add_culture_accepted(uint culture_id);
+  bool remove_culture_accepted(uint culture_id);
   bool player();
+  vector<Market> get_markets();
+  void add_market(Market m);
   vector<uint> get_provinces();
   vector<uint> get_characters();
   friend ostream& operator<<(ostream& os, const Country& c);

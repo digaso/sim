@@ -410,7 +410,7 @@ void draw_province_GUI(Camera2D camera, World* w, bool* show) {
       if (prov->get_country_owner_id() != -1) {
         Country* c = w->getCountryById(prov->get_country_owner_id());
         CountryName += c->get_name();
-        kingName += w->getCharacter(c->get_king_id())->get_name();
+        kingName += w->getCharacterById(c->get_king_id())->get_name();
       }
       else {
         CountryName += "No owner";
@@ -450,7 +450,6 @@ void draw_game_screen(Camera2D camera, World* w, Texture2D Geomap, Texture2D* te
       *political_map = false;
       DrawTexturePro(texgoods[ *id_good ], { 0, 0, (float)texgoods[ *id_good ].width, (float)texgoods[ *id_good ].height }, { 0, 0, texgoods[ *id_good ].width * camera.zoom, texgoods[ *id_good ].height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
     }
-
     EndMode2D();
     DrawFPS(130, 100);
     draw_gui_good(id_good, w);
@@ -506,20 +505,18 @@ void run(World* w) {
   bool show = false;
   bool goods_map = false;
   bool political_map = false;
+  float vol = 0.009;
   uint id_good = 0;
-  uint start_id = -1;
-  uint end_id = -1;
   Camera2D camera = { 0 };
   camera.target = { 0 };
   camera.offset = { 0 };
   camera.rotation = 0.0f;
-  camera.zoom = 1.0f;
+  camera.zoom = 1.85f;
   screen s = STARTING_LOAD;
   game_mode mode = DEBUG;
   province_properties* p = generate_map(w);
   Texture2D* texgoods = new Texture2D[ w->getGoods().size() ];
   renderGoodMap(w, texgoods);
-
   Texture2D Geomap;
   Texture2D map;
   Texture2D borders;
@@ -533,7 +530,6 @@ void run(World* w) {
     musics.push_back(LoadMusicStream(s.c_str()));
   }
   int music_id = GetRandomValue(0, musics.size() - 1);
-  float vol = 0.009;
   SetMusicVolume(musics[ music_id ], vol);
   PlayMusicStream(musics[ music_id ]);
   while (!WindowShouldClose()) {

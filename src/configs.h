@@ -5,7 +5,7 @@
 #define INITIAL_DAY 1
 // graphics variables
 #define NUM_CHUNKS 5
-#define TILESIZE 4
+#define TILESIZE 1
 #define CHUNKSIZE 64
 // generation variables
 #define MAXCOUNTRIES 150

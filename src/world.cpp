@@ -20,11 +20,63 @@ World::World(uint8_t day, uint8_t month, uint year, uint cols, uint rows)
   this->num_rows = rows;
   Good good;
   good.set_goods(this);
+  //organize goods
+  for (Good g : getGoods()) {
+    switch (g.get_class()) {
+    case class_good::basic_need:
+      this->basic_needs.push_back(g.get_id());
+      break;
+    case class_good::luxury:
+      this->luxury_needs.push_back(g.get_id());
+      break;
+    case class_good::military:
+      this->military_needs.push_back(g.get_id());
+      break;
+    case class_good::raw_material:
+      this->raw_materials.push_back(g.get_id());
+      break;
+    default:
+      break;
+    }
+  }
+  //print goods 
+  cout << "Basic needs: " << endl;
+  for (uint id : this->basic_needs) {
+    cout << id << " ";
+    cout << getGoodById(id)->get_name() << endl;
+  }
+  cout << "Luxury needs: " << endl;
+  for (uint id : this->luxury_needs) {
+    cout << getGoodById(id)->get_name() << endl;
+  }
+  cout << "Military needs: " << endl;
+  for (uint id : this->military_needs) {
+    cout << getGoodById(id)->get_name() << endl;
+  }
+  cout << "Raw materials: " << endl;
+  for (uint id : this->raw_materials) {
+    cout << getGoodById(id)->get_name() << endl;
+  }
+
 }
 
 World::~World()
 {
 }
+
+Country* World::getCountryById(uint id) {
+  if (id < countries.size()) {
+    return &countries.at(id);
+  }
+  return nullptr;
+};
+
+Character* World::getCharacterById(uint id) {
+  if (id < characters.size()) {
+    return &characters.at(id);
+  }
+  return nullptr;
+};
 
 void World::addAIAgent(AI_Character aic) {
 
@@ -372,4 +424,11 @@ void World::updateAgents() {
 void  World::updateWorld() {
   advanceDate();
   updateAgents();
+}
+
+Culture* World::getCultureById(uint id) {
+  if (id < cultures.size()) {
+    return &cultures.at(id);
+  }
+  return nullptr;
 }

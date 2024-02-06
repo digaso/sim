@@ -75,11 +75,12 @@ std::string generateCountryName() {
   std::mt19937 gen(rd());
   std::uniform_int_distribution<> numWordsDist(0, 12); // Randomly select 1 or 2 words
   int chance = numWordsDist(gen);
-  int numWords = 1 * (chance < 10) + 2 * (chance >= 10);
+  int numWords = 1 * (chance < 11) + 2 * (chance >= 11);
   std::string countryName;
 
   for (int i = 0; i < numWords; ++i) {
-    countryName += generateWord(2, 4); // Generate word with 2 to 4syllables
+    uint maxsyl = numWords == 1 ? 4 : 3;
+    countryName += generateWord(2, maxsyl);
     if (i < numWords - 1) {
       countryName += " ";
     }

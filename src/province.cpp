@@ -2,12 +2,35 @@
 
 using namespace std;
 
+Province::Province(uint id, string name, uint population_size, int y, int x, float height, type_province type, float moisture, World* w)
+
+{
+  this->id = id;
+  this->name = name;
+  this->y = y;
+  this->x = x;
+  this->country_owner_id = -1;
+  this->migration_atraction = 0;
+  this->infrastructure = 10;
+  this->height = height;
+  this->type = type;
+  this->moisture = moisture;
+}
+
+void Province::set_infrastructure(uint infrastructure)
+{
+  this->infrastructure = infrastructure;
+}
+
+uint Province::get_infrastructure()
+{
+  return this->infrastructure;
+}
+
 string Province::get_name()
 {
   return this->name;
 }
-
-
 
 void Province::set_country_owner_id(uint id)
 {
@@ -91,20 +114,11 @@ float Province::get_migration_atraction()
   return this->migration_atraction;
 }
 
-float Province::get_tax_control()
-{
-  return this->tax_control;
-}
-
 void Province::set_migration_atraction(float migration_atraction)
 {
   this->migration_atraction = migration_atraction;
 }
 
-void Province::set_tax_control(float tax_control)
-{
-  this->tax_control = tax_control;
-}
 
 string Province::type_province_to_string(type_province type)
 {
@@ -202,6 +216,16 @@ uint Province::get_building_amount(uint_fast8_t building_id)
     }
   }
   return 0;
+}
+
+void Province::set_market(Market* market)
+{
+  this->market = market;
+}
+
+Market* Province::get_market()
+{
+  return this->market;
 }
 
 ostream& operator<<(ostream& os, const Province& p)

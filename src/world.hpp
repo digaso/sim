@@ -4,7 +4,6 @@
 #include "utils/date.hpp"
 #include <utility>
 #include <queue>
-#include <list>
 #include "country.hpp"
 #include "economy/trade_route.hpp"
 #include "economy/good.hpp"
@@ -21,6 +20,7 @@ class Good;
 class AI_Character;
 class Character;
 class Country;
+class Culture;
 
 
 typedef struct region {
@@ -43,6 +43,11 @@ private:
   vector<Religion> religions;
   vector<Culture> cultures;
   vector<Good> goods;
+  vector<uint> basic_needs;
+  vector<uint> luxury_needs;
+  vector<uint> military_needs;
+  vector<uint> raw_materials;
+  vector<uint> manufactured_goods;
   vector<Building> buildings;
   vector<AI_Character> agents;
   vector<Region> regions;
@@ -73,12 +78,7 @@ public:
   bool advanceDate();
   vector<Province*> get_land_neighbours_diagonal(Province* p);
   Province* getProvinceByCoords(uint x, uint y);
-  Country* getCountryById(uint id) {
-    if (id < countries.size()) {
-      return &countries.at(id);
-    }
-    return nullptr;
-  };
+  Country* getCountryById(uint id);
   Region getRegionById(int id);
   Province* getProvinceById(uint id);
   Province* getProvinces();
@@ -86,14 +86,9 @@ public:
   vector<Culture> getCultures() { return this->cultures; }
   vector<Character> getCharacters() { return this->characters; }
   vector<AI_Character> getAgents() { return this->agents; }
-  Character* getCharacter(uint id) {
-    if (id < characters.size()) {
-      return &characters.at(id);
-    }
-    return nullptr;
-  }
+  Character* getCharacterById(uint id);
   bool ProvConnectedLand(Province* p1, Province* p2);
-
+  Culture* getCultureById(uint id);
   const vector<Country> getCountries() const;
   void set_num_rows(uint num_rows) { this->num_rows = num_rows; }
   void set_num_cols(uint num_cols) { this->num_cols = num_cols; }

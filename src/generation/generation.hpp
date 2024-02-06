@@ -379,10 +379,10 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
         }
       }
     }
-    cout << g.get_name() << " " << count << endl;
+    //if (count == 0)cout << g.get_name() << " " << count << endl;
+    w->getGoodById(g.get_id())->set_initial_amount(count);
     w->setGoodMapById(g.get_id(), bmap);
   }
-
   maps.clear();
 }
 
@@ -395,7 +395,7 @@ void generate_religions(World* w) {
     uint8_t chance = GetRandomValue(0, 100);
     if (chance < 80) {
       Religion r(i, generateReligionName(), color_id, true);
-      uint8_t num_gods = GetRandomValue(4, 15);
+      uint8_t num_gods = GetRandomValue(4, 10);
       uint8_t j = 0;
       while (j < num_gods) {
         God g(j, generateGodName(), i);
@@ -449,7 +449,7 @@ void generate_royalty(World* w, Country* c, Province* p) {
   string wife_firstName = generateWord(1, 3);
   string wife_lastName = generateWord(2, 4);
   uint wife_age = GetRandomValue(25, 40);
-  uint wife_year = 822 - age;
+  uint wife_year = 822 - wife_age;
   uint wife_month = GetRandomValue(1, 12);
   uint wife_day = GetRandomValue(1, 28);
   date wife_birth_date = date(wife_day, wife_month, wife_year);
@@ -469,7 +469,6 @@ void generate_royalty(World* w, Country* c, Province* p) {
 
 void generate_culture(World* w, Country* c, uint* cultures_count) {
 
-  uint chance = GetRandomValue(0, 100);
   Culture culture(generateCultureName(c->get_name()), *cultures_count);
   *cultures_count += 1;
   c->set_culture_id(culture.get_id());
@@ -502,6 +501,7 @@ void generate_countries(World* w) {
       c.set_capital_id(p->get_id());
       provinces.push_back(p->get_id());
       generate_royalty(w, &c, p);
+      Market m(w);
       for (uint j = 0; j < num_provinces - 1; j++) {
         p = w->getProvinceById(provinces.at(GetRandomValue(0, provinces.size() - 1)));
         vector<Province*> neighbours = w->get_land_neighbours(p);
@@ -520,16 +520,21 @@ void generate_countries(World* w) {
               if (chance < 10) continue;
             }
 
+            m.add_province(n->get_id());
             n->set_country_owner_id(i);
-            n->add_population(Population(0, GetRandomValue(250, 900), i, n->get_id(), c.get_culture_id(), population_class::peasants));
-            n->add_population(Population(1, GetRandomValue(150, 250), i, n->get_id(), c.get_culture_id(), population_class::citizens));
-            n->add_population(Population(2, GetRandomValue(50, 150), i, n->get_id(), c.get_culture_id(), population_class::elite));
+            n->set_market(&m);
+            n->add_population(Population(0, GetRandomValue(400, 1000), i, n->get_id(), c.get_culture_id(), population_class::peasants));
+            n->add_population(Population(1, GetRandomValue(300, 400), i, n->get_id(), c.get_culture_id(), population_class::citizens));
+            n->add_population(Population(2, GetRandomValue(150, 300), i, n->get_id(), c.get_culture_id(), population_class::elite));
+
             c.add_province(n);
             provinces.push_back(n->get_id());
             j++;
           }
         }
       }
+      c.add_market(m);
+      w->getCultureById(c.get_culture_id())->set_homelands(provinces);
       w->addCountry(c);
       i++;
     }

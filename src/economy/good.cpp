@@ -1,12 +1,9 @@
 #include "good.hpp"
 #include "../world.hpp"
 
-Good::Good()
-{
-}
+Good::Good() {}
 
-Good::Good(uint id, string name, float base_value, type_good type, class_good good_class)
-{
+Good::Good(uint id, string name, float base_value, type_good type, class_good good_class) {
   this->id = id;
   this->name = name;
   this->base_value = base_value;
@@ -14,26 +11,21 @@ Good::Good(uint id, string name, float base_value, type_good type, class_good go
   this->good_class = good_class;
 }
 
-Good::~Good()
-{
-}
+Good::~Good() {}
 
-uint Good::get_id()
-{
+uint Good::get_id() {
   return this->id;
 }
 
-float Good::get_base_value()
-{
+float Good::get_base_value() {
   return this->base_value;
 }
 
-type_good Good::get_type()
-{
+type_good Good::get_type() {
   return this->type;
 }
-void Good::set_goods(World* world)
-{
+
+void Good::set_goods(World* world) {
   world->addGood(Good(0, "Grain", 1.4, plantable, basic_need));
   world->addGood(Good(1, "Wine", 2.5, plantable, luxury));
   world->addGood(Good(2, "Salt", 2.3, mineral, basic_need));
@@ -73,25 +65,54 @@ void Good::set_goods(World* world)
   world->addGood(Good(35, "Swords", 4, manufactured, military));
   world->addGood(Good(36, "Bows", 2, manufactured, military));
   world->addGood(Good(37, "Crossbows", 4, manufactured, military));
-  world->addGood(Good(38, "Pikes", 5, manufactured, military));
-  world->addGood(Good(39, "Cannons", 7.5, manufactured, military));
-  world->addGood(Good(40, "Musket", 5.5, manufactured, military));
-  world->addGood(Good(41, "Leather Armour", 2, manufactured, military));
-  world->addGood(Good(42, "Chainmail", 4, manufactured, military));
-  world->addGood(Good(43, "Plate Armour", 5.5, manufactured, military));
-  world->addGood(Good(44, "Elephants", 3, catchable, military));
-  world->addGood(Good(45, "Coques", 5, manufactured, military));
-  world->addGood(Good(46, "Galleys", 7, manufactured, military));
-  world->addGood(Good(47, "Caravelas", 9.5, manufactured, military));
-  world->addGood(Good(48, "Carracks", 12.5, manufactured, military));
-  world->addGood(Good(49, "Naus", 12.5, manufactured, military));
-  world->addGood(Good(50, "Beer", 2, manufactured, basic_need));
-  //TODO: add more ships and military units
-
+  world->addGood(Good(38, "Cannons", 7.5, manufactured, military));
+  world->addGood(Good(39, "Muskets", 5.5, manufactured, military));
+  world->addGood(Good(40, "Leather Armour", 2, manufactured, military));
+  world->addGood(Good(41, "Chainmail", 4, manufactured, military));
+  world->addGood(Good(42, "Plate Armour", 5.5, manufactured, military));
+  world->addGood(Good(43, "Elephants", 3, catchable, military));
+  world->addGood(Good(44, "Coques", 5, manufactured, military));
+  world->addGood(Good(45, "Galleys", 7, manufactured, military));
+  world->addGood(Good(46, "Caravelas", 9.5, manufactured, military));
+  world->addGood(Good(47, "Carracks", 12.5, manufactured, military));
+  world->addGood(Good(48, "Naus", 12.5, manufactured, military));
+  world->addGood(Good(49, "Beer", 2, manufactured, basic_need));
 }
 
-ostream& operator<<(ostream& os, const Good& g)
-{
+bool Good::is_maritime() {
+  return this->maritime;
+}
+
+void Good::set_maritime(bool maritime) {
+  this->maritime = maritime;
+}
+
+
+void Good::set_map(bool* map) {
+  this->map = map;
+}
+
+bool* Good::get_map() {
+  return this->map;
+}
+
+uint Good::get_initial_amount() {
+  return this->initial_amoount;
+}
+
+void Good::set_initial_amount(uint initial_amount) {
+  this->initial_amoount = initial_amount;
+}
+
+class_good Good::get_class() {
+  return this->good_class;
+}
+
+string Good::get_name() {
+  return this->name;
+}
+
+ostream& operator<<(ostream& os, const Good& g) {
   os << g.name;
   return os;
 }

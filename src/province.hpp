@@ -1,12 +1,12 @@
 #pragma once
 #include <string>
 #include "population.hpp"
-#include "country.hpp"
 #include "economy/good.hpp"
 #include "economy/market.hpp"
 #include <vector>
 
 using namespace std;
+
 
 enum type_province {
   deep_sea = 0,
@@ -27,6 +27,7 @@ enum type_province {
   coastal_desert = 15,
 };
 
+class Population;
 
 typedef struct buildings_stats {
   uint_fast8_t id;
@@ -48,28 +49,15 @@ private:
   type_province type; //type of province
   int country_owner_id; //id to country that owns the province
   float migration_atraction; //value between 0 and 1
-  float tax_control; //value between 0 and 1
+  uint infrastructure;
   vector<uint_fast8_t> goods; //id of goods
   vector<BuildingStats> buildings; //id of buildings
-  Market market;
+  Market* market;
 
 
 public:
   Province() {};
-  Province(uint id, string name, uint population_size, int y, int x, float height, type_province type, float moisture, World* w)
-  {
-    this->id = id;
-    this->name = name;
-    this->y = y;
-    this->x = x;
-    this->country_owner_id = -1;
-    this->migration_atraction = 0;
-    this->tax_control = 0.5;
-    this->height = height;
-    this->type = type;
-    this->moisture = moisture;
-    this->market = Market(id, w);
-  }
+  Province(uint id, string name, uint population_size, int y, int x, float height, type_province type, float moisture, World* w);
   ~Province() {};
   string get_name();
   uint get_id();
@@ -89,7 +77,6 @@ public:
   float get_height();
   void set_type(type_province type);
   void set_migration_atraction(float migration_atraction);
-  void set_tax_control(float tax_control);
   static string type_province_to_string(type_province type);
   void add_goods(uint_fast8_t good_id);
   vector<uint_fast8_t> get_goods();
@@ -97,7 +84,13 @@ public:
   void add_building(uint_fast8_t building_id);
   vector<uint_fast8_t> get_buildings();
   void add_population(Population pop);
+  float get_populations_growth();
+  float get_populations_happiness();
   bool is_land();
+  void set_market(Market* m);
+  Market* get_market();
+  void set_infrastructure(uint infrastructure);
+  uint get_infrastructure();
   uint get_building_amount(uint_fast8_t building_id);
   vector<Population>* get_pops();
 

@@ -1,11 +1,14 @@
 sim: ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/culture.o ./out/population.o ./out/province.o ./out/world.o ./out/date.o ./out/good.o ./out/ai_character.o ./out/diplomacy.o ./out/market.o
-		g++ -g -std=c++20 -Wall ./out/ai_character.o ./out/main.o ./out/building.o ./out/market.o ./out/diplomacy.o ./out/country.o ./out/culture.o ./out/population.o ./out/character.o ./out/province.o ./out/world.o ./out/date.o ./out/good.o  -o sim -lraylib -lGL -lm  -DRAUDIO_STANDALONE -DSUPPORT_FILEFORMAT_WAV -DSUPPORT_FILEFORMAT_OGG -lpthread -ldl -lrt -lX11 -DRAYGUI_IMPLEMENTATION -O3
+		g++ -g -std=c++20 -Wall ./out/province.o ./out/ai_character.o ./out/main.o ./out/building.o ./out/market.o ./out/diplomacy.o ./out/country.o ./out/culture.o ./out/population.o ./out/character.o  ./out/world.o ./out/date.o ./out/good.o  -o sim -lraylib -lGL -lm  -DRAUDIO_STANDALONE -DSUPPORT_FILEFORMAT_WAV -DSUPPORT_FILEFORMAT_OGG -lpthread -ldl -lrt -lX11 -DRAYGUI_IMPLEMENTATION -O3
 
 ./out/main.o: main.cpp
 	g++ -g -Wall -c main.cpp -o ./out/main.o -O3
 
 ./out/building.o: ./src/building.cpp
 	g++ -Wall -g -c ./src/building.cpp -o ./out/building.o -O3
+
+./out/province.o: ./src/province.cpp
+	g++ -Wall -g -c ./src/province.cpp -o ./out/province.o	-O3
 
 ./out/character.o: ./src/character.cpp
 	g++ -Wall -g -c ./src/character.cpp -o ./out/character.o -O3
@@ -18,9 +21,6 @@ sim: ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/cultu
 
 ./out/population.o: ./src/population.cpp
 	g++ -Wall -g -c ./src/population.cpp -o ./out/population.o	-O3
-
-./out/province.o: ./src/province.cpp
-	g++ -Wall -g -c ./src/province.cpp -o ./out/province.o	-O3
 
 ./out/world.o: ./src/world.cpp
 	g++ -Wall -g -c ./src/world.cpp -o ./out/world.o	-O3
