@@ -498,7 +498,7 @@ void camera_move(Camera2D* camera, Vector2* prevMousePos, int music_id, vector<M
 }
 
 void run(World* w) {
-  InitWindow(1200, 800, "SIM");
+  InitWindow(1400, 1080, "Winds of Gold");
   SetTargetFPS(60);
   draw_loading_screen();
   SetTraceLogLevel(LOG_ERROR);
