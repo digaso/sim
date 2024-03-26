@@ -85,6 +85,7 @@ public:
   vector<Religion> getReligions() { return this->religions; }
   vector<Culture> getCultures() { return this->cultures; }
   vector<Character> getCharacters() { return this->characters; }
+  vector<Building> getBuildings() { return this->buildings; }
   vector<AI_Character> getAgents() { return this->agents; }
   Character* getCharacterById(uint id);
   bool ProvConnectedLand(Province* p1, Province* p2);

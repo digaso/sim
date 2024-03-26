@@ -52,7 +52,6 @@ private:
   uint infrastructure;
   vector<uint_fast8_t> goods; //id of goods
   vector<BuildingStats> buildings; //id of buildings
-  Market* market;
 
 
 public:
@@ -82,16 +81,16 @@ public:
   vector<uint_fast8_t> get_goods();
   friend ostream& operator<<(ostream& os, const Province& p);
   void add_building(uint_fast8_t building_id);
-  vector<uint_fast8_t> get_buildings();
+  vector<BuildingStats> getBuildingStats();
   void add_population(Population pop);
   float get_populations_growth();
   float get_populations_happiness();
   bool is_land();
-  void set_market(Market* m);
-  Market* get_market();
+  Market* get_market(World* w);
   void set_infrastructure(uint infrastructure);
   uint get_infrastructure();
   uint get_building_amount(uint_fast8_t building_id);
   vector<Population>* get_pops();
+  void updatePopulation(World* w);
 
 };

@@ -1,4 +1,5 @@
 #include "world.hpp"
+#include "future"
 #include <algorithm>
 #include <unordered_map>
 #include <cfloat>
@@ -20,6 +21,8 @@ World::World(uint8_t day, uint8_t month, uint year, uint cols, uint rows)
   this->num_rows = rows;
   Good good;
   good.set_goods(this);
+  Building building;
+  building.setup_buildings(this);
   //organize goods
   for (Good g : getGoods()) {
     switch (g.get_class()) {
@@ -40,23 +43,23 @@ World::World(uint8_t day, uint8_t month, uint year, uint cols, uint rows)
     }
   }
   //print goods 
-  cout << "Basic needs: " << endl;
-  for (uint id : this->basic_needs) {
-    cout << id << " ";
-    cout << getGoodById(id)->get_name() << endl;
-  }
-  cout << "Luxury needs: " << endl;
-  for (uint id : this->luxury_needs) {
-    cout << getGoodById(id)->get_name() << endl;
-  }
-  cout << "Military needs: " << endl;
-  for (uint id : this->military_needs) {
-    cout << getGoodById(id)->get_name() << endl;
-  }
-  cout << "Raw materials: " << endl;
-  for (uint id : this->raw_materials) {
-    cout << getGoodById(id)->get_name() << endl;
-  }
+  //cout << "Basic needs: " << endl;
+  //for (uint id : this->basic_needs) {
+  //  cout << id << " ";
+  //  cout << getGoodById(id)->get_name() << endl;
+  //}
+  //cout << "Luxury needs: " << endl;
+  //for (uint id : this->luxury_needs) {
+  //  cout << getGoodById(id)->get_name() << endl;
+  //}
+  //cout << "Military needs: " << endl;
+  //for (uint id : this->military_needs) {
+  //  cout << getGoodById(id)->get_name() << endl;
+  //}
+  //cout << "Raw materials: " << endl;
+  //for (uint id : this->raw_materials) {
+  //  cout << getGoodById(id)->get_name() << endl;
+  //}
 
 }
 
@@ -421,8 +424,62 @@ void World::updateAgents() {
   }
 }
 
+void World::updateCountries() {
+  for (Country& country : countries) {
+    auto fut = async(launch::async, &Country::cleanMarkets, &country);
+  }
+}
+
+void updateProvince(World* w, int i) {
+  Province* provinces = w->getProvinces();
+  vector<Building> buildings = w->getBuildings();
+  vector<BuildingStats> buildings_prov = provinces[ i ].getBuildingStats();
+  if (buildings_prov.size() < 1) {
+    return;
+  }
+  provinces[ i ].set_infrastructure(0);
+
+  for (BuildingStats building : buildings_prov) {
+    Building b = buildings.at(building.id);
+    b.func(w, i, building.amount, b);
+  }
+}
+
+void World::updateProvinces() {
+
+  //update market province
+  vector<future<void>> tasks;
+
+  for (size_t i = 0; i < num_cols * num_rows; ++i) {
+
+    tasks.push_back(async(launch::async, updateProvince, this, i));
+  }
+
+  for (auto& task : tasks) {
+    task.wait();
+  }
+
+
+  tasks.clear();
+  //update province population
+  for (size_t i = 0; i < num_cols * num_rows; ++i) {
+
+    if (provinces[ i ].get_population_size() > 0 && provinces[ i ].is_land()) {
+      tasks.push_back(async(launch::async, &Province::updatePopulation, &provinces[ i ], this));
+    }
+  }
+
+  for (auto& task : tasks) {
+    task.wait();
+  }
+
+}
 void  World::updateWorld() {
-  advanceDate();
+  if (advanceDate()) {
+    cout << "Date: " << getDateString() << endl;
+    updateCountries();
+    updateProvinces();
+  }
   updateAgents();
 }
 

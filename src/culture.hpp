@@ -1,9 +1,13 @@
 #pragma once
-#include "world.hpp"
-#include <string>
 #include <vector>
+#include <string>
+#include "population.hpp"
+#include "configs.h"
 
 using namespace std;
+
+
+
 
 class CultureCustoms
 {
@@ -44,6 +48,8 @@ public:
   vector<uint> get_goods_obsession();
 
   PopConsumption get_pop_consumption();
+
+  vector<pair<uint, uint>> get_class_consumption(population_class pop_class);
 
   void set_homelands(vector<uint> homelands);
 

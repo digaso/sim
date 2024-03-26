@@ -1,4 +1,5 @@
 #include "province.hpp"
+#include "future"
 
 using namespace std;
 
@@ -20,6 +21,11 @@ Province::Province(uint id, string name, uint population_size, int y, int x, flo
 void Province::set_infrastructure(uint infrastructure)
 {
   this->infrastructure = infrastructure;
+}
+
+vector<BuildingStats> Province::getBuildingStats()
+{
+  return this->buildings;
 }
 
 uint Province::get_infrastructure()
@@ -218,14 +224,26 @@ uint Province::get_building_amount(uint_fast8_t building_id)
   return 0;
 }
 
-void Province::set_market(Market* market)
+Market* Province::get_market(World* w)
 {
-  this->market = market;
+  Country* country = w->getCountryById(this->country_owner_id);
+  vector<Market>* markets = country->get_markets();
+  for (auto& m : *markets)
+  {
+    if (m.has_province(this->id))
+    {
+      return &m;
+    }
+  }
+  return nullptr;
 }
 
-Market* Province::get_market()
+void Province::updatePopulation(World* w)
 {
-  return this->market;
+  for (auto& p : this->pops)
+  {
+    p.update(w);
+  }
 }
 
 ostream& operator<<(ostream& os, const Province& p)

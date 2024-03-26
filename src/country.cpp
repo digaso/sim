@@ -26,12 +26,18 @@ void Country::remove_province(Province* p) {
   }
 }
 
+void Country::cleanMarkets() {
+  for (uint i = 0; i < this->markets.size(); i++) {
+    this->markets[ i ].cleanMarket();
+  }
+}
+
 void Country::add_market(Market m) {
   this->markets.push_back(m);
 }
 
-vector<Market> Country::get_markets() {
-  return this->markets;
+vector<Market>* Country::get_markets() {
+  return &(this->markets);
 }
 
 string Country::get_name() {

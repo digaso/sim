@@ -1,7 +1,6 @@
 #include <iostream>
 #include <random>
 #include <vector>
-#include "future"
 #include "random"
 #include <list>
 #include "../world.hpp"
@@ -275,8 +274,8 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
             continue;
           }
           if (g.get_name() == "Gold" && p->is_land()) {
-            uint8_t chance = GetRandomValue(0, 100);
-            if (chance < 99) {
+            uint8_t chance = GetRandomValue(0, 200);
+            if (chance < 199) {
               continue;
             }
             p->add_goods(g.get_id()); count++;
@@ -472,27 +471,28 @@ void generate_culture(World* w, Country* c, uint* cultures_count) {
   Culture culture(generateCultureName(c->get_name()), *cultures_count);
   *cultures_count += 1;
   c->set_culture_id(culture.get_id());
+  culture.set_pop_consumption(culture.generate_pop_consumption(w, c->get_id()));
   w->addCulture(culture);
 
 }
 
 void generate_countries(World* w) {
-  uint num_countries = MAXCOUNTRIES;
   uint i = 0;
   uint cultures_count = 0;
-  while (i < num_countries) {
+  while (i < MAXCOUNTRIES) {
     //get random number between 0 and num_cols
-    uint x = GetRandomValue(64, w->get_num_cols() - 1 - 64);
+    uint x = GetRandomValue(32, w->get_num_cols() - 1 - 32);
     //get random number between 0 and num_rows
-    uint y = GetRandomValue(64, w->get_num_rows() - 1 - 90);
+    uint y = GetRandomValue(32, w->get_num_rows() - 1 - 32);
     Province* p = w->getProvinceByCoords(x, y);
     uint num_provinces = GetRandomValue(MINPROVINCES, MAXPROVINCES);
     uint8_t color_id = GetRandomValue(0, 116);
     vector<uint> provinces;
 
     if (p->get_type() != type_province::sea && p->get_type() != type_province::coastal_sea && p->get_type() != type_province::deep_sea && p->get_country_owner_id() == -1) {
-      uint8_t religion_id = GetRandomValue(0, MAXRELIGIONS - 1);
+      uint religion_id = GetRandomValue(0, MAXRELIGIONS - 1);
       Country c(i, generateCountryName(), religion_id);
+      Market market(w);
 
       generate_culture(w, &c, &cultures_count);
       p->set_country_owner_id(i);
@@ -501,7 +501,6 @@ void generate_countries(World* w) {
       c.set_capital_id(p->get_id());
       provinces.push_back(p->get_id());
       generate_royalty(w, &c, p);
-      Market m(w);
       for (uint j = 0; j < num_provinces - 1; j++) {
         p = w->getProvinceById(provinces.at(GetRandomValue(0, provinces.size() - 1)));
         vector<Province*> neighbours = w->get_land_neighbours(p);
@@ -519,21 +518,21 @@ void generate_countries(World* w) {
               uint8_t chance = GetRandomValue(0, 100);
               if (chance < 10) continue;
             }
-
-            m.add_province(n->get_id());
+            n->add_building(0);
             n->set_country_owner_id(i);
-            n->set_market(&m);
-            n->add_population(Population(0, GetRandomValue(400, 1000), i, n->get_id(), c.get_culture_id(), population_class::peasants));
-            n->add_population(Population(1, GetRandomValue(300, 400), i, n->get_id(), c.get_culture_id(), population_class::citizens));
-            n->add_population(Population(2, GetRandomValue(150, 300), i, n->get_id(), c.get_culture_id(), population_class::elite));
-
+            market.add_province(n->get_id());
+            n->add_population(Population(0, GetRandomValue(800, 1000), i, n->get_id(), c.get_culture_id(), population_class::peasants, religion_id, w));
+            n->add_population(Population(1, GetRandomValue(100, 250), i, n->get_id(), c.get_culture_id(), population_class::burghers, religion_id, w));
+            n->add_population(Population(2, GetRandomValue(10, 90), i, n->get_id(), c.get_culture_id(), population_class::nobles, religion_id, w));
+            c.add_market(market);
             c.add_province(n);
+
             provinces.push_back(n->get_id());
             j++;
           }
         }
       }
-      c.add_market(m);
+
       w->getCultureById(c.get_culture_id())->set_homelands(provinces);
       w->addCountry(c);
       i++;
@@ -543,9 +542,10 @@ void generate_countries(World* w) {
 }
 
 void populate_world(World* w) {
-  auto fut = async(launch::async, generate_religions, w);
+  generate_religions(w);
+  cout << "Religions generated" << endl;
   generate_countries(w);
-  fut.get();
+  cout << "Countries generated" << endl;
 }
 
 float** setup(int rows, int cols, float frequency, int seed, int octaves) {

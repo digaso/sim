@@ -2,7 +2,15 @@
 
 Population::Population() {}
 
-Population::Population(uint id, uint size, uint country_id, uint province_id, uint culture_id, population_class pop_class)
+string get_class_string(population_class clss) {
+  if (clss == population_class::slaves) return "slaves";
+  if (clss == population_class::burghers) return "burghers";
+  if (clss == population_class::peasants) return "peasants";
+  if (clss == population_class::nobles) return "nobles";
+  return "no_class";
+}
+
+Population::Population(uint id, uint size, uint country_id, uint province_id, uint culture_id, population_class pop_class, uint religion_id, World* w)
 {
   this->id = id;
   this->size = size;
@@ -10,6 +18,12 @@ Population::Population(uint id, uint size, uint country_id, uint province_id, ui
   this->province_id = province_id;
   this->culture_id = culture_id;
   this->pop_class = pop_class;
+  this->religion_id = religion_id;
+  string class_name = get_class_string(pop_class);
+  string culture_name = w->getCultureById(culture_id)->get_name();
+  string religion_name = w->getReligionById(religion_id)->get_name();
+  this->name = class_name + " " + culture_name + " " + religion_name;
+
 }
 
 Population::~Population() {}
@@ -44,6 +58,44 @@ uint Population::get_culture_id()
   return this->culture_id;
 }
 
+void Population::update(World* world)
+{
+  //handle consumption
+  Province* province = world->getProvinceById(this->province_id);
+  Culture culture = world->getCultures().at(this->culture_id);
+  vector<pair<uint, uint>> consumption = culture.get_class_consumption(this->pop_class);
+
+  float temp_happiness = this->population_happiness;
+  float temp_loyalty = this->population_loyalty;
+  float temp_militancy = this->population_militancy;
+  float temp_growth = this->population_growth;
+
+  Market* market = province->get_market(world);
+  for (uint i = 0; i < consumption.size(); i++) {
+    uint good_id = consumption[ i ].first;
+    uint amount = consumption[ i ].second;
+    market->updateDemand(good_id, amount);
+  }
+  //handle growth
+  this->population_happiness = this->get_population_happiness(world);
+  this->population_growth = this->get_population_growth(world);
+  this->population_loyalty = this->get_population_loyalty(world);
+  if (population_loyalty < 0.4f) {
+    this->population_militancy += 0.05f;
+  }
+  else if (population_loyalty > 0.6f) {
+    this->population_militancy -= 0.05;
+    this->population_militancy = population_militancy < 0.0f ? 0.0f : population_militancy;
+  }
+  else {
+    this->population_militancy += 0.0f;
+  }
+  this->size += this->size * this->population_growth;
+  this->size = this->size < 0 ? 0 : this->size;
+
+
+}
+
 float Population::get_population_growth(World* world)
 {
   Province* province = world->getProvinceById(this->province_id);
@@ -55,12 +107,13 @@ float Population::get_population_growth(World* world)
   else if (this->pop_class == population_class::peasants) {
     growth = 0.01f;
   }
-  else if (this->pop_class == population_class::citizens) {
+  else if (this->pop_class == population_class::burghers) {
     growth = 0.02f;
   }
-  else if (this->pop_class == population_class::elite) {
+  else if (this->pop_class == population_class::nobles) {
     growth = 0.03f;
   }
+  return growth + 1;
 
 }
 
@@ -75,12 +128,13 @@ float Population::get_population_happiness(World* world)
   else if (this->pop_class == population_class::peasants) {
     happiness = 0.01f;
   }
-  else if (this->pop_class == population_class::citizens) {
+  else if (this->pop_class == population_class::burghers) {
     happiness = 0.02f;
   }
-  else if (this->pop_class == population_class::elite) {
+  else if (this->pop_class == population_class::nobles) {
     happiness = 0.03f;
   }
+  return happiness;
 
 }
 
@@ -95,11 +149,11 @@ float Population::get_population_loyalty(World* world)
   else if (this->pop_class == population_class::peasants) {
     loyalty = 0.01f;
   }
-  else if (this->pop_class == population_class::citizens) {
+  else if (this->pop_class == population_class::burghers) {
     loyalty = 0.02f;
   }
-  else if (this->pop_class == population_class::elite) {
+  else if (this->pop_class == population_class::nobles) {
     loyalty = 0.03f;
   }
-
+  return loyalty;
 }

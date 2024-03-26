@@ -1,11 +1,11 @@
 #include <raylib.h>
 #include <rlgl.h>
+#include "future"
 #include <filesystem>
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 #include <raymath.h>
 #include "rayutils.h"
-#include "../world.hpp"
 #include "../generation/generation.hpp"
 
 using namespace std;
@@ -501,6 +501,7 @@ void run(World* w) {
   InitWindow(1200, 800, "SIM");
   SetTargetFPS(60);
   draw_loading_screen();
+  SetTraceLogLevel(LOG_ERROR);
   game_velocity velocity = SLOW;
   bool show = false;
   bool goods_map = false;
@@ -520,7 +521,6 @@ void run(World* w) {
   Texture2D Geomap;
   Texture2D map;
   Texture2D borders;
-  SetTraceLogLevel(LOG_ERROR);
   Vector2 prevMousePos = GetMousePosition();
   string path = "assets/songs";
   vector<Music> musics;
@@ -532,12 +532,13 @@ void run(World* w) {
   int music_id = GetRandomValue(0, musics.size() - 1);
   SetMusicVolume(musics[ music_id ], vol);
   PlayMusicStream(musics[ music_id ]);
+  future<void> fut;
   while (!WindowShouldClose()) {
     camera_move(&camera, &prevMousePos, music_id, musics);
 
     if (IsKeyPressed(KEY_SPACE)) velocity = velocity == PAUSED ? SLOW : PAUSED;
 
-    if (velocity != PAUSED) w->updateWorld();
+    if (velocity != PAUSED) fut = async(launch::async, &World::updateWorld, w);
     switch (s) {
     case STARTING_LOAD:
       draw_loading_screen();
@@ -552,6 +553,7 @@ void run(World* w) {
       draw_game_screen(camera, w, Geomap, texgoods, map, borders, &goods_map, &political_map, &id_good, &show, music_id, musics, vol);
       break;
     }
+
   }
   UnloadTexture(Geomap);
   UnloadTexture(map);

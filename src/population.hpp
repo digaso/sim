@@ -2,20 +2,15 @@
 #include <string>
 #include "world.hpp"
 #include "culture.hpp"
+#include "configs.h"
 
-#define POPULATION_HAPPINESS cap 1.f
-#define POPULATION_LOYALTY cap 1.f
-#define POPULATION_MILITANCY cap 1.f
+
+#define POPULATION_HAPPINESS  1.f
+#define POPULATION_LOYALTY  1.f
+#define POPULATION_MILITANCY 1.f
 
 
 using namespace std;
-
-enum population_class {
-  slaves,
-  peasants,
-  citizens,
-  elite
-};
 
 
 class Population
@@ -28,6 +23,7 @@ private:
   uint country_id;
   uint province_id;
   uint culture_id;
+  uint religion_id;
   float population_growth;
   float population_happiness;
   float population_loyalty;
@@ -35,7 +31,7 @@ private:
 
 public:
   Population();
-  Population(uint id, uint size, uint country_id, uint province_id, uint culture_id, population_class pop_class);
+  Population(uint id, uint size, uint country_id, uint province_id, uint culture_id, population_class pop_class, uint religion_id, World* w);
   ~Population();
   string get_name();
   uint get_id();
@@ -44,6 +40,7 @@ public:
   uint get_province_id();
   uint get_culture_id();
   float get_population_growth(World* world);
+  void update(World* world);
   float get_population_happiness(World* world);
   float get_population_loyalty(World* world);
   float get_population_militancy(World* world);

@@ -88,8 +88,10 @@ public:
   bool add_culture_accepted(uint culture_id);
   bool remove_culture_accepted(uint culture_id);
   bool player();
-  vector<Market> get_markets();
+  vector<Market>* get_markets();
   void add_market(Market m);
+  void cleanMarkets();
+
   vector<uint> get_provinces();
   vector<uint> get_characters();
   friend ostream& operator<<(ostream& os, const Country& c);

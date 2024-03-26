@@ -3,18 +3,25 @@
 
 
 Market::Market(World* w) {
-  vector<Good> goods = w->getGoods();
-  for (uint16_t i = 0; i < w->getGoods().size(); i++) {
-    this->goods_prices.push_back(goods[ i ].get_base_value());
+  this->goods = w->getGoods();
+  for (uint16_t i = 0; i < goods.size(); i++) {
+    this->goods_prices.push_back(0);
     this->goods_demands.push_back(0);
     this->goods_production.push_back(0);
     this->goods_stocks.push_back(0);
   }
 }
 
-void Market::updateMarket() {
+void Market::updateMarketPrices() {
   for (uint16_t i = 0; i < this->goods_prices.size(); i++) {
-    this->goods_prices[ i ] += (this->goods_demands[ i ] - this->goods_production[ i ]) / 100;
+    this->goods_prices[ i ] = goods[ i ].get_base_value() + (this->goods_demands[ i ] - this->goods_production[ i ]) / 100;
+  }
+}
+
+void Market::cleanMarket() {
+  for (uint16_t i = 0; i < this->goods_prices.size(); i++) {
+    this->goods_demands.at(i) = 0;
+    this->goods_production.at(i) = 0;
   }
 }
 
@@ -32,6 +39,22 @@ vector<uint> Market::get_provinces() {
 
 void Market::add_province(uint id) {
   this->provinces.push_back(id);
+}
+
+vector<float> Market::get_prices() {
+  return this->goods_prices;
+}
+
+vector<uint> Market::get_demands() {
+  return this->goods_demands;
+}
+
+vector<uint> Market::get_production() {
+  return this->goods_production;
+}
+
+vector<uint> Market::get_stocks() {
+  return this->goods_stocks;
 }
 
 bool Market::has_province(uint id) {

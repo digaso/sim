@@ -37,13 +37,26 @@ void Culture::set_pop_consumption(PopConsumption pop_consumption) {
   this->pop_consumption = pop_consumption;
 }
 
+vector<pair<uint, uint>> Culture::get_class_consumption(population_class pop_class) {
+  switch (pop_class) {
+  case slaves:
+    return this->pop_consumption.slaves_consumption;
+  case peasants:
+    return this->pop_consumption.peasants_consumption;
+  case burghers:
+    return this->pop_consumption.citizens_consumption;
+  case nobles:
+    return this->pop_consumption.elite_consumption;
+  }
+}
+
 PopConsumption Culture::generate_pop_consumption(World* w, uint country_id) {
   PopConsumption pop_consumption;
-
-  pop_consumption.slaves_consumption = { {0, 0},  {3, 2},  {5, 1} };
-  pop_consumption.peasants_consumption = { {0, 0}, {2, 1}, {3, 2},  {5, 1} , {10,1} };
-  pop_consumption.citizens_consumption = { {0, 0}, {1, 1}, {2, 1}, {3, 2},  {5, 1}, {10,1}, {24,1} };
-  pop_consumption.elite_consumption = { {1, 1}, {2, 1}, {3, 2},  {5, 1} , {10,2}, {24,2} };
+  //left good id and right consumption
+  pop_consumption.slaves_consumption = { {0,2} ,{3, 2},  {5, 1} };
+  pop_consumption.peasants_consumption = { {0,2}, {2, 1}, {3, 2},  {5, 1} , {10,1} };
+  pop_consumption.citizens_consumption = { {0,1}, {1, 1}, {2, 1}, {3, 2},  {5, 1}, {10,1}, {24,1} };
+  pop_consumption.elite_consumption = { {0,1}, {1, 1}, {2, 1}, {3, 2},  {5, 1} , {10,2}, {24,2} };
 
   return pop_consumption;
 }

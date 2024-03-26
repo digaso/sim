@@ -7,7 +7,7 @@ Building::Building() {}
 
 Building::~Building() {}
 
-Building::Building(uint id, string name, Production building_production, type_building building_type, void (*func) (World*, uint, uint8_t, Production))
+Building::Building(uint id, string name, Production building_production, type_building building_type, void (*func) (World*, uint, uint8_t, Building))
 {
   this->id = id;
   this->name = name;
@@ -176,44 +176,55 @@ Production no_production = {
   {}, {}
 };
 
-void farm(World* w, uint province_id, uint8_t level, Production production) {
+void farm(World* w, uint province_id, uint8_t level, Building b) {
+  auto production = b.get_production();
   auto amount = production.outputs.at(0).amount;
   auto good_id = production.outputs.at(0).good_id;
-  Market* market = w->getProvinceById(province_id)->get_market();
+  Market* market = w->getProvinceById(province_id)->get_market(w);
   market->updateProduction(good_id, amount * level);
 }
 
-void mine(World* w, uint province_id, uint8_t level, Production production) {
+void mine(World* w, uint province_id, uint8_t level, Building b) {
+  auto production = b.get_production();
+
   auto amount = production.outputs.at(0).amount;
   auto good_id = production.outputs.at(0).good_id;
-  Market* market = w->getProvinceById(province_id)->get_market();
+  Market* market = w->getProvinceById(province_id)->get_market(w);
   market->updateProduction(good_id, amount * level);
 }
 
-void logging_camp(World* w, uint province_id, uint8_t level, Production production) {
+void logging_camp(World* w, uint province_id, uint8_t level, Building b) {
+  auto production = b.get_production();
+
   auto amount = production.outputs.at(0).amount;
   auto good_id = production.outputs.at(0).good_id;
-  Market* market = w->getProvinceById(province_id)->get_market();
+  Market* market = w->getProvinceById(province_id)->get_market(w);
   market->updateProduction(good_id, amount * level);
 }
 
-void fishery(World* w, uint province_id, uint8_t level, Production production) {
+void fishery(World* w, uint province_id, uint8_t level, Building b) {
+  auto production = b.get_production();
+
   auto amount = production.outputs.at(0).amount;
   auto good_id = production.outputs.at(0).good_id;
-  Market* market = w->getProvinceById(province_id)->get_market();
+  Market* market = w->getProvinceById(province_id)->get_market(w);
   market->updateProduction(good_id, amount * level);
 }
 
-void furrier(World* w, uint province_id, uint8_t level, Production production) {
+void furrier(World* w, uint province_id, uint8_t level, Building b) {
+  auto production = b.get_production();
+
   auto amount = production.outputs.at(0).amount;
   auto good_id = production.outputs.at(0).good_id;
-  Market* market = w->getProvinceById(province_id)->get_market();
+  Market* market = w->getProvinceById(province_id)->get_market(w);
   market->updateProduction(good_id, amount * level);
 }
 
-void port(World* w, uint province_id, uint8_t level, Production production) {
+void port(World* w, uint province_id, uint8_t level, Building b) {
+  auto production = b.get_production();
+
   Province* prov = w->getProvinceById(province_id);
-  Market* market = prov->get_market();
+  Market* market = prov->get_market(w);
   uint8_t infr_per_level = 2;
   for (auto& good : production.inputs) {
     auto amount = good.amount;
@@ -224,9 +235,11 @@ void port(World* w, uint province_id, uint8_t level, Production production) {
 
 }
 
-void dock(World* w, uint province_id, uint8_t level, Production production) {
+void dock(World* w, uint province_id, uint8_t level, Building b) {
+  auto production = b.get_production();
+
   Province* prov = w->getProvinceById(province_id);
-  Market* market = prov->get_market();
+  Market* market = prov->get_market(w);
   uint8_t infr_per_level = 4;
   for (auto& good : production.inputs) {
     auto amount = good.amount;
@@ -236,9 +249,10 @@ void dock(World* w, uint province_id, uint8_t level, Production production) {
   prov->set_infrastructure(prov->get_infrastructure() + infr_per_level * level);
 }
 
-void shipyard(World* w, uint province_id, uint8_t level, Production production) {
+void shipyard(World* w, uint province_id, uint8_t level, Building b) {
+  auto production = b.get_production();
   Province* prov = w->getProvinceById(province_id);
-  Market* market = prov->get_market();
+  Market* market = prov->get_market(w);
   for (auto& good : production.inputs) {
     auto amount = good.amount;
     auto good_id = good.good_id;
@@ -255,65 +269,66 @@ void shipyard(World* w, uint province_id, uint8_t level, Production production) 
 
 }
 
-void winery(World* w, uint province_id, uint8_t level, Production production) {
+void winery(World* w, uint province_id, uint8_t level, Building b) {
+  auto production = b.get_production();
   auto amount = production.outputs.at(0).amount;
   auto good_id = production.outputs.at(0).good_id;
-  Market* market = w->getProvinceById(province_id)->get_market();
+  Market* market = w->getProvinceById(province_id)->get_market(w);
   market->updateProduction(good_id, amount * level);
 }
 
-void clothier(World* w, uint province_id, uint8_t level, Production production) {
+void clothier(World* w, uint province_id, uint8_t level, Building b) {
+  auto production = b.get_production();
   auto amount_out = production.outputs.at(0).amount;
   auto good_id_out = production.outputs.at(0).good_id;
-  Market* market = w->getProvinceById(province_id)->get_market();
+  Market* market = w->getProvinceById(province_id)->get_market(w);
   market->updateProduction(good_id_out, amount_out * level);
 
   auto amount_in = production.inputs.at(0).amount;
   auto good_id_in = production.inputs.at(0).good_id;
   market->updateDemand(good_id_in, amount_in * level);
-
 }
 
-void armourer(World* w, uint province_id, uint8_t level, Production production) {}
+void armourer(World* w, uint province_id, uint8_t level, Building b) {}
 
-void small_temple(World* w, uint province_id, uint8_t level, Production production) {}
+void small_temple(World* w, uint province_id, uint8_t level, Building b) {}
 
-void temple(World* w, uint province_id, uint8_t level, Production production) {}
+void temple(World* w, uint province_id, uint8_t level, Building b) {}
 
-void blacksmith(World* w, uint province_id, uint8_t level, Production production) {}
+void blacksmith(World* w, uint province_id, uint8_t level, Building b) {}
 
-void cattle_farm(World* w, uint province_id, uint8_t level, Production production) {}
+void cattle_farm(World* w, uint province_id, uint8_t level, Building b) {}
 
-void sheep_farm(World* w, uint province_id, uint8_t level, Production production) {}
+void sheep_farm(World* w, uint province_id, uint8_t level, Building b) {}
 
-void camel_breeder(World* w, uint province_id, uint8_t level, Production production) {}
+void camel_breeder(World* w, uint province_id, uint8_t level, Building b) {}
 
-void horse_breeder(World* w, uint province_id, uint8_t level, Production production) {}
+void horse_breeder(World* w, uint province_id, uint8_t level, Building b) {}
 
-void elephant_breeder(World* w, uint province_id, uint8_t level, Production production) {}
+void elephant_breeder(World* w, uint province_id, uint8_t level, Building b) {}
 
-void well(World* w, uint province_id, uint8_t level, Production production) {
+void well(World* w, uint province_id, uint8_t level, Building b) {
   Province* prov = w->getProvinceById(province_id);
   prov->set_infrastructure(prov->get_infrastructure() + 2 * level);
 }
 
-void bowyer(World* w, uint province_id, uint8_t level, Production production) {}
+void bowyer(World* w, uint province_id, uint8_t level, Building b) {}
 
-void wooden_city_walls(World* w, uint province_id, uint8_t level, Production production) {}
+void wooden_city_walls(World* w, uint province_id, uint8_t level, Building b) {}
 
-void stone_city_walls(World* w, uint province_id, uint8_t level, Production production) {}
+void stone_city_walls(World* w, uint province_id, uint8_t level, Building b) {}
 
-void wooden_fort(World* w, uint province_id, uint8_t level, Production production) {}
+void wooden_fort(World* w, uint province_id, uint8_t level, Building b) {}
 
-void wooden_castle(World* w, uint province_id, uint8_t level, Production production) {}
+void wooden_castle(World* w, uint province_id, uint8_t level, Building b) {}
 
-void stone_castle(World* w, uint province_id, uint8_t level, Production production) {}
+void stone_castle(World* w, uint province_id, uint8_t level, Building b) {}
 
-void stone_fort(World* w, uint province_id, uint8_t level, Production production) {}
+void stone_fort(World* w, uint province_id, uint8_t level, Building b) {}
 
-void market(World* w, uint province_id, uint8_t level, Production production) {}
+void market(World* w, uint province_id, uint8_t level, Building b) {}
 
-void road(World* w, uint province_id, uint8_t level, Production production) {
+void road(World* w, uint province_id, uint8_t level, Building b) {
   Province* prov = w->getProvinceById(province_id);
   prov->set_infrastructure(prov->get_infrastructure() + 5 * level);
 }
