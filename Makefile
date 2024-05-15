@@ -1,5 +1,5 @@
-sim: ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/culture.o ./out/population.o ./out/province.o ./out/world.o ./out/date.o ./out/good.o ./out/ai_character.o ./out/diplomacy.o ./out/market.o
-		g++ -g -std=c++20 -Wall ./out/province.o ./out/ai_character.o ./out/main.o ./out/building.o ./out/market.o ./out/diplomacy.o ./out/country.o ./out/culture.o ./out/population.o ./out/character.o  ./out/world.o ./out/date.o ./out/good.o  -o sim -lraylib -lGL -lm  -DRAUDIO_STANDALONE -DSUPPORT_FILEFORMAT_WAV -DSUPPORT_FILEFORMAT_OGG -lpthread -ldl -lrt -lX11 -DRAYGUI_IMPLEMENTATION -O3
+sim: ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/culture.o ./out/population.o ./out/province.o ./out/world.o ./out/date.o ./out/good.o ./out/ai_character.o ./out/diplomacy.o ./out/market.o ./out/screen_loading.o ./out/screen_menu.o ./out/screen_game.o ./out/render_maps.o
+		g++ -g -std=c++20 -Wall ./out/province.o ./out/screen_game.o ./out/screen_loading.o ./out/screen_menu.o ./out/ai_character.o ./out/main.o ./out/building.o ./out/market.o ./out/diplomacy.o ./out/country.o ./out/culture.o ./out/render_maps.o ./out/population.o ./out/character.o  ./out/world.o ./out/date.o ./out/good.o  -o sim -lraylib -lGL -lm  -DRAUDIO_STANDALONE -DSUPPORT_FILEFORMAT_WAV -DSUPPORT_FILEFORMAT_OGG -lpthread -ldl -lrt -lX11 -DRAYGUI_IMPLEMENTATION -O3
 
 ./out/main.o: main.cpp
 	g++ -g -Wall -c main.cpp -o ./out/main.o -O3
@@ -39,6 +39,18 @@ sim: ./out/main.o ./out/building.o ./out/character.o ./out/country.o ./out/cultu
 
 ./out/market.o: ./src/economy/market.cpp
 	g++ -Wall -g -c ./src/economy/market.cpp -o ./out/market.o -O3
+
+./out/screen_loading.o: ./src/graphics/screen_loading.cpp
+	g++ -Wall -g -c ./src/graphics/screen_loading.cpp -o ./out/screen_loading.o -O3
+
+./out/screen_menu.o: ./src/graphics/screen_menu.cpp
+	g++ -Wall -g -c ./src/graphics/screen_menu.cpp -o ./out/screen_menu.o -O3
+
+./out/screen_game.o: ./src/graphics/screen_game.cpp
+	g++ -Wall -g -c ./src/graphics/screen_game.cpp -o ./out/screen_game.o -O3
+
+./out/render_maps.o: ./src/graphics/render_maps.cpp
+	g++ -Wall -g -c ./src/graphics/render_maps.cpp -o ./out/render_maps.o -O3
 
 clean:
 	rm -f ./out/*.o sim

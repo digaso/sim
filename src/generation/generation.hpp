@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <random>
 #include <vector>
@@ -10,18 +11,10 @@
 #include "../configs.h"
 
 
-
-typedef struct province_properties {
-  uint pop;
-  string province_name;
-  type_province type;
-  int color_id;
-} province_properties;
-
-
 float** setup(int rows, int cols, float frequency, int seed, int octaves);
 void populate_world(World* w);
 void set_map_goods(World* w, float frequency, int seed, int octaves);
+province_properties* generate_map(World* w);
 
 vector<float> _generate_noise(int rows, int cols, float frequency, int seed, int octaves) {
   FastNoiseLite noise;
@@ -78,11 +71,11 @@ province_properties get_province_type(float height, float moisture) {
     province_name = generateCityName();
   }
   else if (height < 0.45f) {
-    if (moisture < -0.4) {
+    if (moisture < -0.35) {
       color = 9;
       type = desert;
     }
-    else if (moisture < -0.22) {
+    else if (moisture < -0.12) {
       color = 10;
       type = temperate_desert;
     }
@@ -273,19 +266,25 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
             bmap[ row * cols + col ] = true;
             continue;
           }
+          if (g.get_name() == "Timber" && (p->get_type() == coastal_desert || p->get_type() == desert || p->get_type() == bare)) {
+            if (GetRandomValue(0, 100) < 20) {
+              p->add_goods(g.get_id()); count++;
+              bmap[ row * cols + col ] = true;
+            }
+            continue;
+          }
           if (g.get_name() == "Gold" && p->is_land()) {
-            uint8_t chance = GetRandomValue(0, 200);
-            if (chance < 199) {
+            uint8_t chance = GetRandomValue(0, 240);
+            if (chance < 230) {
               continue;
             }
             p->add_goods(g.get_id()); count++;
             bmap[ row * cols + col ] = true;
             continue;
           }
-          if (g.get_type() == catchable && g.is_maritime() && (p->get_type() == sea || p->get_type() == coastal_sea || p->get_type() == deep_sea))
+          if (g.get_type() == catchable && g.is_maritime() && (p->get_type() == coast || p->get_type() == coastal_desert))
           {
             p->add_goods(g.get_id()); count++;
-
             bmap[ row * cols + col ] = true;
           }
           else if (map[ row ][ col ] > 0.5 - (1.0 / g.get_base_value()) && (p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)) {

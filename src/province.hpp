@@ -3,29 +3,10 @@
 #include "population.hpp"
 #include "economy/good.hpp"
 #include "economy/market.hpp"
+#include "configs.h"
 #include <vector>
 
 using namespace std;
-
-
-enum type_province {
-  deep_sea = 0,
-  sea = 1,
-  coastal_sea = 2,
-  coast = 3,
-  grassland = 4,
-  forest = 5,
-  tropical_forest = 6,
-  desert = 7,
-  temperate_desert = 8,
-  hill = 9,
-  tropical = 10,
-  mountain = 11,
-  bare = 12,
-  taiga = 13,
-  tundra = 14,
-  coastal_desert = 15,
-};
 
 class Population;
 

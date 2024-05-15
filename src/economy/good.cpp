@@ -71,12 +71,7 @@ void Good::set_goods(World* world) {
   world->addGood(Good(41, "Chainmail", 4, manufactured, military));
   world->addGood(Good(42, "Plate Armour", 5.5, manufactured, military));
   world->addGood(Good(43, "Elephants", 3, catchable, military));
-  world->addGood(Good(44, "Coques", 5, manufactured, military));
-  world->addGood(Good(45, "Galleys", 7, manufactured, military));
-  world->addGood(Good(46, "Caravelas", 9.5, manufactured, military));
-  world->addGood(Good(47, "Carracks", 12.5, manufactured, military));
-  world->addGood(Good(48, "Naus", 12.5, manufactured, military));
-  world->addGood(Good(49, "Beer", 2, manufactured, basic_need));
+  world->addGood(Good(44, "Ale", 2, manufactured, basic_need));
 }
 
 bool Good::is_maritime() {
