@@ -1,38 +1,10 @@
 #pragma once
 #include <string>
 #include "world.hpp"
+#include "configs.h"
 
 using namespace std;
 
-enum type_building {
-  agriculture,
-  mineral_building,
-  maritime,
-  manufactury,
-  military_building,
-  infrastructure_building,
-  commerce,
-  culture,
-  religion,
-  administration,
-  education,
-  health,
-  special
-};
-
-
-struct base_input {
-  uint good_id;
-  uint32_t amount;
-};
-struct base_output {
-  uint good_id;
-  uint32_t amount;
-};
-typedef struct production {
-  vector<base_input> inputs = {};
-  vector<base_output> outputs = {};
-} Production;
 
 
 class Building

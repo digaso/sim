@@ -13,6 +13,7 @@ class Population;
 typedef struct buildings_stats {
   uint_fast8_t id;
   uint_fast8_t amount;
+  Ownership owner;
 } BuildingStats;
 
 class Country;

@@ -23,6 +23,37 @@ enum population_class {
   nobles
 };
 
+enum type_building {
+  agriculture,
+  mineral_building,
+  maritime,
+  manufactury,
+  military_building,
+  infrastructure_building,
+  commerce,
+  culture,
+  religion,
+  administration,
+  education,
+  health,
+  special
+};
+
+
+struct base_input {
+  uint good_id;
+  uint32_t amount;
+};
+struct base_output {
+  uint good_id;
+  uint32_t amount;
+};
+typedef struct production {
+  vector<base_input> inputs = {};
+  vector<base_output> outputs = {};
+} Production;
+
+
 enum type_province {
   deep_sea = 0,
   sea = 1,
@@ -60,6 +91,12 @@ typedef enum {
   SCREEN_GAME,
   SCREEN_SETTINGS
 } GameScreen;
+
+typedef struct ownership {
+  bool country; //true if country, false if character
+  uint owner_id;
+}Ownership;
+
 
 typedef struct province_properties {
   uint pop;

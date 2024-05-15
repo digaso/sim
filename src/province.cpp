@@ -4,7 +4,6 @@
 using namespace std;
 
 Province::Province(uint id, string name, uint population_size, int y, int x, float height, type_province type, float moisture, World* w)
-
 {
   this->id = id;
   this->name = name;
@@ -204,7 +203,8 @@ void Province::add_building(uint_fast8_t building_id)
       return;
     }
   }
-  this->buildings.push_back({ building_id, 1 });
+  Ownership owner = { true, this->country_owner_id };
+  this->buildings.push_back({ building_id, 1, owner });
 }
 
 void Province::set_type(type_province type)

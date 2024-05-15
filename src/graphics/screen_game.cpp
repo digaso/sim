@@ -93,9 +93,7 @@ void drawGameScreen(World* w) {
 
 void updateGameScreen(World* w) {
   if (velocity != PAUSED) {
-
     w->updateWorld();
-    w->advanceDate();
   }
   Vector2 prevMousePos = GetMousePosition();
   UpdateMusicStream(musics[ music_id ]);

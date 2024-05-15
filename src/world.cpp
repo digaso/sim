@@ -413,6 +413,7 @@ bool World::advanceDate() {
   int month = this->world_date.month();
   this->world_date++;
   if (month != this->world_date.month()) {
+    cout << "Date: " << getDateString() << endl;
     return true;
   }
   return false;
@@ -476,7 +477,6 @@ void World::updateProvinces() {
 }
 void  World::updateWorld() {
   if (advanceDate()) {
-    cout << "Date: " << getDateString() << endl;
     updateCountries();
     updateProvinces();
   }
