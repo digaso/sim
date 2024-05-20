@@ -520,9 +520,9 @@ void generate_countries(World* w) {
             n->add_building(0);
             n->set_country_owner_id(i);
             market.add_province(n->get_id());
-            n->add_population(Population(0, GetRandomValue(800, 1000), i, n->get_id(), c.get_culture_id(), population_class::peasants, religion_id, w));
-            n->add_population(Population(1, GetRandomValue(100, 250), i, n->get_id(), c.get_culture_id(), population_class::burghers, religion_id, w));
-            n->add_population(Population(2, GetRandomValue(10, 90), i, n->get_id(), c.get_culture_id(), population_class::nobles, religion_id, w));
+            n->add_population(Population(0, GetRandomValue(4000, 10000), i, n->get_id(), c.get_culture_id(), population_class::peasants, religion_id, w));
+            n->add_population(Population(1, GetRandomValue(200, 450), i, n->get_id(), c.get_culture_id(), population_class::burghers, religion_id, w));
+            n->add_population(Population(2, GetRandomValue(50, 100), i, n->get_id(), c.get_culture_id(), population_class::nobles, religion_id, w));
             c.add_market(market);
             c.add_province(n);
 

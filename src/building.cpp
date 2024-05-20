@@ -172,9 +172,16 @@ Production ivory_hunters_production = {
   {{44,1}}, {{28,2}}
 };
 
+
+Production libary_production = {
+  {}, {{19,2}}
+};
+
 Production no_production = {
   {}, {}
 };
+
+
 
 void farm(World* w, uint province_id, uint8_t level, Building b) {
   auto production = b.get_production();
@@ -333,6 +340,8 @@ void road(World* w, uint province_id, uint8_t level, Building b) {
   prov->set_infrastructure(prov->get_infrastructure() + 5 * level);
 }
 
+void library(World* w, uint province_id, uint8_t level, Building b) {
+}
 
 
 
@@ -387,5 +396,5 @@ void Building::setup_buildings(World* w) {
   w->addBuilding(Building(46, "Stone City Walls", no_production, military_building, stone_city_walls));
   w->addBuilding(Building(47, "Market", no_production, commerce, market));
   w->addBuilding(Building(48, "Roads", no_production, infrastructure_building, road));
-
+  w->addBuilding(Building(49, "Library", libary_production, type_building::education, library));
 }

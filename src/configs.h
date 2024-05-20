@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 // world variables
 #define INITIAL_YEAR 822
 #define INITIAL_MONTH 1
@@ -9,10 +10,10 @@
 #define TILESIZE 2
 #define CHUNKSIZE 64
 // generation variables
-#define MAXCOUNTRIES 75
+#define MAXCOUNTRIES 70
 #define MAXRELIGIONS MAXCOUNTRIES/3
-#define MAXPROVINCES 55
-#define MINPROVINCES 40
+#define MAXPROVINCES 95
+#define MINPROVINCES 70
 
 using namespace std;
 

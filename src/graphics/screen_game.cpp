@@ -24,17 +24,21 @@ static Texture2D map;
 static Texture2D borders;
 static vector<Music> musics;
 static Province* prov;
+static Vector2 prevMousePos;
 static string province_name, good_name, CountryName, type_prov, coords, population, region_name, kingName;
 static game_velocity velocity = PAUSED;
 static province_properties* p;
+static bool dragging = false;
+static Vector2 dragStartPos = { 0 };
+static Vector2 cameraStartTarget = { 0 };
 
 
 void drawGUIGood(World* w);
 void drawMusic();
 void toggleButtons();
 void drawProvinceGUI(World* w);
-void cameraMoveLetters(Camera2D* camera);
-void cameraMove(Vector2* prevMousePos);
+void cameraMoveLetters();
+void cameraMove();
 
 
 void initGameScreen(World* w, province_properties* props) {
@@ -92,12 +96,12 @@ void drawGameScreen(World* w) {
 }
 
 void updateGameScreen(World* w) {
+  prevMousePos = GetMousePosition();
   if (velocity != PAUSED) {
     w->updateWorld();
   }
-  Vector2 prevMousePos = GetMousePosition();
   UpdateMusicStream(musics[ music_id ]);
-  cameraMove(&prevMousePos);
+  cameraMove();
   if (IsKeyPressed(KEY_SPACE)) velocity = velocity == PAUSED ? SLOW : PAUSED;
   if (velocity != PAUSED) w->updateWorld();
 }
@@ -204,21 +208,25 @@ void cameraMoveLetters() {
     camera.offset.x -= 10 / camera.zoom;
 }
 
-void cameraMove(Vector2* prevMousePos) {
-
+void cameraMove() {
+  // Zoom handling
   float mouseDelta = GetMouseWheelMove();
   float newZoom = camera.zoom + mouseDelta * 0.02f;
-  if (newZoom <= 0)
-    newZoom = 0.01f;
-
+  if (newZoom <= 0) newZoom = 0.01f;
   camera.zoom = newZoom;
+
+  // Get the current mouse position
   Vector2 thisPos = GetMousePosition();
+  // Calculate the delta from the previous mouse position
+  Vector2 delta = Vector2Subtract(thisPos, prevMousePos);
+  // Update the previous mouse position
+  prevMousePos = thisPos;
 
-  Vector2 delta = Vector2Subtract(*prevMousePos, thisPos);
-  *prevMousePos = thisPos;
-
-  if (IsMouseButtonDown(0))
-    camera.target = GetScreenToWorld2D(Vector2Add(camera.offset, delta), camera);
-
+  // Handle dragging (panning)
+  if (IsMouseButtonDown(0)) {
+    Vector2 worldDelta = Vector2Scale(delta, -1.0f / camera.zoom);
+    camera.target = Vector2Add(camera.target, worldDelta);
+  }
+  // Additional panning using keyboard input
   cameraMoveLetters();
 }
