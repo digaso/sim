@@ -8,7 +8,7 @@
 #include "src/world.hpp"
 #include "src/province.hpp"
 #include "src/country.hpp"
-#include "src/graphics/raytest.hpp"
+#include "src/graphics/game.hpp"
 
 
 using namespace std;
