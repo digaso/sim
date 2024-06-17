@@ -41,7 +41,7 @@ public:
   Province(uint id, string name, uint population_size, int y, int x, float height, type_province type, float moisture, World* w);
   ~Province() {};
   string get_name();
-  uint get_id();
+  uint getId();
   uint get_baron_id();
   void set_baron_id(uint id);
   int get_y();

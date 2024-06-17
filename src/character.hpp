@@ -49,7 +49,7 @@ public:
   Character(uint id, string first_name, string last_name, date birth_date, uint country_living, uint8_t conscientiousness, uint8_t agreeableness, uint8_t neuroticism, uint8_t openness, uint8_t extraversion, uint religion_id, uint culture_id, int father_id, int mother_id, int spouse_id, uint province_born_id, uint province_living_id, bool ruling, bool man, World* w, int country_ruling);
   ~Character();
   string get_name();
-  uint get_id();
+  uint getId();
   uint get_religion();
   uint get_culture();
   uint get_father();

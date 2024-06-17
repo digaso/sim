@@ -9,6 +9,7 @@
 #include "render_maps.hpp"
 #include "../configs.h"
 
+
 using namespace std;
 
 static int music_id = 0;
@@ -25,7 +26,7 @@ static Texture2D borders;
 static vector<Music> musics;
 static Province* prov;
 static Vector2 prevMousePos;
-static string province_name, good_name, CountryName, type_prov, coords, population, region_name, kingName;
+static string province_name, good_name, CountryName, type_prov, coords, population, region_name, kingName, height;
 static game_velocity velocity = PAUSED;
 static province_properties* p;
 static bool dragging = false;
@@ -182,6 +183,7 @@ void drawProvinceGUI(World* w) {
       coords = "Position x: " + to_string(prov->get_x()) + " y: " + to_string(prov->get_y());
       population = "Population: " + to_string(prov->get_population_size());
       region_name = "Region: " + w->getRegionById(prov->get_region_id()).name;
+      height = "Height: " + to_string(prov->get_height());
       GuiPanel(Rectangle{ 10, 130, 310, 300 }, province_name.c_str());
       GuiLabel(Rectangle{ 15, 150, 310, 20 }, good_name.c_str());
       GuiLabel(Rectangle{ 15, 170, 310, 20 }, CountryName.c_str());
@@ -190,6 +192,7 @@ void drawProvinceGUI(World* w) {
       GuiLabel(Rectangle{ 15, 230, 310, 20 }, population.c_str());
       GuiLabel(Rectangle{ 15, 250, 310, 20 }, region_name.c_str());
       GuiLabel(Rectangle{ 15, 270, 310, 20 }, kingName.c_str());
+      GuiLabel(Rectangle{ 15, 290, 310, 20 }, height.c_str());
     }
     else {
       show = false;

@@ -10,7 +10,6 @@
 #include "src/country.hpp"
 #include "src/graphics/game.hpp"
 
-
 using namespace std;
 
 void print_memory_usage() {

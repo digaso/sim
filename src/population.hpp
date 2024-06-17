@@ -34,7 +34,7 @@ public:
   Population(uint id, uint size, uint country_id, uint province_id, uint culture_id, population_class pop_class, uint religion_id, World* w);
   ~Population();
   string get_name();
-  uint get_id();
+  uint getId();
   uint get_size() const;
   uint get_country_id();
   uint get_province_id();

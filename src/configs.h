@@ -6,12 +6,12 @@
 #define INITIAL_MONTH 1
 #define INITIAL_DAY 1
 // graphics variables
-#define NUM_CHUNKS 3
+#define NUM_CHUNKS 5
 #define TILESIZE 2
 #define CHUNKSIZE 64
 // generation variables
-#define MAXCOUNTRIES 70
-#define MAXRELIGIONS MAXCOUNTRIES/3
+#define MAXCOUNTRIES 190
+#define MAXRELIGIONS MAXCOUNTRIES/4
 #define MAXPROVINCES 95
 #define MINPROVINCES 70
 

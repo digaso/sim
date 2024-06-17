@@ -11,9 +11,9 @@ class World;
 class Market {
   vector<uint> provinces;
   vector<float> goods_prices;
-  vector<uint> goods_demands;
-  vector<uint> goods_production;
-  vector<uint> goods_stocks;
+  vector<float> goods_demands;
+  vector<float> goods_production;
+  vector<float> goods_stocks;
 public:
   vector<Good> goods;
 
@@ -21,14 +21,14 @@ public:
   Market() {};
   ~Market() {};
   vector<float> get_prices();
-  vector<uint> get_demands();
-  vector<uint> get_production();
-  vector<uint> get_stocks();
+  vector<float> get_demands();
+  vector<float> get_production();
+  vector<float> get_stocks();
   void updateMarketPrices();
-  void updateDemand(uint good_id, uint amount);
-  void updateProduction(uint good_id, uint amount);
+  void updateDemand(uint good_id, float amount);
+  void updateProduction(uint good_id, float amount);
   void cleanMarket();
-  vector<uint> get_provinces();
+  vector<uint> getProvinces();
   bool has_province(uint id);
   void add_province(uint id);
 };

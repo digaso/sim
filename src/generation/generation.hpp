@@ -11,7 +11,7 @@
 #include "../configs.h"
 
 
-float** setup(int rows, int cols, float frequency, int seed, int octaves);
+float** setup(int rows, int cols, float frequency, int seed, int octaves, bool _gradient);
 void populate_world(World* w);
 void set_map_goods(World* w, float frequency, int seed, int octaves);
 province_properties* generate_map(World* w);
@@ -38,11 +38,11 @@ vector<float> _generate_noise(int rows, int cols, float frequency, int seed, int
 }
 
 province_properties get_province_type(float height, float moisture) {
-  uint pop = 500;
+  uint pop = 0;
   string province_name;
   type_province type = sea;
   int color = 0;
-  if (height < -0.22) {
+  if (height < -0.22f) {
     color = 0;
     type = deep_sea;
     pop = 0;
@@ -57,7 +57,7 @@ province_properties get_province_type(float height, float moisture) {
     type = coastal_sea;
     pop = 0;
   }
-  else if (height < 0.19f) {
+  else if (height < 0.192f) {
     if (moisture < -0.4)
     {
       color = 4;
@@ -70,7 +70,7 @@ province_properties get_province_type(float height, float moisture) {
     }
     province_name = generateCityName();
   }
-  else if (height < 0.45f) {
+  else if (height < 0.68f) {
     if (moisture < -0.35) {
       color = 9;
       type = desert;
@@ -83,7 +83,7 @@ province_properties get_province_type(float height, float moisture) {
       color = 5;
       type = grassland;
     }
-    else if (moisture < 0.4) {
+    else if (moisture < 0.35) {
       color = 6;
       type = forest;
     }
@@ -91,13 +91,14 @@ province_properties get_province_type(float height, float moisture) {
       color = 7;
       type = tropical;
     }
-    else if (moisture < 0.99) {
+    else {
       color = 8;
       type = tropical_forest;
     }
+
     province_name = generateCityName();
   }
-  else if (height < 0.8f) {
+  else if (height < 1.19f) {
     if (moisture < -0.4) {
       color = 13;
       type = bare;
@@ -203,9 +204,9 @@ province_properties* generate_map(World* w) {
 
   province_properties* prov_props = new province_properties[ rows * cols ];
 
-  float** tiles = setup(rows, cols, frequency, seed, octaves);
+  float** tiles = setup(rows, cols, frequency, seed, octaves, true);
   seed = random % 1000000;
-  float** moisture = setup(rows, cols, frequency / 3, seed, octaves);
+  float** moisture = setup(rows, cols, frequency / 3, seed, octaves, true);
   uint id_count = 0;
   for (int row = 0; row < rows; row++) {
     for (int col = 0; col < cols; col++) {
@@ -239,7 +240,7 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
   vector<float**> maps;
   //fill bmap with 0s
   for (uint i = 0; i < goods.size(); i++) {
-    float** map = setup(rows, cols, frequency / 2, seed, octaves);
+    float** map = setup(rows, cols, frequency / 2, seed, octaves, false);
     seed += 50;
     maps.push_back(map);
   }
@@ -257,43 +258,43 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
           float** map = maps[ i ];
           Province* p = w->getProvinceById(row * cols + col);
           if (g.get_name() == "Salt" && (p->get_type() == coastal_desert || p->get_type() == coast)) {
-            p->add_goods(g.get_id()); count++;
+            p->add_goods(g.getId()); count++;
             bmap[ row * cols + col ] = true;
             continue;
           }
           if (g.get_name() == "Timber" && (p->get_type() == forest || p->get_type() == tropical_forest || p->get_type() == tropical || p->get_type() == grassland || p->get_type() == taiga) && GetRandomValue(0, 100) < 90) {
-            p->add_goods(g.get_id()); count++;
+            p->add_goods(g.getId()); count++;
             bmap[ row * cols + col ] = true;
             continue;
           }
           if (g.get_name() == "Timber" && (p->get_type() == coastal_desert || p->get_type() == desert || p->get_type() == bare)) {
             if (GetRandomValue(0, 100) < 20) {
-              p->add_goods(g.get_id()); count++;
+              p->add_goods(g.getId()); count++;
               bmap[ row * cols + col ] = true;
             }
             continue;
           }
           if (g.get_name() == "Gold" && p->is_land()) {
             uint8_t chance = GetRandomValue(0, 240);
-            if (chance < 230) {
+            if (chance < 233) {
               continue;
             }
-            p->add_goods(g.get_id()); count++;
+            p->add_goods(g.getId()); count++;
             bmap[ row * cols + col ] = true;
             continue;
           }
           if (g.get_type() == catchable && g.is_maritime() && (p->get_type() == coast || p->get_type() == coastal_desert))
           {
-            p->add_goods(g.get_id()); count++;
+            p->add_goods(g.getId()); count++;
             bmap[ row * cols + col ] = true;
           }
           else if (map[ row ][ col ] > 0.5 - (1.0 / g.get_base_value()) && (p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)) {
             if (g.get_name() == "Camels" && (p->get_type() == desert || p->get_type() == coastal_desert || p->get_type() == temperate_desert || p->get_type() == bare)) {
               uint chance = GetRandomValue(0, 100);
-              if (chance < 30) {
+              if (chance < 20) {
                 continue;
               }
-              p->add_goods(g.get_id()); count++;
+              p->add_goods(g.getId()); count++;
               bmap[ row * cols + col ] = true;
               continue;
             }
@@ -302,7 +303,7 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
               if (chance < 10) {
                 continue;
               }
-              p->add_goods(g.get_id()); count++;
+              p->add_goods(g.getId()); count++;
               bmap[ row * cols + col ] = true;
               continue;
             }
@@ -311,13 +312,14 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
               if (chance < 10) {
                 continue;
               }
-              p->add_goods(g.get_id()); count++;
+              p->add_goods(g.getId()); count++;
               bmap[ row * cols + col ] = true;
               continue;
             }
 
             if (g.get_name() == "Elephants" && (p->get_type() == type_province::temperate_desert || p->get_type() == type_province::coastal_desert || p->get_type() == type_province::tropical || p->get_type() == type_province::tropical_forest)) {
-              p->add_goods(g.get_id()); count++;
+              if (GetRandomValue(0, 100) < 10) continue;
+              p->add_goods(g.getId()); count++;
               bmap[ row * cols + col ] = true;
               continue;
             }
@@ -327,7 +329,7 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
               if (chance < 30) {
                 continue;
               }
-              p->add_goods(g.get_id()); count++;
+              p->add_goods(g.getId()); count++;
               bmap[ row * cols + col ] = true;
               continue;
             }
@@ -337,7 +339,7 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
               if (chance < 30) {
                 continue;
               }
-              p->add_goods(g.get_id()); count++;
+              p->add_goods(g.getId()); count++;
               bmap[ row * cols + col ] = true;
               continue;
             }
@@ -347,7 +349,7 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
               if (chance < 20) {
                 continue;
               }
-              p->add_goods(g.get_id()); count++;
+              p->add_goods(g.getId()); count++;
               bmap[ row * cols + col ] = true;
               continue;
             }
@@ -357,19 +359,28 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
               if (chance < 30) {
                 continue;
               }
-              p->add_goods(g.get_id()); count++;
+              p->add_goods(g.getId()); count++;
+              bmap[ row * cols + col ] = true;
+              continue;
+            }
+            if (g.get_name() == "Gems" && (type_province::mountain || p->get_type() == type_province::hill || p->get_type() == type_province::bare || p->get_type() == type_province::tundra || p->get_type() == type_province::taiga)) {
+              uint8_t chance = GetRandomValue(0, 10);
+              if (chance < 8) {
+                continue;
+              }
+              p->add_goods(g.getId()); count++;
               bmap[ row * cols + col ] = true;
               continue;
             }
             if (g.get_type() == type_good::mineral && (p->get_type() == type_province::mountain || p->get_type() == type_province::hill || p->get_type() == bare || p->get_type() == tundra || p->get_type() == taiga) && p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)
             {
-              p->add_goods(g.get_id()); count++;
+              p->add_goods(g.getId()); count++;
               bmap[ row * cols + col ] = true;
 
             }
-            if (g.get_type() == type_good::plantable && p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)
+            if (g.get_type() == type_good::plantable)
             {
-              p->add_goods(g.get_id()); count++;
+              p->add_goods(g.getId()); count++;
 
               bmap[ row * cols + col ] = true;
             }
@@ -378,8 +389,8 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
       }
     }
     //if (count == 0)cout << g.get_name() << " " << count << endl;
-    w->getGoodById(g.get_id())->set_initial_amount(count);
-    w->setGoodMapById(g.get_id(), bmap);
+    w->getGoodById(g.getId())->set_initial_amount(count);
+    w->setGoodMapById(g.getId(), bmap);
   }
   maps.clear();
 }
@@ -427,15 +438,15 @@ void generate_royalty(World* w, Country* c, Province* p) {
   uint month = GetRandomValue(1, 12);
   uint day = GetRandomValue(1, 28);
   date birth_date = date(day, month, year);
-  uint country_living = c->get_id();
+  uint country_living = c->getId();
   uint culture_id = c->get_culture_id();
   uint father_id = -1;
   uint mother_id = -1;
   uint spouse_id;
-  uint country_ruling = c->get_id();
+  uint country_ruling = c->getId();
   bool man = true;
-  uint province_born = p->get_id();
-  uint province_living = p->get_id();
+  uint province_born = p->getId();
+  uint province_living = p->getId();
   uint id = w->get_characters_size();
 
   //generate queen
@@ -469,8 +480,8 @@ void generate_culture(World* w, Country* c, uint* cultures_count) {
 
   Culture culture(generateCultureName(c->get_name()), *cultures_count);
   *cultures_count += 1;
-  c->set_culture_id(culture.get_id());
-  culture.set_pop_consumption(culture.generate_pop_consumption(w, c->get_id()));
+  c->set_culture_id(culture.getId());
+  culture.set_pop_consumption(culture.generate_pop_consumption(w, c->getId()));
   w->addCulture(culture);
 
 }
@@ -480,9 +491,9 @@ void generate_countries(World* w) {
   uint cultures_count = 0;
   while (i < MAXCOUNTRIES) {
     //get random number between 0 and num_cols
-    uint x = GetRandomValue(32, w->get_num_cols() - 1 - 32);
+    uint x = GetRandomValue(40, w->get_num_cols() - 1 - ((NUM_CHUNKS * 0.25) * CHUNKSIZE));
     //get random number between 0 and num_rows
-    uint y = GetRandomValue(32, w->get_num_rows() - 1 - 32);
+    uint y = GetRandomValue(40, w->get_num_rows() - 1 - ((NUM_CHUNKS * 0.25) * CHUNKSIZE));
     Province* p = w->getProvinceByCoords(x, y);
     uint num_provinces = GetRandomValue(MINPROVINCES, MAXPROVINCES);
     uint8_t color_id = GetRandomValue(0, 116);
@@ -497,8 +508,8 @@ void generate_countries(World* w) {
       p->set_country_owner_id(i);
       c.set_color_id(color_id);
       c.add_province(p);
-      c.set_capital_id(p->get_id());
-      provinces.push_back(p->get_id());
+      c.set_capital_id(p->getId());
+      provinces.push_back(p->getId());
       generate_royalty(w, &c, p);
       for (uint j = 0; j < num_provinces - 1; j++) {
         p = w->getProvinceById(provinces.at(GetRandomValue(0, provinces.size() - 1)));
@@ -519,14 +530,14 @@ void generate_countries(World* w) {
             }
             n->add_building(0);
             n->set_country_owner_id(i);
-            market.add_province(n->get_id());
-            n->add_population(Population(0, GetRandomValue(4000, 10000), i, n->get_id(), c.get_culture_id(), population_class::peasants, religion_id, w));
-            n->add_population(Population(1, GetRandomValue(200, 450), i, n->get_id(), c.get_culture_id(), population_class::burghers, religion_id, w));
-            n->add_population(Population(2, GetRandomValue(50, 100), i, n->get_id(), c.get_culture_id(), population_class::nobles, religion_id, w));
+            market.add_province(n->getId());
+            n->add_population(Population(0, GetRandomValue(4000, 10000), i, n->getId(), c.get_culture_id(), population_class::peasants, religion_id, w));
+            n->add_population(Population(1, GetRandomValue(200, 450), i, n->getId(), c.get_culture_id(), population_class::burghers, religion_id, w));
+            n->add_population(Population(2, GetRandomValue(50, 100), i, n->getId(), c.get_culture_id(), population_class::nobles, religion_id, w));
             c.add_market(market);
             c.add_province(n);
 
-            provinces.push_back(n->get_id());
+            provinces.push_back(n->getId());
             j++;
           }
         }
@@ -547,8 +558,15 @@ void populate_world(World* w) {
   cout << "Countries generated" << endl;
 }
 
-float** setup(int rows, int cols, float frequency, int seed, int octaves) {
+float getDistanceFromEdge(int x, int y, int rows, int cols) {
+  int dist_left = x;
+  int dist_right = cols - 1 - x;
+  int dist_top = y;
+  int dist_bottom = rows - 1 - y;
+  return min(min(dist_left, dist_right), min(dist_top, dist_bottom));
+}
 
+float** setup(int rows, int cols, float frequency, int seed, int octaves, bool _gradient = false) {
   float** tiles = new float* [ rows ];
   for (int i = 0; i < rows; i++) {
     tiles[ i ] = new float[ cols ];
@@ -556,10 +574,29 @@ float** setup(int rows, int cols, float frequency, int seed, int octaves) {
 
   vector<float> noiseData = _generate_noise(rows, cols, frequency, seed, octaves);
   int index = 0;
+
+  float max_distance_from_edge = min(rows, cols) / 2.0f;
+
   for (int row = 0; row < rows; row++) {
     for (int col = 0; col < cols; col++) {
-      //make boundaries ocean smoothly
-      tiles[ row ][ col ] = noiseData[ index++ ];
+      float distance_from_edge = getDistanceFromEdge(col, row, rows, cols);
+
+      // Normalize distance to the range [0, 1]
+      float normalized_distance = distance_from_edge / max_distance_from_edge;
+
+      // Apply the gradient based on the distance from the edge
+      float gradient = normalized_distance * 1.9; // Adjust this factor to control the transition smoothness
+      float noise_value = noiseData[ index++ ];
+
+      // Modify the noise value based on the gradient
+      if (noise_value > 0.0f && _gradient) {
+        tiles[ row ][ col ] = noise_value * gradient;
+      }
+      else
+      {
+        tiles[ row ][ col ] = noise_value;
+      }
+
     }
   }
 

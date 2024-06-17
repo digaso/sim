@@ -33,7 +33,7 @@ string Population::get_name()
   return this->name;
 }
 
-uint Population::get_id()
+uint Population::getId()
 {
   return this->id;
 }
@@ -63,7 +63,7 @@ void Population::update(World* world)
   //handle consumption
   Province* province = world->getProvinceById(this->province_id);
   Culture culture = world->getCultures().at(this->culture_id);
-  vector<pair<uint, uint>> consumption = culture.get_class_consumption(this->pop_class);
+  vector<pair<uint, float>> consumption = culture.get_class_consumption(this->pop_class);
 
   float temp_happiness = this->population_happiness;
   float temp_loyalty = this->population_loyalty;

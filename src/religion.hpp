@@ -19,7 +19,7 @@ public:
     this->id = id;
   };
   ~God() {};
-  uint8_t get_id() { return this->id; };
+  uint8_t getId() { return this->id; };
   string get_name() { return this->name; };
   uint8_t get_religion_id() { return this->religion_id; };
 };
@@ -44,7 +44,7 @@ public:
     this->id = id;
     this->is_polytheistic = is_polytheistic;
   };
-  uint8_t get_id() { return this->id; };
+  uint8_t getId() { return this->id; };
   string get_name() { return this->name; };
   uint8_t get_color_id() { return this->color_id; };
   void set_name(string name) { this->name = name; };

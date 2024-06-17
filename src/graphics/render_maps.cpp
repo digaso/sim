@@ -117,7 +117,7 @@ Texture2D renderBordersMap(World* w) {
   vector<Country> countries = w->getCountries();
   // Iterate over each country
   for (Country country : countries) {
-    for (int i : country.get_provinces()) {
+    for (int i : country.getProvinces()) {
 
       Province* prov = w->getProvinceById(i);
       for (Province* p : w->get_neighbours(prov)) {

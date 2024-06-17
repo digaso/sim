@@ -13,12 +13,12 @@ Country::Country(uint id, string name, uint8_t religion_id)
 };
 
 void Country::add_province(Province* p) {
-  this->provinces.push_back(p->get_id());
+  this->provinces.push_back(p->getId());
   this->num_provinces++;
 }
 void Country::remove_province(Province* p) {
   for (uint i = 0; i < this->num_provinces; i++) {
-    if (this->provinces[ i ] == p->get_id()) {
+    if (this->provinces[ i ] == p->getId()) {
       this->provinces.erase(this->provinces.begin() + i);
       this->num_provinces--;
       return;
@@ -51,7 +51,7 @@ string Country::print() {
   return this->name;
 }
 
-uint Country::get_id() {
+uint Country::getId() {
   return this->id;
 }
 
@@ -113,8 +113,22 @@ void Country::set_culture_id(uint id) {
   this->culture_id = id;
 }
 
-vector<uint> Country::get_provinces() {
+vector<uint> Country::getProvinces() {
   return this->provinces;
+}
+
+vector<uint> Country::getProvinceTypesCount() {
+  map<uint, uint> types;
+  vector<uint> types_count;
+  for (uint i = 0; i < this->num_provinces; i++) {
+    types[ this->provinces[ i ] ]++;
+  }
+
+  for (auto const& x : types) {
+    types_count.push_back(x.second);
+  }
+
+  return types_count;
 }
 
 void Country::print_characters() {

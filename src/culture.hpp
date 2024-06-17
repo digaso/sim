@@ -7,8 +7,6 @@
 using namespace std;
 
 
-
-
 class CultureCustoms
 {
 private:
@@ -19,10 +17,10 @@ public:
 };
 
 typedef struct PopConsumption {
-  vector<pair<uint, uint>> slaves_consumption;
-  vector<pair<uint, uint>> peasants_consumption;
-  vector<pair<uint, uint>> citizens_consumption;
-  vector<pair<uint, uint>> elite_consumption;
+  vector<pair<uint, float>> slaves_consumption;
+  vector<pair<uint, float>> peasants_consumption;
+  vector<pair<uint, float>> citizens_consumption;
+  vector<pair<uint, float>> elite_consumption;
 }PopConsumption;
 
 class Culture
@@ -35,28 +33,18 @@ private:
   vector<uint> goods_obsession; // goods that this culture is obsessed with
   PopConsumption pop_consumption; // how much of each good each pop consumes
 public:
-
   Culture(/* args */) {};
   ~Culture() {};
-
   Culture(string name, uint id);
-
   string get_name();
-  uint get_id();
+  uint getId();
   vector<uint> get_homelands();
-
   vector<uint> get_goods_obsession();
-
   PopConsumption get_pop_consumption();
-
-  vector<pair<uint, uint>> get_class_consumption(population_class pop_class);
-
+  vector<pair<uint, float>> get_class_consumption(population_class pop_class);
   void set_homelands(vector<uint> homelands);
-
   void set_goods_obsession(vector<uint> goods_obsession);
-
   void set_pop_consumption(PopConsumption pop_consumption);
-
   PopConsumption generate_pop_consumption(World* w, uint country_id);
 };
 

@@ -58,14 +58,14 @@ public:
   Country() {};
   Country(uint id, string name, uint8_t religion_id);
   ~Country() {};
-  uint get_id();
+  uint getId();
   string get_name();
   void set_name(string name);
   string print();
   void add_province(Province* p);
   void remove_province(Province* p);
   void add_character(Character c);
-  void remove_character(Character c);
+  void remove_character(uint id);
   void print_characters();
   void print_provinces();
   void print_provinces_known();
@@ -92,7 +92,9 @@ public:
   void add_market(Market m);
   void cleanMarkets();
 
-  vector<uint> get_provinces();
-  vector<uint> get_characters();
+  vector<uint> getProvinces();
+  vector<uint> get_provinces_known();
+  vector<uint> getProvinceTypesCount();
+  vector<uint> getCharacters();
   friend ostream& operator<<(ostream& os, const Country& c);
 };

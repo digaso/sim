@@ -7,10 +7,11 @@
 #include "render_maps.hpp"
 #include "../generation/generation.hpp"
 
+
 using namespace std;
 
-static GameScreen s = GameScreen::SCREEN_GAME;
 
+static GameScreen s = GameScreen::SCREEN_GAME;
 
 void run(World* w) {
   SetTraceLogLevel(LOG_ERROR);

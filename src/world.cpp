@@ -27,16 +27,16 @@ World::World(uint8_t day, uint8_t month, uint year, uint cols, uint rows)
   for (Good g : getGoods()) {
     switch (g.get_class()) {
     case class_good::basic_need:
-      this->basic_needs.push_back(g.get_id());
+      this->basic_needs.push_back(g.getId());
       break;
     case class_good::luxury:
-      this->luxury_needs.push_back(g.get_id());
+      this->luxury_needs.push_back(g.getId());
       break;
     case class_good::military:
-      this->military_needs.push_back(g.get_id());
+      this->military_needs.push_back(g.getId());
       break;
     case class_good::raw_material:
-      this->raw_materials.push_back(g.get_id());
+      this->raw_materials.push_back(g.getId());
       break;
     default:
       break;

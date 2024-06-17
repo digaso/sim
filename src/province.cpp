@@ -73,7 +73,7 @@ uint Province::get_population_size() const
 }
 
 
-uint Province::get_id()
+uint Province::getId()
 {
   return this->id;
 }

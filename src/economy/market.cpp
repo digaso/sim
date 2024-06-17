@@ -25,15 +25,15 @@ void Market::cleanMarket() {
   }
 }
 
-void Market::updateDemand(uint good_id, uint amount) {
+void Market::updateDemand(uint good_id, float amount) {
   this->goods_demands[ good_id ] += amount;
 }
 
-void Market::updateProduction(uint good_id, uint amount) {
+void Market::updateProduction(uint good_id, float amount) {
   this->goods_production[ good_id ] += amount;
 }
 
-vector<uint> Market::get_provinces() {
+vector<uint> Market::getProvinces() {
   return this->provinces;
 }
 
@@ -45,15 +45,15 @@ vector<float> Market::get_prices() {
   return this->goods_prices;
 }
 
-vector<uint> Market::get_demands() {
+vector<float> Market::get_demands() {
   return this->goods_demands;
 }
 
-vector<uint> Market::get_production() {
+vector<float> Market::get_production() {
   return this->goods_production;
 }
 
-vector<uint> Market::get_stocks() {
+vector<float> Market::get_stocks() {
   return this->goods_stocks;
 }
 

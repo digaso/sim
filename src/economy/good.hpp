@@ -37,7 +37,7 @@ public:
   Good(/* args */);
   Good(uint id, string name, float base_value, type_good type, class_good good_class);
   ~Good();
-  uint get_id();
+  uint getId();
   type_good get_type();
   class_good get_class();
   bool is_maritime();

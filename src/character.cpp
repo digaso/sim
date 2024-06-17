@@ -47,7 +47,7 @@ uint Character::get_country_living()
   return this->country_living_id;
 }
 
-uint Character::get_id()
+uint Character::getId()
 {
   return this->id;
 }

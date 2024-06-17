@@ -13,7 +13,7 @@ Good::Good(uint id, string name, float base_value, type_good type, class_good go
 
 Good::~Good() {}
 
-uint Good::get_id() {
+uint Good::getId() {
   return this->id;
 }
 
