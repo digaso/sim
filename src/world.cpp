@@ -482,11 +482,9 @@ void World::updateProvinces() {
 }
 void  World::updateWorld() {
   if (advanceDate()) {
-    cout << "Month has changed" << endl;
     updateCountries();
     updateProvinces();
   }
-  cout << "updating agents" << endl;
   updateAgents();
 }
 

@@ -10,11 +10,6 @@ using namespace std;
 
 class Population;
 
-typedef struct buildings_stats {
-  uint_fast8_t id;
-  uint_fast8_t amount;
-  Ownership owner;
-} BuildingStats;
 
 class Country;
 class Province {
@@ -24,6 +19,7 @@ private:
   string name; //name of province
   uint y;
   uint x;
+  rank_province rank = village; //rank of province
   int region_id = -1; //id of region
   uint baron_id; //id of baron
   float height; //value between -1 and 1
@@ -57,8 +53,9 @@ public:
   float get_tax_control();
   float get_height();
   void set_type(type_province type);
+  rank_province upgrade_rank();
+  rank_province downgrade_rank();
   void set_migration_atraction(float migration_atraction);
-  static string type_province_to_string(type_province type);
   void add_goods(uint_fast8_t good_id);
   vector<uint_fast8_t> get_goods();
   friend ostream& operator<<(ostream& os, const Province& p);
@@ -74,5 +71,4 @@ public:
   uint get_building_amount(uint_fast8_t building_id);
   vector<Population>* get_pops();
   void updatePopulation(World* w);
-
 };

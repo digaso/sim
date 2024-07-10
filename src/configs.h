@@ -10,13 +10,23 @@
 #define TILESIZE 2
 #define CHUNKSIZE 64
 // generation variables
-#define MAXCOUNTRIES 70
+#define MAXCOUNTRIES 90
 #define MAXRELIGIONS MAXCOUNTRIES/4
-#define MAXPROVINCES 95
-#define MINPROVINCES 70
+#define MAXPROVINCES 90
+#define MINPROVINCES 75
+
 
 
 using namespace std;
+
+static int window_width = 1920;
+static int window_height = 1080;
+
+enum rank_province {
+  village,
+  town,
+  city
+};
 
 enum population_class {
   slaves,
@@ -56,6 +66,10 @@ typedef struct production {
   vector<base_output> outputs = {};
 } Production;
 
+enum game_mode {
+  PLAY,
+  DEBUG
+};
 
 enum type_province {
   deep_sea = 0,
@@ -77,10 +91,6 @@ enum type_province {
   wasteland = 16,
 };
 
-enum game_mode {
-  NORMAL,
-  DEBUG
-};
 
 enum game_velocity {
   PAUSED,
@@ -109,3 +119,10 @@ typedef struct province_properties {
   type_province type;
   int color_id;
 } province_properties;
+
+typedef struct buildings_stats {
+  uint_fast8_t id;
+  uint_fast8_t amount;
+  Ownership owner;
+} BuildingStats;
+

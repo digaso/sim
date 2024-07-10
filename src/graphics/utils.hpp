@@ -15,6 +15,65 @@ Vector2 getCoordinatesByMouse(Camera2D camera) {
   return { (float)x, (float)y };
 }
 
+
+string getLiteralTypeProv(type_province type)
+{
+  switch (type)
+  {
+  case deep_sea:
+    return "Deep Sea";
+    break;
+  case sea:
+    return "Sea";
+    break;
+  case coastal_sea:
+    return "Coastal Sea";
+    break;
+  case coast:
+    return "Coast";
+    break;
+  case grassland:
+    return "Grassland";
+    break;
+  case desert:
+    return "Desert";
+    break;
+  case tundra:
+    return "Tundra";
+    break;
+  case taiga:
+    return "Taiga";
+    break;
+  case bare:
+    return "Bare";
+    break;
+  case mountain:
+    return "Mountain";
+    break;
+  case hill:
+    return "Hill";
+    break;
+  case tropical:
+    return "Tropical";
+    break;
+  case tropical_forest:
+    return "Tropical Forest";
+    break;
+  case temperate_desert:
+    return "Temperate Desert";
+    break;
+  case forest:
+    return "Forest";
+    break;
+  case coastal_desert:
+    return "Coastal Desert";
+    break;
+  default:
+    break;
+  }
+  return "None";
+}
+
 string getLiteralVelocity(game_velocity v) {
   switch (v) {
   case PAUSED:
@@ -29,5 +88,18 @@ string getLiteralVelocity(game_velocity v) {
     return "Super Fast";
   default:
     return "Paused";
+  }
+}
+
+string getLiteralRank(rank_province r) {
+  switch (r) {
+  case village:
+    return "Village";
+  case town:
+    return "Town";
+  case city:
+    return "City";
+  default:
+    return "Village";
   }
 }

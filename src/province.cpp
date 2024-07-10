@@ -17,6 +17,32 @@ Province::Province(uint id, string name, uint population_size, int y, int x, flo
   this->moisture = moisture;
 }
 
+rank_province Province::upgrade_rank()
+{
+  if (this->rank == village)
+  {
+    this->rank = town;
+  }
+  else if (this->rank == town)
+  {
+    this->rank = city;
+  }
+  return this->rank;
+}
+
+rank_province Province::downgrade_rank()
+{
+  if (this->rank == city)
+  {
+    this->rank = town;
+  }
+  else if (this->rank == town)
+  {
+    this->rank = village;
+  }
+  return this->rank;
+}
+
 void Province::set_infrastructure(uint infrastructure)
 {
   this->infrastructure = infrastructure;
@@ -124,64 +150,6 @@ void Province::set_migration_atraction(float migration_atraction)
   this->migration_atraction = migration_atraction;
 }
 
-
-string Province::type_province_to_string(type_province type)
-{
-  switch (type)
-  {
-  case deep_sea:
-    return "Deep Sea";
-    break;
-  case sea:
-    return "Sea";
-    break;
-  case coastal_sea:
-    return "Coastal Sea";
-    break;
-  case coast:
-    return "Coast";
-    break;
-  case grassland:
-    return "Grassland";
-    break;
-  case desert:
-    return "Desert";
-    break;
-  case tundra:
-    return "Tundra";
-    break;
-  case taiga:
-    return "Taiga";
-    break;
-  case bare:
-    return "Bare";
-    break;
-  case mountain:
-    return "Mountain";
-    break;
-  case hill:
-    return "Hill";
-    break;
-  case tropical:
-    return "Tropical";
-    break;
-  case tropical_forest:
-    return "Tropical Forest";
-    break;
-  case temperate_desert:
-    return "Temperate Desert";
-    break;
-  case forest:
-    return "Forest";
-    break;
-  case coastal_desert:
-    return "Coastal Desert";
-    break;
-  default:
-    break;
-  }
-  return "None";
-}
 
 void Province::add_population(Population pop)
 {

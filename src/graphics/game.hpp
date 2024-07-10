@@ -6,13 +6,13 @@
 #include <filesystem>
 #include "render_maps.hpp"
 #include "../generation/generation.hpp"
+#include "../configs.h"
 
 
 
 using namespace std;
 
-static int window_width = 1920;
-static int window_height = 1080;
+
 
 static GameScreen s = GameScreen::SCREEN_GAME;
 

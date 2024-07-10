@@ -25,6 +25,7 @@ static Texture2D* texgoods;
 static Texture2D geomap;
 static Texture2D map;
 static Texture2D borders;
+static Texture2D fog;
 static vector<Music> musics;
 static Province* prov;
 static Vector2 prevMousePos;
@@ -34,15 +35,28 @@ static province_properties* p;
 static bool dragging = false;
 static Vector2 dragStartPos = { 0 };
 static Vector2 cameraStartTarget = { 0 };
+static game_mode mode = DEBUG;
+static int screen_width = 320;
+static int screen_height = 240;
+static bool country_chosen = false;
+static Country* player_country = nullptr;
 
-
-
+void drawDebugMode(World* w);
+void drawGameMode(World* w);
 void drawGUIGood(World* w);
 void drawMusic();
 void toggleButtons();
 void drawProvinceGUI(World* w);
 void cameraMoveLetters();
 void cameraMove();
+void drawPoliticalMap();
+
+void drawPoliticalMap() {
+  DrawTexturePro(geomap, { 0, 0, (float)geomap.width, (float)geomap.height }, { 0, 0, geomap.width * camera.zoom, geomap.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
+  DrawTexturePro(map, { 0, 0, (float)map.width, (float)map.height }, { 0, 0, map.width * camera.zoom, map.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
+  DrawTexturePro(borders, { 0, 0, (float)borders.width, (float)borders.height }, { 0, 0, borders.width * camera.zoom, borders.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
+  DrawTexturePro(fog, { 0, 0, (float)fog.width, (float)fog.height }, { 0, 0, fog.width * camera.zoom, fog.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
+}
 
 
 void initGameScreen(World* w, province_properties* props) {
@@ -71,33 +85,57 @@ void initGameScreen(World* w, province_properties* props) {
 
 }
 
-void drawGameScreen(World* w) {
-  BeginDrawing();
-  {
-    BeginMode2D(camera);
-    ClearBackground(RAYWHITE);
-    DrawTexturePro(geomap, { 0, 0, (float)geomap.width, (float)geomap.height }, { 0, 0, geomap.width * camera.zoom , geomap.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
-    if (political_map) {
-      goods_map = false;
-      DrawTexturePro(map, { 0, 0, (float)map.width, (float)map.height }, { 0, 0, map.width * camera.zoom, map.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
-      DrawTexturePro(borders, { 0, 0, (float)borders.width, (float)borders.height }, { 0, 0, borders.width * camera.zoom, borders.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
-    }
-    else if (goods_map) {
-      political_map = false;
-      DrawTexturePro(texgoods[ id_good ], { 0, 0, (float)texgoods[ id_good ].width, (float)texgoods[ id_good ].height }, { 0, 0, texgoods[ id_good ].width * camera.zoom, texgoods[ id_good ].height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
-    }
-    EndMode2D();
-    DrawFPS(130, 100);
-    drawGUIGood(w);
-    drawMusic();
-    toggleButtons();
-    //draw velocity
-    DrawText(TextFormat("Velocity: %s", getLiteralVelocity(velocity).c_str()), 10, 170, 20, BLACK);
-    //draw world date
-    DrawText(TextFormat("Date: %d-%d-%d", w->getDate().day(), w->getDate().month(), w->getDate().year()), 10, 130, 20, BLACK);
-    //mouse click over provinces with tilesize and show text, but caring about zoom
-    drawProvinceGUI(w);
+void drawGameMode(World* w) {
+  BeginMode2D(camera);
+  ClearBackground(RAYWHITE);
+  drawPoliticalMap();
+  EndMode2D();
+  //draw navbar
+  DrawRectangle(0, 0, window_width, 50, BLUEVIOLET);
+  DrawText(TextFormat("Date: %d-%d-%d", w->getDate().day(), w->getDate().month(), w->getDate().year()), 10, 10, 20, BLACK);
+  DrawText(TextFormat("Velocity: %s", getLiteralVelocity(velocity).c_str()), 160, 10, 20, BLACK);
+  DrawText(TextFormat("Country: %s", player_country->get_name().c_str()), 410, 10, 20, BLACK);
+  DrawText(TextFormat("Money: %.2f", player_country->get_money()), 660, 10, 20, BLACK);
+  drawProvinceGUI(w);
+  DrawFPS(100, 100);
+}
 
+void drawDebugMode(World* w) {
+  BeginMode2D(camera);
+  ClearBackground(RAYWHITE);
+  DrawTexturePro(geomap, { 0, 0, (float)geomap.width, (float)geomap.height }, { 0, 0, geomap.width * camera.zoom , geomap.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
+  if (political_map) {
+    goods_map = false;
+    DrawTexturePro(map, { 0, 0, (float)map.width, (float)map.height }, { 0, 0, map.width * camera.zoom, map.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
+    DrawTexturePro(borders, { 0, 0, (float)borders.width, (float)borders.height }, { 0, 0, borders.width * camera.zoom, borders.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
+  }
+  else if (goods_map) {
+    political_map = false;
+    DrawTexturePro(texgoods[ id_good ], { 0, 0, (float)texgoods[ id_good ].width, (float)texgoods[ id_good ].height }, { 0, 0, texgoods[ id_good ].width * camera.zoom, texgoods[ id_good ].height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
+  }
+  EndMode2D();
+  DrawFPS(130, 100);
+  drawGUIGood(w);
+  drawMusic();
+  toggleButtons();
+  //draw velocity
+  DrawText(TextFormat("Velocity: %s", getLiteralVelocity(velocity).c_str()), 10, 170, 20, BLACK);
+  //draw world date
+  DrawText(TextFormat("Date: %d-%d-%d", w->getDate().day(), w->getDate().month(), w->getDate().year()), 10, 130, 20, BLACK);
+  //mouse click over provinces with tilesize and show text, but caring about zoom
+  drawProvinceGUI(w);
+
+}
+
+void drawGameScreen(World* w) {
+  BeginDrawing(); {
+
+    if (mode == PLAY) {
+      drawGameMode(w);
+    }
+    else if (mode == DEBUG) {
+      drawDebugMode(w);
+    }
   }
   EndDrawing();
 }
@@ -112,7 +150,6 @@ void updateGameScreen(World* w) {
   case SLOW:
     if (chrono::duration_cast<chrono::milliseconds>(now - last_tick).count() > 550) {
       w->updateWorld();
-      cout << "Updating world" << endl;
       last_tick = now;
     }
     break;
@@ -198,46 +235,57 @@ void drawProvinceGUI(World* w) {
   Vector2 coordinates = getCoordinatesByMouse(camera);
   int x = (int)coordinates.x;
   int y = (int)coordinates.y;
-
-  if (IsMouseButtonPressed(0) || show) {
-    if (x >= 0 && x < w->get_num_cols() && y >= 0 && y < w->get_num_rows()) {
-      show = true;
-      prov = w->getProvinceByCoords(x, y);
-      province_name = prov->get_name();
-      good_name = "Goods: ";
-      for (auto& g : prov->get_goods()) {
-        good_name += w->getGoodById(g)->get_name() + ", ";
-      }
-      CountryName = "Country: ";
-      kingName = "King Name:";
-      if (prov->get_country_owner_id() != -1) {
-        Country* country = w->getCountryById(prov->get_country_owner_id());
-        CountryName += country->get_name();
-        kingName += w->getCharacterById(country->get_king_id())->get_name();
-      }
-      else {
-        CountryName += "No owner";
-      }
-
-      type_prov = "Type: " + Province::type_province_to_string(prov->get_type());
-      coords = "Position x: " + to_string(prov->get_x()) + " y: " + to_string(prov->get_y());
-      population = "Population: " + to_string(prov->get_population_size());
-      region_name = "Region: " + w->getRegionById(prov->get_region_id()).name;
-      height = "Height: " + to_string(prov->get_height());
-      GuiPanel(Rectangle{ 10, 130, 310, 300 }, province_name.c_str());
-      GuiLabel(Rectangle{ 15, 150, 310, 20 }, good_name.c_str());
-      GuiLabel(Rectangle{ 15, 170, 310, 20 }, CountryName.c_str());
-      GuiLabel(Rectangle{ 15, 190, 310, 20 }, type_prov.c_str());
-      GuiLabel(Rectangle{ 15, 210, 310, 20 }, coords.c_str());
-      GuiLabel(Rectangle{ 15, 230, 310, 20 }, population.c_str());
-      GuiLabel(Rectangle{ 15, 250, 310, 20 }, region_name.c_str());
-      GuiLabel(Rectangle{ 15, 270, 310, 20 }, kingName.c_str());
-      GuiLabel(Rectangle{ 15, 290, 310, 20 }, height.c_str());
+  Rectangle guiRec = { 10, 130, 310, 300 };
+  if (x >= 0 && x < w->get_num_cols() && y >= 0 && y < w->get_num_rows() && IsMouseButtonDown(0) && !CheckCollisionPointRec(GetMousePosition(), guiRec)) {
+    prov = w->getProvinceByCoords(x, y);
+    province_name = prov->get_name();
+    good_name = "Goods: ";
+    for (auto& g : prov->get_goods()) {
+      good_name += w->getGoodById(g)->get_name() + ", ";
+    }
+    CountryName = "Country: ";
+    kingName = "King Name:";
+    if (prov->get_country_owner_id() != -1) {
+      Country* country = w->getCountryById(prov->get_country_owner_id());
+      CountryName += country->get_name();
+      kingName += w->getCharacterById(country->get_king_id())->get_name();
     }
     else {
+      CountryName += "No owner";
+    }
+
+    type_prov = "Type: " + getLiteralTypeProv(prov->get_type());
+    coords = "Position x: " + to_string(prov->get_x()) + " y: " + to_string(prov->get_y());
+    population = "Population: " + to_string(prov->get_population_size());
+    region_name = "Region: " + w->getRegionById(prov->get_region_id()).name;
+    height = "Height: " + to_string(prov->get_height());
+    show = true;
+
+  }
+  if (show) {
+    GuiPanel(guiRec, province_name.c_str());
+    GuiLabel(Rectangle{ 15, 150, 310, 20 }, good_name.c_str());
+    GuiLabel(Rectangle{ 15, 170, 310, 20 }, CountryName.c_str());
+    GuiLabel(Rectangle{ 15, 190, 310, 20 }, type_prov.c_str());
+    GuiLabel(Rectangle{ 15, 210, 310, 20 }, coords.c_str());
+    GuiLabel(Rectangle{ 15, 230, 310, 20 }, population.c_str());
+    GuiLabel(Rectangle{ 15, 250, 310, 20 }, region_name.c_str());
+    GuiLabel(Rectangle{ 15, 270, 310, 20 }, kingName.c_str());
+    GuiLabel(Rectangle{ 15, 290, 310, 20 }, height.c_str());
+    if (GuiButton(Rectangle{ 10, 320, 100, 20 }, "Close")) {
       show = false;
     }
+    if (prov->get_country_owner_id() != -1 && GuiButton(Rectangle{ 10,350, 100, 20 }, "Choose country")) {
+      country_chosen = true;
+      player_country = w->getCountryById(prov->get_country_owner_id());
+      mode = PLAY;
+      cout << "Country chosen" << endl;
+      UnloadTexture(fog);
+      fog = renderFogOfWarMap(w, prov->get_country_owner_id());
+      cout << "Fog of war loaded" << endl;
+    }
   }
+
 }
 
 void cameraMoveLetters() {

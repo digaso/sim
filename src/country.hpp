@@ -33,7 +33,7 @@ class Country
   uint capital_id;
   vector<uint> provinces;
   vector<uint> characters;
-  vector<uint> provinces_known;
+  bool* provinces_known;
   uint king_id;
   uint id;
   string name;
@@ -56,12 +56,14 @@ class Country
 
 public:
   Country() {};
-  Country(uint id, string name, uint8_t religion_id);
+  Country(uint id, string name, uint8_t religion_id, World* w);
   ~Country() {};
   uint getId();
   string get_name();
   void set_name(string name);
   string print();
+  void knowProvince(uint id);
+  void knowMultipleProvinces(vector<uint> ids);
   void add_province(Province* p);
   void remove_province(Province* p);
   void add_character(Character c);
@@ -93,7 +95,7 @@ public:
   void cleanMarkets();
 
   vector<uint> getProvinces();
-  vector<uint> get_provinces_known();
+  bool* getProvincesKnown();
   vector<uint> getProvinceTypesCount();
   vector<uint> getCharacters();
   friend ostream& operator<<(ostream& os, const Country& c);

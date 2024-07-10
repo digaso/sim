@@ -15,6 +15,7 @@ float** setup(int rows, int cols, float frequency, int seed, int octaves, bool _
 void populate_world(World* w);
 void set_map_goods(World* w, float frequency, int seed, int octaves);
 province_properties* generate_map(World* w);
+vector<uint> getProvinceRadius(uint province_id, int radius, World* w);
 
 vector<float> _generate_noise(int rows, int cols, float frequency, int seed, int octaves) {
   FastNoiseLite noise;
@@ -525,15 +526,21 @@ void generate_countries(World* w) {
 
     if (p->get_type() != type_province::sea && p->get_type() != type_province::coastal_sea && p->get_type() != type_province::deep_sea && p->get_type() != wasteland && p->get_country_owner_id() == -1) {
       uint religion_id = GetRandomValue(0, MAXRELIGIONS - 1);
-      Country c(i, generateCountryName(), religion_id);
+      Country c(i, generateCountryName(), religion_id, w);
       Market market(w);
 
       generate_culture(w, &c, &cultures_count);
       p->set_country_owner_id(i);
+      p->add_population(Population(0, GetRandomValue(6000, 10000), i, p->getId(), c.get_culture_id(), population_class::peasants, religion_id, w));
+      p->add_population(Population(1, GetRandomValue(100, 250), i, p->getId(), c.get_culture_id(), population_class::burghers, religion_id, w));
+      p->add_population(Population(2, GetRandomValue(50, 150), i, p->getId(), c.get_culture_id(), population_class::monks, religion_id, w));
+      p->add_population(Population(3, GetRandomValue(10, 25), i, p->getId(), c.get_culture_id(), population_class::nobles, religion_id, w));
       c.set_color_id(color_id);
       c.add_province(p);
+      p->upgrade_rank();
       w->addPopulatedLandProvince(p->getId());
       c.set_capital_id(p->getId());
+      cout << "Capital: " << p->get_x() << ", " << p->get_y() << endl;
       provinces.push_back(p->getId());
       generate_royalty(w, &c, p);
       for (uint j = 0; j < num_provinces - 1; j++) {
@@ -555,10 +562,12 @@ void generate_countries(World* w) {
             }
             n->add_building(0);
             n->set_country_owner_id(i);
+            c.knowMultipleProvinces(getProvinceRadius(n->getId(), 4, w));
             market.add_province(n->getId());
-            n->add_population(Population(0, GetRandomValue(4000, 10000), i, n->getId(), c.get_culture_id(), population_class::peasants, religion_id, w));
-            n->add_population(Population(1, GetRandomValue(200, 450), i, n->getId(), c.get_culture_id(), population_class::burghers, religion_id, w));
-            n->add_population(Population(2, GetRandomValue(50, 100), i, n->getId(), c.get_culture_id(), population_class::nobles, religion_id, w));
+            n->add_population(Population(0, GetRandomValue(6000, 10000), i, n->getId(), c.get_culture_id(), population_class::peasants, religion_id, w));
+            n->add_population(Population(1, GetRandomValue(100, 250), i, n->getId(), c.get_culture_id(), population_class::burghers, religion_id, w));
+            n->add_population(Population(2, GetRandomValue(50, 150), i, n->getId(), c.get_culture_id(), population_class::monks, religion_id, w));
+            n->add_population(Population(3, GetRandomValue(10, 25), i, n->getId(), c.get_culture_id(), population_class::nobles, religion_id, w));
             c.add_province(n);
             w->addPopulatedLandProvince(n->getId());
             provinces.push_back(n->getId());
@@ -589,6 +598,26 @@ float getDistanceFromEdge(int x, int y, int rows, int cols) {
   int dist_top = y;
   int dist_bottom = rows - 1 - y;
   return min(min(dist_left, dist_right), min(dist_top, dist_bottom));
+}
+
+vector<uint> getProvinceRadius(uint province_id, int radius, World* w) {
+  vector<uint> provinces;
+  Province* p = w->getProvinceById(province_id);
+  uint cols = w->get_num_cols();
+  uint rows = w->get_num_rows();
+
+  for (int row = p->get_y() - radius; row <= p->get_y() + radius; row++) {
+    for (int col = p->get_x() - radius; col <= p->get_x() + radius; col++) {
+      if (row >= 0 && row < rows && col >= 0 && col < cols) {
+        Province* n = w->getProvinceByCoords(col, row);
+        provinces.push_back(n->getId());
+
+      }
+    }
+  }
+  if (provinces.size() > 25) cout << "Provinces in radius: " << p->get_x() << ", " << p->get_y() << endl;
+
+  return provinces;
 }
 
 float** setup(int rows, int cols, float frequency, int seed, int octaves, bool _gradient = false) {

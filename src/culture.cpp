@@ -50,6 +50,7 @@ vector<pair<uint, float>> Culture::get_class_consumption(population_class pop_cl
   }
 }
 
+
 PopConsumption Culture::generate_pop_consumption(World* w, uint country_id) {
   PopConsumption pop_consumption;
   Country* country = w->getCountryById(country_id);

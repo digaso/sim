@@ -12,3 +12,5 @@ void renderGoodMap(World* w, Texture2D* tex);
 Texture2D renderPoliticalMap(World* w);
 
 Texture2D renderBordersMap(World* w);
+
+Texture2D renderFogOfWarMap(World* w, uint country_id);

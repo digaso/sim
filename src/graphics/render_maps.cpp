@@ -147,3 +147,35 @@ Texture2D renderBordersMap(World* w) {
   delete[] img.data;
   return tex;
 }
+
+Texture2D renderFogOfWarMap(World* w, uint country_id) {
+
+  int cols = w->get_num_cols();
+  int rows = w->get_num_rows();
+  Country* country = w->getCountryById(country_id);
+  bool* provinces_known = country->getProvincesKnown();
+
+  byte* pixels = new byte[ rows * cols * 4 ];
+  for (int i = 0; i < rows * cols; i++) {
+    int index = i * 4;
+    Province* prov = w->getProvinceById(i);
+    cout << provinces_known[ i ] << endl;
+    if (!provinces_known[ i ]) {
+      pixels[ index + 0 ] = (byte)0;
+      pixels[ index + 1 ] = (byte)0;
+      pixels[ index + 2 ] = (byte)0;
+      pixels[ index + 3 ] = (byte)255;
+    }
+  }
+  Image img = {
+    .data = pixels,
+    .width = cols,
+    .height = rows,
+    .mipmaps = 1,
+    .format = 7
+  };
+  ImageResizeNN(&img, cols * TILESIZE, rows * TILESIZE);
+  Texture2D tex = LoadTextureFromImage(img);
+  delete[] img.data;
+  return tex;
+}

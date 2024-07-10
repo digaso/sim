@@ -5,11 +5,15 @@
 using namespace std;
 
 
-Country::Country(uint id, string name, uint8_t religion_id)
+Country::Country(uint id, string name, uint8_t religion_id, World* w)
 {
   this->id = id;
   this->name = name;
   this->religion_id = religion_id;
+  this->provinces_known = new bool[ w->get_num_cols() * w->get_num_rows() ];
+  for (int i = 0; i < w->get_num_cols() * w->get_num_rows(); i++) {
+    this->provinces_known[ i ] = false;
+  }
 };
 
 void Country::add_province(Province* p) {
@@ -117,6 +121,12 @@ vector<uint> Country::getProvinces() {
   return this->provinces;
 }
 
+void Country::knowMultipleProvinces(vector<uint> ids) {
+  for (uint i = 0; i < ids.size(); i++) {
+    this->provinces_known[ ids[ i ] ] = true;
+  }
+}
+
 vector<uint> Country::getProvinceTypesCount() {
   map<uint, uint> types;
   vector<uint> types_count;
@@ -133,6 +143,14 @@ vector<uint> Country::getProvinceTypesCount() {
 
 void Country::print_characters() {
 
+}
+
+void Country::knowProvince(uint id) {
+  this->provinces_known[ id ] = true;
+}
+
+bool* Country::getProvincesKnown() {
+  return this->provinces_known;
 }
 
 void Country::print_provinces() {
