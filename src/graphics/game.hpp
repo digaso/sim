@@ -8,14 +8,17 @@
 #include "../generation/generation.hpp"
 
 
+
 using namespace std;
 
+static int window_width = 1920;
+static int window_height = 1080;
 
 static GameScreen s = GameScreen::SCREEN_GAME;
 
 void run(World* w) {
   SetTraceLogLevel(LOG_ERROR);
-  InitWindow(1400, 1080, "Winds of Gold");
+  InitWindow(window_width, window_height, "Winds of Gold");
   SetTargetFPS(60);
   drawLoadingScreen();
   province_properties* props = generate_map(w);

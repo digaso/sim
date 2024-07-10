@@ -98,8 +98,24 @@ province_properties get_province_type(float height, float moisture) {
 
     province_name = generateCityName();
   }
-  else if (height < 1.19f) {
-    if (moisture < -0.4) {
+  else if (height < 0.80f) {
+    if (GetRandomValue(0, 100) < 5) {
+      color = 16;
+      type = wasteland;
+    }
+    else {
+
+      type = hill;
+      color = 11;
+      province_name = generateCityName();
+    }
+  }
+  else if (height < 1.29f) {
+    if (GetRandomValue(0, 100) < 15) {
+      color = 16;
+      type = wasteland;
+    }
+    else if (moisture < -0.4) {
       color = 13;
       type = bare;
     }
@@ -107,20 +123,27 @@ province_properties get_province_type(float height, float moisture) {
       color = 14;
       type = taiga;
     }
-    else if (moisture < 0.3) {
+    else if (moisture < 0.38) {
       color = 12;
       type = tundra;
     }
     else {
-      color = 11;
-      type = hill;
+      color = 15;
+      type = mountain;
     }
     province_name = generateCityName();
   }
   else {
-    color = 15;
-    type = mountain;
-    province_name = generateCityName();
+    if (GetRandomValue(0, 100) < 22) {
+      type = wasteland;
+      color = 16;
+    }
+    else {
+
+      color = 15;
+      type = mountain;
+      province_name = generateCityName();
+    }
   }
   return { pop, province_name, type, color };
 }
@@ -257,6 +280,7 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
         for (uint col = 0; col < cols; col++) {
           float** map = maps[ i ];
           Province* p = w->getProvinceById(row * cols + col);
+          if (p->get_type() == type_province::wasteland) continue;
           if (g.get_name() == "Salt" && (p->get_type() == coastal_desert || p->get_type() == coast)) {
             p->add_goods(g.getId()); count++;
             bmap[ row * cols + col ] = true;
@@ -499,7 +523,7 @@ void generate_countries(World* w) {
     uint8_t color_id = GetRandomValue(0, 116);
     vector<uint> provinces;
 
-    if (p->get_type() != type_province::sea && p->get_type() != type_province::coastal_sea && p->get_type() != type_province::deep_sea && p->get_country_owner_id() == -1) {
+    if (p->get_type() != type_province::sea && p->get_type() != type_province::coastal_sea && p->get_type() != type_province::deep_sea && p->get_type() != wasteland && p->get_country_owner_id() == -1) {
       uint religion_id = GetRandomValue(0, MAXRELIGIONS - 1);
       Country c(i, generateCountryName(), religion_id);
       Market market(w);
@@ -508,6 +532,7 @@ void generate_countries(World* w) {
       p->set_country_owner_id(i);
       c.set_color_id(color_id);
       c.add_province(p);
+      w->addPopulatedLandProvince(p->getId());
       c.set_capital_id(p->getId());
       provinces.push_back(p->getId());
       generate_royalty(w, &c, p);
@@ -534,15 +559,15 @@ void generate_countries(World* w) {
             n->add_population(Population(0, GetRandomValue(4000, 10000), i, n->getId(), c.get_culture_id(), population_class::peasants, religion_id, w));
             n->add_population(Population(1, GetRandomValue(200, 450), i, n->getId(), c.get_culture_id(), population_class::burghers, religion_id, w));
             n->add_population(Population(2, GetRandomValue(50, 100), i, n->getId(), c.get_culture_id(), population_class::nobles, religion_id, w));
-            c.add_market(market);
             c.add_province(n);
-
+            w->addPopulatedLandProvince(n->getId());
             provinces.push_back(n->getId());
             j++;
           }
         }
       }
 
+      c.add_market(market);
       w->getCultureById(c.get_culture_id())->set_homelands(provinces);
       w->addCountry(c);
       i++;

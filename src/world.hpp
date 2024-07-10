@@ -49,6 +49,8 @@ private:
   vector<uint> raw_materials;
   vector<uint> manufactured_goods;
   vector<Building> buildings;
+  vector<uint> populated_provinces;
+
   vector<AI_Character> agents;
   vector<Region> regions;
 
@@ -71,6 +73,7 @@ public:
   void addBuilding(Building b);
   void addAIAgent(AI_Character aic);
   void addRegion(Region r);
+  void addPopulatedLandProvince(uint id);
   uint get_characters_size();
   Good* getGoodById(uint id);
   bool* getGoodMapById(uint id) { return this->goods.at(id).get_map(); }

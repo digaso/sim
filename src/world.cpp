@@ -153,6 +153,11 @@ Province* World::getProvinces()
   return this->provinces;
 }
 
+void World::addPopulatedLandProvince(uint id)
+{
+  this->populated_provinces.push_back(id);
+}
+
 void World::addRegion(Region r)
 {
   this->regions.push_back(r);
@@ -169,16 +174,16 @@ vector<Province*> World::get_land_neighbours(Province* p)
   int x = p->get_x();
   int y = p->get_y();
   //check cardinal directions
-  if (x < this->num_cols - 1 && this->getProvinceByCoords(x + 1, y)->get_type() != type_province::sea && this->getProvinceByCoords(x + 1, y)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x + 1, y)->get_type() != type_province::deep_sea) {
+  if (x < this->num_cols - 1 && this->getProvinceByCoords(x + 1, y)->get_type() != type_province::sea && this->getProvinceByCoords(x + 1, y)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x + 1, y)->get_type() != type_province::deep_sea && this->getProvinceByCoords(x + 1, y)->get_type() != type_province::wasteland) {
     neighbours.push_back(this->getProvinceByCoords(x + 1, y));
   }
-  if (y > 0 && this->getProvinceByCoords(x, y - 1)->get_type() != type_province::sea && this->getProvinceByCoords(x, y - 1)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x, y - 1)->get_type() != type_province::deep_sea) {
+  if (y > 0 && this->getProvinceByCoords(x, y - 1)->get_type() != type_province::sea && this->getProvinceByCoords(x, y - 1)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x, y - 1)->get_type() != type_province::deep_sea && this->getProvinceByCoords(x, y - 1)->get_type() != type_province::wasteland) {
     neighbours.push_back(this->getProvinceByCoords(x, y - 1));
   }
-  if (x > 0 && this->getProvinceByCoords(x - 1, y)->get_type() != type_province::sea && this->getProvinceByCoords(x - 1, y)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x - 1, y)->get_type() != type_province::deep_sea) {
+  if (x > 0 && this->getProvinceByCoords(x - 1, y)->get_type() != type_province::sea && this->getProvinceByCoords(x - 1, y)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x - 1, y)->get_type() != type_province::deep_sea && this->getProvinceByCoords(x - 1, y)->get_type() != type_province::wasteland) {
     neighbours.push_back(this->getProvinceByCoords(x - 1, y));
   }
-  if (y < this->num_rows - 1 && this->getProvinceByCoords(x, y + 1)->get_type() != type_province::sea && this->getProvinceByCoords(x, y + 1)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x, y + 1)->get_type() != type_province::deep_sea) {
+  if (y < this->num_rows - 1 && this->getProvinceByCoords(x, y + 1)->get_type() != type_province::sea && this->getProvinceByCoords(x, y + 1)->get_type() != type_province::coastal_sea && this->getProvinceByCoords(x, y + 1)->get_type() != type_province::deep_sea && this->getProvinceByCoords(x, y + 1)->get_type() != type_province::wasteland) {
     neighbours.push_back(this->getProvinceByCoords(x, y + 1));
   }
 
@@ -449,37 +454,39 @@ void updateProvince(World* w, int i) {
 void World::updateProvinces() {
 
   //update market province
-  vector<future<void>> tasks;
+ // vector<future<void>> tasks;
 
-  for (size_t i = 0; i < num_cols * num_rows; ++i) {
-
-    tasks.push_back(async(launch::async, updateProvince, this, i));
+  for (auto l : populated_provinces) {
+    //tasks.push_back(async(launch::async, updateProvince, this, l));
+    updateProvince(this, l);
   }
 
-  for (auto& task : tasks) {
-    task.wait();
-  }
+  //for (auto& task : tasks) {
+  //  task.wait();
+  //}
 
-
-  tasks.clear();
+ // tasks.clear();
   //update province population
-  for (size_t i = 0; i < num_cols * num_rows; ++i) {
+  for (auto l : populated_provinces) {
 
-    if (provinces[ i ].get_population_size() > 0 && provinces[ i ].is_land()) {
-      tasks.push_back(async(launch::async, &Province::updatePopulation, &provinces[ i ], this));
+    if (provinces[ l ].get_population_size() > 0 && provinces[ l ].is_land()) {
+      //tasks.push_back(async(launch::async, &Province::updatePopulation, &provinces[ i ], this));
+      provinces[ l ].updatePopulation(this);
     }
   }
-
-  for (auto& task : tasks) {
-    task.wait();
-  }
+  cout << "updating province goods" << endl;
+  //for (auto& task : tasks) {
+  //  task.wait();
+  //}
 
 }
 void  World::updateWorld() {
   if (advanceDate()) {
+    cout << "Month has changed" << endl;
     updateCountries();
     updateProvinces();
   }
+  cout << "updating agents" << endl;
   updateAgents();
 }
 

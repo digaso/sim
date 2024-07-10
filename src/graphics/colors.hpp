@@ -18,8 +18,9 @@ static  Color Tundra = { 171, 219, 227, 255 };
 static  Color Bare = { 234, 182, 118, 255 };
 static  Color Taiga = { 109, 247, 146, 255 };
 static  Color Mountain = { 255, 255, 255, 255 };
+static  Color Wasteland = { 0, 0, 0, 255 };
 
-static  Color* terrain_colors = new Color[ 16 ]{
+static  Color* terrain_colors = new Color[ 17 ]{
   DeepSea,
   Sea,
   CoastalSea,
@@ -35,7 +36,8 @@ static  Color* terrain_colors = new Color[ 16 ]{
   Tundra,
   Bare,
   Taiga,
-  Mountain
+  Mountain,
+  Wasteland
 };
 
 

@@ -24,7 +24,7 @@ void print_memory_usage() {
 
 int main() {
   uint cols = NUM_CHUNKS * CHUNKSIZE;
-  uint rows = (NUM_CHUNKS * CHUNKSIZE) * 0.7;
+  uint rows = (NUM_CHUNKS * CHUNKSIZE)* 0.7;
   World w(INITIAL_DAY, INITIAL_MONTH, INITIAL_YEAR, cols, rows);
   run(&w);
 

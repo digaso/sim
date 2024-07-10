@@ -1,4 +1,5 @@
 #pragma once
+#include <chrono>
 #include <filesystem>
 #include "raylib.h"
 #include "rlgl.h"
@@ -7,11 +8,12 @@
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 #include "render_maps.hpp"
+#include "utils.hpp"
 #include "../configs.h"
 
 
 using namespace std;
-
+static auto last_tick = chrono::steady_clock::now();
 static int music_id = 0;
 static int id_good = 0;
 static bool show = false;
@@ -32,6 +34,7 @@ static province_properties* p;
 static bool dragging = false;
 static Vector2 dragStartPos = { 0 };
 static Vector2 cameraStartTarget = { 0 };
+
 
 
 void drawGUIGood(World* w);
@@ -64,6 +67,7 @@ void initGameScreen(World* w, province_properties* props) {
   InitAudioDevice();
   SetMusicVolume(musics[ music_id ], vol);
   PlayMusicStream(musics[ music_id ]);
+  last_tick = chrono::steady_clock::now();
 
 }
 
@@ -87,6 +91,8 @@ void drawGameScreen(World* w) {
     drawGUIGood(w);
     drawMusic();
     toggleButtons();
+    //draw velocity
+    DrawText(TextFormat("Velocity: %s", getLiteralVelocity(velocity).c_str()), 10, 170, 20, BLACK);
     //draw world date
     DrawText(TextFormat("Date: %d-%d-%d", w->getDate().day(), w->getDate().month(), w->getDate().year()), 10, 130, 20, BLACK);
     //mouse click over provinces with tilesize and show text, but caring about zoom
@@ -98,15 +104,47 @@ void drawGameScreen(World* w) {
 
 void updateGameScreen(World* w) {
   prevMousePos = GetMousePosition();
-  if (velocity != PAUSED) {
+  auto now = chrono::steady_clock::now();
+  switch (velocity)
+  {
+  case PAUSED:
+    break;
+  case SLOW:
+    if (chrono::duration_cast<chrono::milliseconds>(now - last_tick).count() > 550) {
+      w->updateWorld();
+      cout << "Updating world" << endl;
+      last_tick = now;
+    }
+    break;
+
+  case MEDIUM:
+    if (chrono::duration_cast<chrono::milliseconds>(now - last_tick).count() > 250) {
+      w->updateWorld();
+      last_tick = now;
+    }
+    break;
+  case FAST:
+    if (chrono::duration_cast<chrono::milliseconds>(now - last_tick).count() > 80) {
+      w->updateWorld();
+      last_tick = now;
+    }
+    break;
+  case SUPER_FAST:
     w->updateWorld();
+    break;
+
+
+  default:
+    break;
   }
   UpdateMusicStream(musics[ music_id ]);
   cameraMove();
   if (IsKeyPressed(KEY_SPACE)) velocity = velocity == PAUSED ? SLOW : PAUSED;
-  if (velocity != PAUSED) w->updateWorld();
+  if (IsKeyPressed(KEY_ONE)) velocity = SLOW;
+  if (IsKeyPressed(KEY_TWO)) velocity = MEDIUM;
+  if (IsKeyPressed(KEY_THREE)) velocity = FAST;
+  if (IsKeyPressed(KEY_FOUR)) velocity = SUPER_FAST;
 }
-
 
 void destroyGameScreen(World* w) {
   UnloadTexture(geomap);
@@ -147,19 +185,21 @@ void drawMusic() {
 
 void toggleButtons() {
   if (GuiButton(Rectangle{ 10, 70, 100, 20 }, "Toggle goods map")) {
+    political_map = false;
     goods_map = !goods_map;
   }
   if (GuiButton(Rectangle{ 10, 100, 100, 20 }, "Toggle political map")) {
+    goods_map = false;
     political_map = !political_map;
   }
 }
 
 void drawProvinceGUI(World* w) {
-  Vector2 mousePos = GetMousePosition();
-  mousePos = GetScreenToWorld2D(mousePos, camera);
-  int x = (int)mousePos.x / (TILESIZE * camera.zoom);
-  int y = (int)mousePos.y / (TILESIZE * camera.zoom);
-  if (IsMouseButtonPressed(0) || show == true) {
+  Vector2 coordinates = getCoordinatesByMouse(camera);
+  int x = (int)coordinates.x;
+  int y = (int)coordinates.y;
+
+  if (IsMouseButtonPressed(0) || show) {
     if (x >= 0 && x < w->get_num_cols() && y >= 0 && y < w->get_num_rows()) {
       show = true;
       prov = w->getProvinceByCoords(x, y);

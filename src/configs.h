@@ -6,14 +6,15 @@
 #define INITIAL_MONTH 1
 #define INITIAL_DAY 1
 // graphics variables
-#define NUM_CHUNKS 5
+#define NUM_CHUNKS 4
 #define TILESIZE 2
 #define CHUNKSIZE 64
 // generation variables
-#define MAXCOUNTRIES 190
+#define MAXCOUNTRIES 70
 #define MAXRELIGIONS MAXCOUNTRIES/4
 #define MAXPROVINCES 95
 #define MINPROVINCES 70
+
 
 using namespace std;
 
@@ -21,6 +22,7 @@ enum population_class {
   slaves,
   peasants,
   burghers,
+  monks,
   nobles
 };
 
@@ -72,6 +74,7 @@ enum type_province {
   taiga = 13,
   tundra = 14,
   coastal_desert = 15,
+  wasteland = 16,
 };
 
 enum game_mode {
@@ -83,7 +86,8 @@ enum game_velocity {
   PAUSED,
   SLOW,
   MEDIUM,
-  FAST
+  FAST,
+  SUPER_FAST
 };
 
 typedef enum {
