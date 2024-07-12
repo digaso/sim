@@ -181,6 +181,7 @@ void updateGameScreen(World* w) {
   if (IsKeyPressed(KEY_TWO)) velocity = MEDIUM;
   if (IsKeyPressed(KEY_THREE)) velocity = FAST;
   if (IsKeyPressed(KEY_FOUR)) velocity = SUPER_FAST;
+  if (IsKeyPressed(KEY_TAB)) mode = DEBUG;
 }
 
 void destroyGameScreen(World* w) {
@@ -279,8 +280,6 @@ void drawProvinceGUI(World* w) {
       country_chosen = true;
       player_country = w->getCountryById(prov->get_country_owner_id());
       mode = PLAY;
-      cout << "Country chosen" << endl;
-      UnloadTexture(fog);
       fog = renderFogOfWarMap(w, prov->get_country_owner_id());
       cout << "Fog of war loaded" << endl;
     }

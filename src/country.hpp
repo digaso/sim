@@ -44,7 +44,7 @@ class Country
   vector<Market> markets;
   vector<uint> cultures_accepted;
   bool is_player = false;
-  float money;
+  float money = 0.00f;
   float income;
   float expenses;
   float tax_income;

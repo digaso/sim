@@ -2,6 +2,9 @@
 #include "../world.hpp"
 
 
+//TODO: REMAKE MARKET
+
+
 Market::Market(World* w) {
   this->goods = w->getGoods();
   for (uint16_t i = 0; i < goods.size(); i++) {

@@ -19,8 +19,9 @@ public:
 typedef struct PopConsumption {
   vector<pair<uint, float>> slaves_consumption;
   vector<pair<uint, float>> peasants_consumption;
-  vector<pair<uint, float>> citizens_consumption;
-  vector<pair<uint, float>> elite_consumption;
+  vector<pair<uint, float>> burghers_consumption;
+  vector<pair<uint, float>> monks_consumption;
+  vector<pair<uint, float>> nobles_consumption;
 }PopConsumption;
 
 class Culture

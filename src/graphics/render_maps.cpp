@@ -159,12 +159,17 @@ Texture2D renderFogOfWarMap(World* w, uint country_id) {
   for (int i = 0; i < rows * cols; i++) {
     int index = i * 4;
     Province* prov = w->getProvinceById(i);
-    cout << provinces_known[ i ] << endl;
     if (!provinces_known[ i ]) {
       pixels[ index + 0 ] = (byte)0;
       pixels[ index + 1 ] = (byte)0;
       pixels[ index + 2 ] = (byte)0;
       pixels[ index + 3 ] = (byte)255;
+    }
+    else {
+      pixels[ index + 0 ] = (byte)255;
+      pixels[ index + 1 ] = (byte)255;
+      pixels[ index + 2 ] = (byte)255;
+      pixels[ index + 3 ] = (byte)0;
     }
   }
   Image img = {

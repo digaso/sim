@@ -10,6 +10,7 @@
 #include "../utils/wgen.hpp"
 #include "../configs.h"
 
+#define INITIAL_RADIUS 4
 
 float** setup(int rows, int cols, float frequency, int seed, int octaves, bool _gradient);
 void populate_world(World* w);
@@ -508,7 +509,6 @@ void generate_culture(World* w, Country* c, uint* cultures_count) {
   c->set_culture_id(culture.getId());
   culture.set_pop_consumption(culture.generate_pop_consumption(w, c->getId()));
   w->addCulture(culture);
-
 }
 
 void generate_countries(World* w) {
@@ -535,12 +535,12 @@ void generate_countries(World* w) {
       p->add_population(Population(1, GetRandomValue(100, 250), i, p->getId(), c.get_culture_id(), population_class::burghers, religion_id, w));
       p->add_population(Population(2, GetRandomValue(50, 150), i, p->getId(), c.get_culture_id(), population_class::monks, religion_id, w));
       p->add_population(Population(3, GetRandomValue(10, 25), i, p->getId(), c.get_culture_id(), population_class::nobles, religion_id, w));
+      c.knowMultipleProvinces(getProvinceRadius(p->getId(), INITIAL_RADIUS, w));
       c.set_color_id(color_id);
       c.add_province(p);
       p->upgrade_rank();
       w->addPopulatedLandProvince(p->getId());
       c.set_capital_id(p->getId());
-      cout << "Capital: " << p->get_x() << ", " << p->get_y() << endl;
       provinces.push_back(p->getId());
       generate_royalty(w, &c, p);
       for (uint j = 0; j < num_provinces - 1; j++) {
@@ -562,7 +562,7 @@ void generate_countries(World* w) {
             }
             n->add_building(0);
             n->set_country_owner_id(i);
-            c.knowMultipleProvinces(getProvinceRadius(n->getId(), 4, w));
+            c.knowMultipleProvinces(getProvinceRadius(n->getId(), INITIAL_RADIUS, w));
             market.add_province(n->getId());
             n->add_population(Population(0, GetRandomValue(6000, 10000), i, n->getId(), c.get_culture_id(), population_class::peasants, religion_id, w));
             n->add_population(Population(1, GetRandomValue(100, 250), i, n->getId(), c.get_culture_id(), population_class::burghers, religion_id, w));
@@ -573,9 +573,9 @@ void generate_countries(World* w) {
             provinces.push_back(n->getId());
             j++;
           }
+
         }
       }
-
       c.add_market(market);
       w->getCultureById(c.get_culture_id())->set_homelands(provinces);
       w->addCountry(c);
@@ -615,7 +615,6 @@ vector<uint> getProvinceRadius(uint province_id, int radius, World* w) {
       }
     }
   }
-  if (provinces.size() > 25) cout << "Provinces in radius: " << p->get_x() << ", " << p->get_y() << endl;
 
   return provinces;
 }

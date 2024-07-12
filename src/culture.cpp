@@ -44,9 +44,11 @@ vector<pair<uint, float>> Culture::get_class_consumption(population_class pop_cl
   case peasants:
     return this->pop_consumption.peasants_consumption;
   case burghers:
-    return this->pop_consumption.citizens_consumption;
+    return this->pop_consumption.burghers_consumption;
+  case monks:
+    return this->pop_consumption.monks_consumption;
   case nobles:
-    return this->pop_consumption.elite_consumption;
+    return this->pop_consumption.nobles_consumption;
   }
 }
 
@@ -60,8 +62,9 @@ PopConsumption Culture::generate_pop_consumption(World* w, uint country_id) {
   //left good id and right consumption
   pop_consumption.slaves_consumption = { {0,0.3} ,{3, 0.5},  {5, 0.3} };
   pop_consumption.peasants_consumption = { {0,0.6}, {2, 0.7}, {3, 0.4},  {5, 0.6} , {10,0.4} };
-  pop_consumption.citizens_consumption = { {0,0.6}, {1, 0.5}, {2, 0.5}, {3, 0.9},  {5, 0.4}, {10,0.3}, {24,0.4} };
-  pop_consumption.elite_consumption = { {0,0.8}, {1, 0.5}, {2, 0.6}, {3, 0.6},  {5, 0.4} , {10,0.95}, {24,0.74} };
+  pop_consumption.burghers_consumption = { {0,0.6}, {1, 0.5}, {2, 0.5}, {3, 0.9},  {5, 0.4}, {10,0.3}, {24,0.4} };
+  pop_consumption.monks_consumption = { {0,0.6}, {1, 0.5}, {2, 0.5}, {3, 0.9},  {5, 0.4}, {10,0.3}, {24,0.4} };
+  pop_consumption.nobles_consumption = { {0,0.8}, {1, 0.5}, {2, 0.6}, {3, 0.6},  {5, 0.4} , {10,0.95}, {24,0.74} };
 
   return pop_consumption;
 }
