@@ -10,7 +10,7 @@
 #include "../utils/wgen.hpp"
 #include "../configs.h"
 
-#define INITIAL_RADIUS 4
+#define INITIAL_RADIUS 15
 
 float** setup(int rows, int cols, float frequency, int seed, int octaves, bool _gradient);
 void populate_world(World* w);
@@ -531,8 +531,8 @@ void generate_countries(World* w) {
 
       generate_culture(w, &c, &cultures_count);
       p->set_country_owner_id(i);
-      p->add_population(Population(0, GetRandomValue(6000, 10000), i, p->getId(), c.get_culture_id(), population_class::peasants, religion_id, w));
-      p->add_population(Population(1, GetRandomValue(100, 250), i, p->getId(), c.get_culture_id(), population_class::burghers, religion_id, w));
+      p->add_population(Population(0, GetRandomValue(8000, 10000), i, p->getId(), c.get_culture_id(), population_class::peasants, religion_id, w));
+      p->add_population(Population(1, GetRandomValue(200, 450), i, p->getId(), c.get_culture_id(), population_class::burghers, religion_id, w));
       p->add_population(Population(2, GetRandomValue(50, 150), i, p->getId(), c.get_culture_id(), population_class::monks, religion_id, w));
       p->add_population(Population(3, GetRandomValue(10, 25), i, p->getId(), c.get_culture_id(), population_class::nobles, religion_id, w));
       c.knowMultipleProvinces(getProvinceRadius(p->getId(), INITIAL_RADIUS, w));
@@ -542,6 +542,7 @@ void generate_countries(World* w) {
       w->addPopulatedLandProvince(p->getId());
       c.set_capital_id(p->getId());
       provinces.push_back(p->getId());
+      market.add_province(p->getId());
       generate_royalty(w, &c, p);
       for (uint j = 0; j < num_provinces - 1; j++) {
         p = w->getProvinceById(provinces.at(GetRandomValue(0, provinces.size() - 1)));
@@ -564,10 +565,10 @@ void generate_countries(World* w) {
             n->set_country_owner_id(i);
             c.knowMultipleProvinces(getProvinceRadius(n->getId(), INITIAL_RADIUS, w));
             market.add_province(n->getId());
-            n->add_population(Population(0, GetRandomValue(6000, 10000), i, n->getId(), c.get_culture_id(), population_class::peasants, religion_id, w));
-            n->add_population(Population(1, GetRandomValue(100, 250), i, n->getId(), c.get_culture_id(), population_class::burghers, religion_id, w));
-            n->add_population(Population(2, GetRandomValue(50, 150), i, n->getId(), c.get_culture_id(), population_class::monks, religion_id, w));
-            n->add_population(Population(3, GetRandomValue(10, 25), i, n->getId(), c.get_culture_id(), population_class::nobles, religion_id, w));
+            n->add_population(Population(0, GetRandomValue(4000, 7000), i, n->getId(), c.get_culture_id(), population_class::peasants, religion_id, w));
+            n->add_population(Population(1, GetRandomValue(80, 200), i, n->getId(), c.get_culture_id(), population_class::burghers, religion_id, w));
+            n->add_population(Population(2, GetRandomValue(50, 100), i, n->getId(), c.get_culture_id(), population_class::monks, religion_id, w));
+            n->add_population(Population(3, GetRandomValue(2, 20), i, n->getId(), c.get_culture_id(), population_class::nobles, religion_id, w));
             c.add_province(n);
             w->addPopulatedLandProvince(n->getId());
             provinces.push_back(n->getId());

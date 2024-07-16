@@ -24,6 +24,7 @@ void destroyMainMenuScreen();
 void initGameScreen(World* w, province_properties* props);
 void updateGameScreen(World* w);
 void drawGameScreen(World* w);
+void updateWorld(World* w);
 void destroyGameScreen();
 
 //settings screen functions

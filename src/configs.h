@@ -10,7 +10,7 @@
 #define TILESIZE 2
 #define CHUNKSIZE 64
 // generation variables
-#define MAXCOUNTRIES 90
+#define MAXCOUNTRIES 140
 #define MAXRELIGIONS MAXCOUNTRIES/4
 #define MAXPROVINCES 90
 #define MINPROVINCES 75

@@ -5,6 +5,7 @@
 #include "rlgl.h"
 #include "raymath.h"
 #include "screens.hpp"
+#include "thread"
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 #include "render_maps.hpp"
@@ -140,8 +141,7 @@ void drawGameScreen(World* w) {
   EndDrawing();
 }
 
-void updateGameScreen(World* w) {
-  prevMousePos = GetMousePosition();
+void updateWorld(World* w) {
   auto now = chrono::steady_clock::now();
   switch (velocity)
   {
@@ -167,13 +167,22 @@ void updateGameScreen(World* w) {
     }
     break;
   case SUPER_FAST:
-    w->updateWorld();
+    if (chrono::duration_cast<chrono::milliseconds>(now - last_tick).count() > 1) {
+      w->updateWorld();
+      last_tick = now;
+    }
     break;
 
 
   default:
     break;
   }
+}
+
+void updateGameScreen(World* w) {
+  prevMousePos = GetMousePosition();
+
+  //asdasdas
   UpdateMusicStream(musics[ music_id ]);
   cameraMove();
   if (IsKeyPressed(KEY_SPACE)) velocity = velocity == PAUSED ? SLOW : PAUSED;

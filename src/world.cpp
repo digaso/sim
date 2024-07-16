@@ -432,8 +432,11 @@ void World::updateAgents() {
 
 void World::updateCountries() {
   for (Country& country : countries) {
-    auto fut = async(launch::async, &Country::cleanMarkets, &country);
+    //auto fut = async(launch::async, &Country::cleanMarkets, &country);
+    country.cleanMarkets();
+
   }
+
 }
 
 void World::updateProvince(int i) {

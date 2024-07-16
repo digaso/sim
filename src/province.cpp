@@ -203,6 +203,7 @@ Market* Province::get_market(World* w)
       return &m;
     }
   }
+
   return nullptr;
 }
 

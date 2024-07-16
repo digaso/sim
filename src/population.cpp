@@ -70,16 +70,12 @@ void Population::update(World* w)
   float temp_loyalty = this->population_loyalty;
   float temp_militancy = this->population_militancy;
   float temp_growth = this->population_growth;
-  //TODO: implement market
-  //Market* market = province->get_market(w);
-  //for (uint i = 0; i < consumption.size(); i++) {
-  //  uint good_id = consumption[ i ].first;
-  //  cout << "olá" << endl;
-  //  uint amount = consumption[ i ].second;
-  //  cout << "olá" << endl;
-  //  market->updateDemand(good_id, amount);
-  //  cout << "olá" << endl;
-  //}
+  Market* market = w->getProvinceById(this->province_id)->get_market(w);
+  for (uint i = 0; i < consumption.size(); i++) {
+    uint good_id = consumption[ i ].first;
+    uint amount = consumption[ i ].second;
+    market->updateDemand(good_id, amount);
+  }
 
   //handle growth
   this->population_happiness = this->get_population_happiness(w);
