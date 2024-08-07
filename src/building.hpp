@@ -7,6 +7,8 @@ using namespace std;
 
 
 
+
+
 class Building
 {
   uint id;
@@ -14,10 +16,17 @@ class Building
   string name;
   type_building type;
   uint size_workers; //per level
+  population_class worker_class; //class of worker that works in the building
   Production production;
   float upkeep;
-  uint build_time;
-  uint build_cost;
+  uint build_time; //in months
+  float infrastructure_cost;
+  float build_cost;
+  uint8_t max_levels;
+  vector<rank_province> rank_provinces_allowed;
+  vector<uint> required_buildings;
+  vector<uint> required_techs;
+  vector<uint> required_goods;
 
 
 public:

@@ -3,6 +3,56 @@
 
 using namespace std;
 
+enum good_id {
+  grain = 0,
+  wine,
+  salt,
+  fish,
+  cotton = 4,
+  clothes = 5,
+  iron,
+  timber,
+  dyes,
+  silk,
+  tea = 10,
+  coffee,
+  cloves,
+  sugar,
+  horses,
+  copper,
+  stone = 16,
+  marble,
+  glass,
+  paper,
+  incense,
+  gold,
+  silver,
+  spices = 23,
+  opium,
+  fruit,
+  tobacco,
+  cocoa,
+  ivory,
+  camels = 29,
+  meat,
+  fur,
+  leather,
+  gems,
+  spears,
+  swords,
+  bows = 36,
+  crossbows,
+  cannons,
+  muskets,
+  leather_armour,
+  plate_armour = 41,
+  elephants,
+  ale,
+  rice,
+  vegetables = 45,
+  tools
+};
+
 
 enum type_good {
   plantable,
@@ -17,6 +67,7 @@ enum class_good {
   luxury,
   military
 };
+
 
 class Province;
 class World;

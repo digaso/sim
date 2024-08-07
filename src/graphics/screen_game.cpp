@@ -17,7 +17,7 @@ using namespace std;
 static auto last_tick = chrono::steady_clock::now();
 static int music_id = 0;
 static int id_good = 0;
-static bool show = false;
+static bool show = false, showMarket = false;
 static bool goods_map = false;
 static bool political_map = false;
 static float vol = 0.009;
@@ -45,6 +45,7 @@ static Country* player_country = nullptr;
 void drawDebugMode(World* w);
 void drawGameMode(World* w);
 void drawGUIGood(World* w);
+void drawCountryMarketGUI(World* w);
 void drawMusic();
 void toggleButtons();
 void drawProvinceGUI(World* w);
@@ -98,6 +99,7 @@ void drawGameMode(World* w) {
   DrawText(TextFormat("Country: %s", player_country->get_name().c_str()), 410, 10, 20, BLACK);
   DrawText(TextFormat("Money: %.2f", player_country->get_money()), 660, 10, 20, BLACK);
   drawProvinceGUI(w);
+  drawCountryMarketGUI(w);
   DrawFPS(100, 100);
 }
 
@@ -130,7 +132,6 @@ void drawDebugMode(World* w) {
 
 void drawGameScreen(World* w) {
   BeginDrawing(); {
-
     if (mode == PLAY) {
       drawGameMode(w);
     }
@@ -197,6 +198,7 @@ void destroyGameScreen(World* w) {
   UnloadTexture(geomap);
   UnloadTexture(map);
   UnloadTexture(borders);
+  UnloadTexture(fog);
   for (uint i = 0; i < w->getGoods().size(); i++) {
     UnloadTexture(texgoods[ i ]);
   }
@@ -241,11 +243,29 @@ void toggleButtons() {
   }
 }
 
+void drawCountryMarketGUI(World* w) {
+  if (showMarket) {
+    GuiPanel(Rectangle{ 400, 10, 310, 700 }, "Market");
+    Market* m = w->getCountryById(prov->get_country_owner_id())->getMarket(0);
+    int i = 0;
+    for (auto& g : w->getGoods()) {
+      GuiLabel(Rectangle{ 410, 40.0f + i * 20, 310, 20 }, g.get_name().c_str());
+      GuiLabel(Rectangle{ 475, 40.0f + i * 20, 310, 20 }, TextFormat("Demand: %.2f", m->get_demands()[ g.getId() ]));
+      GuiLabel(Rectangle{ 575, 40.0f + i * 20, 310, 20 }, TextFormat("Supply: %.2f", m->get_production()[ g.getId() ]));
+      i++;
+    }
+
+    if (GuiButton(Rectangle{ 400, 350, 100, 20 }, "Close")) {
+      showMarket = false;
+    }
+  }
+}
+
 void drawProvinceGUI(World* w) {
   Vector2 coordinates = getCoordinatesByMouse(camera);
   int x = (int)coordinates.x;
   int y = (int)coordinates.y;
-  Rectangle guiRec = { 10, 130, 310, 300 };
+  Rectangle guiRec = { 10, 160, 310, 300 };
   if (x >= 0 && x < w->get_num_cols() && y >= 0 && y < w->get_num_rows() && IsMouseButtonDown(0) && !CheckCollisionPointRec(GetMousePosition(), guiRec)) {
     prov = w->getProvinceByCoords(x, y);
     province_name = prov->get_name();
@@ -274,24 +294,29 @@ void drawProvinceGUI(World* w) {
   }
   if (show) {
     GuiPanel(guiRec, province_name.c_str());
-    GuiLabel(Rectangle{ 15, 150, 310, 20 }, good_name.c_str());
-    GuiLabel(Rectangle{ 15, 170, 310, 20 }, CountryName.c_str());
-    GuiLabel(Rectangle{ 15, 190, 310, 20 }, type_prov.c_str());
-    GuiLabel(Rectangle{ 15, 210, 310, 20 }, coords.c_str());
-    GuiLabel(Rectangle{ 15, 230, 310, 20 }, population.c_str());
-    GuiLabel(Rectangle{ 15, 250, 310, 20 }, region_name.c_str());
-    GuiLabel(Rectangle{ 15, 270, 310, 20 }, kingName.c_str());
-    GuiLabel(Rectangle{ 15, 290, 310, 20 }, height.c_str());
-    if (GuiButton(Rectangle{ 10, 320, 100, 20 }, "Close")) {
+    GuiLabel(Rectangle{ 15, 180, 310, 20 }, good_name.c_str());
+    GuiLabel(Rectangle{ 15, 200, 310, 20 }, CountryName.c_str());
+    GuiLabel(Rectangle{ 15, 220, 310, 20 }, type_prov.c_str());
+    GuiLabel(Rectangle{ 15, 240, 310, 20 }, coords.c_str());
+    GuiLabel(Rectangle{ 15, 260, 310, 20 }, population.c_str());
+    GuiLabel(Rectangle{ 15, 280, 310, 20 }, region_name.c_str());
+    GuiLabel(Rectangle{ 15, 300, 310, 20 }, kingName.c_str());
+    GuiLabel(Rectangle{ 15, 320, 310, 20 }, height.c_str());
+    if (GuiButton(Rectangle{ 10, 350, 100, 20 }, "Close")) {
       show = false;
     }
-    if (prov->get_country_owner_id() != -1 && GuiButton(Rectangle{ 10,350, 100, 20 }, "Choose country")) {
+    if (prov->get_country_owner_id() != -1 && GuiButton(Rectangle{ 10,380, 100, 20 }, "Choose country")) {
       country_chosen = true;
       player_country = w->getCountryById(prov->get_country_owner_id());
       mode = PLAY;
       fog = renderFogOfWarMap(w, prov->get_country_owner_id());
       cout << "Fog of war loaded" << endl;
     }
+    if (prov->get_country_owner_id() != -1) {
+
+      if (GuiButton(Rectangle{ 10, 410, 100, 20 }, "Market")) showMarket = true;
+    }
+    else showMarket = false;
   }
 
 }

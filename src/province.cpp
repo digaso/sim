@@ -196,8 +196,7 @@ Market* Province::get_market(World* w)
 {
   Country* country = w->getCountryById(this->country_owner_id);
   vector<Market>* markets = country->get_markets();
-  for (auto& m : *markets)
-  {
+  for (auto& m : *markets) {
     if (m.has_province(this->id))
     {
       return &m;

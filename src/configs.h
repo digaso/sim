@@ -10,10 +10,10 @@
 #define TILESIZE 2
 #define CHUNKSIZE 64
 // generation variables
-#define MAXCOUNTRIES 140
-#define MAXRELIGIONS MAXCOUNTRIES/4
-#define MAXPROVINCES 90
-#define MINPROVINCES 75
+#define MAXCOUNTRIES 1
+#define MAXRELIGIONS 1
+#define MAXPROVINCES 15
+#define MINPROVINCES 10
 
 
 
@@ -55,13 +55,20 @@ enum type_building {
 
 struct base_input {
   uint good_id;
-  uint32_t amount;
+  float amount;
 };
 struct base_output {
   uint good_id;
-  uint32_t amount;
+  float amount;
 };
 typedef struct production {
+  float infrastructure_cost;
+  population_class worker_class;
+  uint size_workers;
+  float base_cost;
+  float upkeep;
+  uint base_time;
+  vector<base_input> construction_goods = {};
   vector<base_input> inputs = {};
   vector<base_output> outputs = {};
 } Production;
@@ -88,7 +95,7 @@ enum type_province {
   taiga = 13,
   tundra = 14,
   coastal_desert = 15,
-  wasteland = 16,
+  wasteland = 16
 };
 
 

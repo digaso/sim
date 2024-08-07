@@ -25,6 +25,7 @@ type_good Good::get_type() {
   return this->type;
 }
 
+
 void Good::set_goods(World* world) {
   world->addGood(Good(0, "Grain", 1.4, plantable, basic_need));
   world->addGood(Good(1, "Wine", 2.5, plantable, luxury));
@@ -73,6 +74,7 @@ void Good::set_goods(World* world) {
   world->addGood(Good(43, "Ale", 2, manufactured, basic_need));
   world->addGood(Good(44, "Rice", 1.4, plantable, raw_material));
   world->addGood(Good(45, "Vegetables", 1.4, plantable, raw_material));
+  world->addGood(Good(46, "Tools", 3, manufactured, class_good::basic_need));
 }
 
 bool Good::is_maritime() {

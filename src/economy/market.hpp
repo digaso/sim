@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <queue>
+#include <stack>
 #include "good.hpp"
 
 
@@ -10,23 +12,27 @@ class World;
 
 class Market {
   vector<uint> provinces;
-  vector<float> goods_prices;
-  vector<float> goods_demands;
-  vector<float> goods_production;
-  vector<float> goods_stocks;
+  float* goods_prices;
+  float* goods_demands;
+  float* goods_production;
+  float* goods_stocks;
+  stack<pair<uint, float>> demand_stack;
+  stack<pair<uint, float>> production_stack;
 public:
   vector<Good> goods;
 
   Market(World* w);
   Market() {};
   ~Market() {};
-  vector<float> get_prices();
-  vector<float> get_demands();
-  vector<float> get_production();
-  vector<float> get_stocks();
+  float* get_prices();
+  float* get_demands();
+  float* get_production();
+  float* get_stocks();
   void updateMarketPrices();
-  void updateDemand(uint good_id, float amount);
-  void updateProduction(uint good_id, float amount);
+  void updateDemands();
+  void updateProductions();
+  void addDemand(uint good_id, float amount);
+  void addProduction(uint good_id, float amount);
   void cleanMarket();
   vector<uint> getProvinces();
   bool has_province(uint id);

@@ -20,6 +20,7 @@ void Country::add_province(Province* p) {
   this->provinces.push_back(p->getId());
   this->num_provinces++;
 }
+
 void Country::remove_province(Province* p) {
   for (uint i = 0; i < this->num_provinces; i++) {
     if (this->provinces[ i ] == p->getId()) {
@@ -33,6 +34,7 @@ void Country::remove_province(Province* p) {
 void Country::cleanMarkets() {
   for (uint i = 0; i < this->markets.size(); i++) {
     this->markets[ i ].cleanMarket();
+    cout << "Market " << i << " cleaned" << endl;
   }
 }
 
@@ -42,6 +44,18 @@ void Country::add_market(Market m) {
 
 vector<Market>* Country::get_markets() {
   return &(this->markets);
+}
+
+void Country::updateMarkets() {
+  for (uint i = 0; i < this->markets.size(); i++) {
+    this->markets[ i ].cleanMarket();
+    this->markets[ i ].updateMarketPrices();
+  }
+}
+
+
+Market* Country::getMarket(uint id) {
+  return &(this->markets[ id ]);
 }
 
 string Country::get_name() {

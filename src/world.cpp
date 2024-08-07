@@ -431,59 +431,34 @@ void World::updateAgents() {
 }
 
 void World::updateCountries() {
-  for (Country& country : countries) {
-    //auto fut = async(launch::async, &Country::cleanMarkets, &country);
-    country.cleanMarkets();
-
+  for (Country country : this->countries) {
+    vector<uint> provs = country.getProvinces();
+    for (uint i : provs) {
+      updateProvince(i);
+    }
+    country.updateMarkets();
   }
 
 }
 
 void World::updateProvince(int i) {
   vector<BuildingStats> buildings_prov = provinces[ i ].getBuildingStats();
-  if (buildings_prov.size() < 1) {
-    return;
-  }
-  provinces[ i ].set_infrastructure(0);
+  if (buildings_prov.size() >= 1) {
+    provinces[ i ].set_infrastructure(0);
 
-  for (BuildingStats building : buildings_prov) {
-    Building b = buildings.at(building.id);
-    b.func(this, i, building.amount, b);
-  }
-}
-
-void World::updateProvinces() {
-
-  //update market province
- // vector<future<void>> tasks;
-
-  for (auto l : populated_provinces) {
-    //tasks.push_back(async(launch::async, updateProvince, this, l));
-    updateProvince(l);
-  }
-  //for (auto& task : tasks) {
-  //  task.wait();
-  //}
-
- // tasks.clear();
-  //update province population
-  for (auto l : populated_provinces) {
-    if (provinces[ l ].get_population_size() > 0 && provinces[ l ].is_land()) {
-      //tasks.push_back(async(launch::async, &Province::updatePopulation, &provinces[ i ], this));
-      provinces[ l ].updatePopulation(this);
+    for (BuildingStats building : buildings_prov) {
+      Building b = buildings.at(building.id);
+      b.func(this, i, building.amount, b);
     }
   }
-  //for (auto& task : tasks) {
-  //  task.wait();
-  //}
-
+  this->provinces[ i ].updatePopulation(this);
 }
+
 void  World::updateWorld() {
   if (advanceDate()) {
-    cout << "updating countries" << endl;
     updateCountries();
-    cout << "updating provinces" << endl;
-    updateProvinces();
+    //cout << "updating provinces" << endl;
+    //updateProvinces();
   }
   updateAgents();
 }

@@ -110,7 +110,6 @@ public:
   void updateAgents();
   void updateCharacters();
   void updateCountries();
-  void updateProvinces();
   void updateProvince(int i);
   void updateReligions();
   void updateWorld();

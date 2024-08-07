@@ -59,7 +59,7 @@ province_properties get_province_type(float height, float moisture) {
     type = coastal_sea;
     pop = 0;
   }
-  else if (height < 0.192f) {
+  else if (height < 0.199f) {
     if (moisture < -0.4)
     {
       color = 4;
@@ -531,6 +531,7 @@ void generate_countries(World* w) {
 
       generate_culture(w, &c, &cultures_count);
       p->set_country_owner_id(i);
+      p->add_building(0);
       p->add_population(Population(0, GetRandomValue(8000, 10000), i, p->getId(), c.get_culture_id(), population_class::peasants, religion_id, w));
       p->add_population(Population(1, GetRandomValue(200, 450), i, p->getId(), c.get_culture_id(), population_class::burghers, religion_id, w));
       p->add_population(Population(2, GetRandomValue(50, 150), i, p->getId(), c.get_culture_id(), population_class::monks, religion_id, w));

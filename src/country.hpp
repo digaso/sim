@@ -43,6 +43,10 @@ class Country
   uint religion_id;
   vector<Market> markets;
   vector<uint> cultures_accepted;
+  float influence;
+  float prestige;
+  float inovation;
+  float inovation_used;
   bool is_player = false;
   float money = 0.00f;
   float income;
@@ -93,10 +97,11 @@ public:
   vector<Market>* get_markets();
   void add_market(Market m);
   void cleanMarkets();
-
+  Market* getMarket(uint id);
   vector<uint> getProvinces();
   bool* getProvincesKnown();
   vector<uint> getProvinceTypesCount();
   vector<uint> getCharacters();
+  void updateMarkets();
   friend ostream& operator<<(ostream& os, const Country& c);
 };

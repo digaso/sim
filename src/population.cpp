@@ -24,7 +24,6 @@ Population::Population(uint id, uint size, uint country_id, uint province_id, ui
   string culture_name = w->getCultureById(culture_id)->get_name();
   string religion_name = w->getReligionById(religion_id)->get_name();
   this->name = class_name + " " + culture_name + " " + religion_name;
-
 }
 
 Population::~Population() {}
@@ -73,15 +72,13 @@ void Population::update(World* w)
   Market* market = w->getProvinceById(this->province_id)->get_market(w);
   for (uint i = 0; i < consumption.size(); i++) {
     uint good_id = consumption[ i ].first;
-    uint amount = consumption[ i ].second;
-    market->updateDemand(good_id, amount);
+    float amount = consumption[ i ].second / 1000 * this->size;
+    market->addDemand(good_id, amount);
   }
-
   //handle growth
   this->population_happiness = this->get_population_happiness(w);
   this->population_growth = this->get_population_growth(w);
   this->population_loyalty = this->get_population_loyalty(w);
-
 
   if (population_loyalty < 0.4f) {
     this->population_militancy += 0.05f;
@@ -93,10 +90,8 @@ void Population::update(World* w)
   else {
     this->population_militancy += 0.0f;
   }
-  this->size += this->size * this->population_growth;
-  this->size = this->size < 0 ? 0 : this->size;
-
-
+  //this->size += this->size * this->population_growth;
+  //this->size = this->size < 0 ? 0 : this->size;
 }
 
 float Population::get_population_growth(World* world)

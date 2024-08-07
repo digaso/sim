@@ -59,12 +59,12 @@ PopConsumption Culture::generate_pop_consumption(World* w, uint country_id) {
 
 
 
-  //left good id and right consumption
-  pop_consumption.slaves_consumption = { {0,0.3} ,{3, 0.5},  {5, 0.3} };
-  pop_consumption.peasants_consumption = { {0,0.6}, {2, 0.7}, {3, 0.4},  {5, 0.6} , {10,0.4} };
-  pop_consumption.burghers_consumption = { {0,0.6}, {1, 0.5}, {2, 0.5}, {3, 0.9},  {5, 0.4}, {10,0.3}, {24,0.4} };
-  pop_consumption.monks_consumption = { {0,0.6}, {1, 0.5}, {2, 0.5}, {3, 0.9},  {5, 0.4}, {10,0.3}, {24,0.4} };
-  pop_consumption.nobles_consumption = { {0,0.8}, {1, 0.5}, {2, 0.6}, {3, 0.6},  {5, 0.4} , {10,0.95}, {24,0.74} };
+  //left: good id, right:consumption
+  pop_consumption.slaves_consumption = { {grain,0.15} ,{fish, 0.2},  {clothes, 0.2} };
+  pop_consumption.peasants_consumption = { {grain,0.22}, {salt, 0.2}, {fish, 0.25},  {clothes, 0.3} , {tea,0.2}, {tobacco, 0.15} };
+  pop_consumption.burghers_consumption = { {grain,0.4}, {wine, 0.5}, {salt, 0.4}, {fish, 0.7},  {clothes, 0.4}, {tea,0.4}, {spices,0.55} };
+  pop_consumption.monks_consumption = { {grain,0.8}, {wine, 0.7}, {salt, 0.5}, {fish, 0.8},  {clothes, 0.4}, {tea,0.4}, {spices,0.45} };
+  pop_consumption.nobles_consumption = { {grain,1.0}, {wine, 0.9}, {salt, 0.9}, {fish, 0.9},  {clothes, 0.9} , {tea,0.65}, {spices,0.85}, {gems, 0.5} };
 
   return pop_consumption;
 }

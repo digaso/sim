@@ -57,6 +57,7 @@ void run(World* w) {
   SetTargetFPS(60);
   drawLoadingScreen();
   province_properties* props = generate_map(w);
+  w->updateCountries();
   initGameScreen(w, props);
   //create thread
   atomic_bool playing = true;
