@@ -16,8 +16,8 @@ class Market {
   float* goods_demands;
   float* goods_production;
   float* goods_stocks;
-  stack<pair<uint, float>> demand_stack;
-  stack<pair<uint, float>> production_stack;
+  queue<pair<uint, float>> demand_stack;
+  queue<pair<uint, float>> production_stack;
 public:
   vector<Good> goods;
 
@@ -37,4 +37,5 @@ public:
   vector<uint> getProvinces();
   bool has_province(uint id);
   void add_province(uint id);
+  void clearStacks();
 };

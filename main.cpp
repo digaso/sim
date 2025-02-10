@@ -28,6 +28,7 @@ int main() {
   World w(INITIAL_DAY, INITIAL_MONTH, INITIAL_YEAR, cols, rows);
   run(&w);
 
+
   print_memory_usage();
 
   return EXIT_SUCCESS;

@@ -49,7 +49,7 @@ vector<Market>* Country::get_markets() {
 void Country::updateMarkets() {
   for (uint i = 0; i < this->markets.size(); i++) {
     this->markets[ i ].cleanMarket();
-    this->markets[ i ].updateMarketPrices();
+    this->markets[ i ].updateMarketPrices(); // This will now clear the stacks
   }
 }
 

@@ -431,14 +431,13 @@ void World::updateAgents() {
 }
 
 void World::updateCountries() {
-  for (Country country : this->countries) {
+  for (Country& country : this->countries) {
     vector<uint> provs = country.getProvinces();
     for (uint i : provs) {
       updateProvince(i);
     }
     country.updateMarkets();
   }
-
 }
 
 void World::updateProvince(int i) {

@@ -14,12 +14,13 @@ Market::Market(World* w) {
     this->goods_stocks[ i ] = 0;
   }
 }
-
 void Market::updateMarketPrices() {
-  cout << this->production_stack.size() << endl;
+  cout << "Production Start: " << this->production_stack.size() << endl;
+  cout << "Demand Start: " << this->demand_stack.size() << endl;
   this->updateDemands();
   this->updateProductions();
-  cout << this->production_stack.size() << endl;
+  cout << "Production End: " << this->production_stack.size() << endl;
+  cout << "Demand End: " << this->demand_stack.size() << endl;
   for (uint16_t i = 0; i < this->goods.size(); i++) {
     this->goods_prices[ i ] = goods[ i ].get_base_value() + (this->goods_demands[ i ] - this->goods_production[ i ]) / 100;
   }
@@ -34,29 +35,29 @@ void Market::cleanMarket() {
 
 void Market::updateDemands() {
   while (!this->demand_stack.empty()) {
-    pair<uint, float> demand = this->demand_stack.top();
+    pair<uint, float> demand = this->demand_stack.front();
     this->goods_demands[ demand.first ] += demand.second;
     this->demand_stack.pop();
   }
-
 }
 
 void Market::updateProductions() {
   while (!this->production_stack.empty()) {
-    pair<uint, float> production = this->production_stack.top();
+    pair<uint, float> production = this->production_stack.front();
     this->goods_production[ production.first ] += production.second;
     this->production_stack.pop();
   }
 }
 
+
 void Market::addDemand(uint good_id, float amount) {
-  cout << "Demand added" << endl;
   this->demand_stack.push(make_pair(good_id, amount));
 }
 
 void Market::addProduction(uint good_id, float amount) {
-  cout << "Production added" << endl;
   this->production_stack.push(make_pair(good_id, amount));
+  cout << "stack size: " << this->demand_stack.size() << endl;
+
 }
 
 vector<uint> Market::getProvinces() {

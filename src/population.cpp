@@ -72,7 +72,7 @@ void Population::update(World* w)
   Market* market = w->getProvinceById(this->province_id)->get_market(w);
   for (uint i = 0; i < consumption.size(); i++) {
     uint good_id = consumption[ i ].first;
-    float amount = consumption[ i ].second / 1000 * this->size;
+    float amount = (consumption[ i ].second / 1000) * this->size;
     market->addDemand(good_id, amount);
   }
   //handle growth
@@ -80,16 +80,16 @@ void Population::update(World* w)
   this->population_growth = this->get_population_growth(w);
   this->population_loyalty = this->get_population_loyalty(w);
 
-  if (population_loyalty < 0.4f) {
-    this->population_militancy += 0.05f;
-  }
-  else if (population_loyalty > 0.6f) {
-    this->population_militancy -= 0.05;
-    this->population_militancy = population_militancy < 0.0f ? 0.0f : population_militancy;
-  }
-  else {
-    this->population_militancy += 0.0f;
-  }
+  //if (population_loyalty < 0.4f) {
+  //  this->population_militancy += 0.05f;
+  //}
+  //else if (population_loyalty > 0.6f) {
+  //  this->population_militancy -= 0.05;
+  //  this->population_militancy = population_militancy < 0.0f ? 0.0f : population_militancy;
+  //}
+  //else {
+  //  this->population_militancy += 0.0f;
+  //}
   //this->size += this->size * this->population_growth;
   //this->size = this->size < 0 ? 0 : this->size;
 }
