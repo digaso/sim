@@ -21,7 +21,8 @@ static bool show = false, showMarket = false;
 static bool goods_map = false;
 static bool political_map = false;
 static float vol = 0.009;
-static Camera2D camera = { 0 };
+static Camera2D camera2D = { 0 };
+static Camera3D camera3D = { 0 };
 static Texture2D* texgoods;
 static Texture2D geomap;
 static Texture2D map;
@@ -33,6 +34,7 @@ static Vector2 prevMousePos;
 static string province_name, good_name, CountryName, type_prov, coords, population, region_name, kingName, height;
 static game_velocity velocity = PAUSED;
 static province_properties* p;
+static bool is3DView = false;
 
 static game_mode mode = DEBUG;
 static bool country_chosen = false;
@@ -48,20 +50,29 @@ void drawProvinceGUI(World* w);
 void cameraMoveLetters();
 void cameraMove();
 void drawPoliticalMap();
+void init_camera3D(int mapWidth, int mapHeight);
 
 void drawPoliticalMap() {
-  DrawTexturePro(geomap, { 0, 0, (float)geomap.width, (float)geomap.height }, { 0, 0, geomap.width * camera.zoom, geomap.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
-  DrawTexturePro(map, { 0, 0, (float)map.width, (float)map.height }, { 0, 0, map.width * camera.zoom, map.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
-  DrawTexturePro(borders, { 0, 0, (float)borders.width, (float)borders.height }, { 0, 0, borders.width * camera.zoom, borders.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
-  DrawTexturePro(fog, { 0, 0, (float)fog.width, (float)fog.height }, { 0, 0, fog.width * camera.zoom, fog.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
+  DrawTexturePro(geomap, { 0, 0, (float)geomap.width, (float)geomap.height }, { 0, 0, geomap.width * camera2D.zoom, geomap.height * camera2D.zoom }, { 0, 0 }, camera2D.rotation, WHITE);
+  DrawTexturePro(map, { 0, 0, (float)map.width, (float)map.height }, { 0, 0, map.width * camera2D.zoom, map.height * camera2D.zoom }, { 0, 0 }, camera2D.rotation, WHITE);
+  DrawTexturePro(borders, { 0, 0, (float)borders.width, (float)borders.height }, { 0, 0, borders.width * camera2D.zoom, borders.height * camera2D.zoom }, { 0, 0 }, camera2D.rotation, WHITE);
+  DrawTexturePro(fog, { 0, 0, (float)fog.width, (float)fog.height }, { 0, 0, fog.width * camera2D.zoom, fog.height * camera2D.zoom }, { 0, 0 }, camera2D.rotation, WHITE);
 }
 
 
+void init_camera3D(int mapWidth, int mapHeight) {
+  camera3D.position = (Vector3){ mapWidth / 2.0f, 100.0f, mapHeight / 2.0f };
+  camera3D.target = (Vector3){ mapWidth / 2.0f, 0.0f, mapHeight / 2.0f };
+  camera3D.up = (Vector3){ 0.0f, 1.0f, 0.0f };
+  camera3D.fovy = 45.0f;
+  camera3D.projection = CAMERA_PERSPECTIVE;
+}
+
 void initGameScreen(World* w, province_properties* props) {
-  camera.target = { 0 };
-  camera.offset = { 0 };
-  camera.zoom = 1.8f;
-  camera.rotation = 0.0f;
+  camera2D.target = { 0 };
+  camera2D.offset = { 0 };
+  camera2D.zoom = 1.8f;
+  camera2D.rotation = 0.0f;
   texgoods = new Texture2D[ w->getGoods().size() ];
   p = props;
   geomap = renderGeographicalMap(w, p);
@@ -83,8 +94,41 @@ void initGameScreen(World* w, province_properties* props) {
 
 }
 
+
+void render_map_3d(World* w, province_properties* props) {
+  static Model terrainModel;
+  static Texture2D heightmapTex;
+  static bool initialized = false;
+
+  if (!initialized) {
+    int rows = w->get_num_rows();
+    int cols = w->get_num_cols();
+    Image heightmap = GenImageColor(cols, rows, BLACK);
+    for (int y = 0; y < rows; y++) {
+      for (int x = 0; x < cols; x++) {
+        Province* p = w->getProvinceByCoords(x, y);
+        float val = (p->get_height() + 1.0f) / 2.0f; // normalizar de [-1,1] para [0,1]
+        Vector4 colorVal = (Vector4){ val, val, val, 1.0f };
+        Color c = ColorFromNormalized(colorVal);
+        ImageDrawPixel(&heightmap, x, y, c);
+      }
+    }
+    heightmapTex = LoadTextureFromImage(heightmap);
+    UnloadImage(heightmap);
+    Mesh mesh = GenMeshHeightmap(heightmap, (Vector3) { (float)cols, 40.0f, (float)rows });
+    terrainModel = LoadModelFromMesh(mesh);
+    terrainModel.materials[ 0 ].maps[ MATERIAL_MAP_DIFFUSE ].texture = heightmapTex;
+    initialized = true;
+  }
+
+  BeginMode3D(camera3D);
+  DrawModel(terrainModel, (Vector3) { 0.0f, 0.0f, 0.0f }, 1.0f, WHITE);
+  EndMode3D();
+}
+
+
 void drawGameMode(World* w) {
-  BeginMode2D(camera);
+  BeginMode2D(camera2D);
   ClearBackground(RAYWHITE);
   drawPoliticalMap();
   EndMode2D();
@@ -100,17 +144,17 @@ void drawGameMode(World* w) {
 }
 
 void drawDebugMode(World* w) {
-  BeginMode2D(camera);
+  BeginMode2D(camera2D);
   ClearBackground(RAYWHITE);
-  DrawTexturePro(geomap, { 0, 0, (float)geomap.width, (float)geomap.height }, { 0, 0, geomap.width * camera.zoom , geomap.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
+  DrawTexturePro(geomap, { 0, 0, (float)geomap.width, (float)geomap.height }, { 0, 0, geomap.width * camera2D.zoom , geomap.height * camera2D.zoom }, { 0, 0 }, camera2D.rotation, WHITE);
   if (political_map) {
     goods_map = false;
-    DrawTexturePro(map, { 0, 0, (float)map.width, (float)map.height }, { 0, 0, map.width * camera.zoom, map.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
-    DrawTexturePro(borders, { 0, 0, (float)borders.width, (float)borders.height }, { 0, 0, borders.width * camera.zoom, borders.height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
+    DrawTexturePro(map, { 0, 0, (float)map.width, (float)map.height }, { 0, 0, map.width * camera2D.zoom, map.height * camera2D.zoom }, { 0, 0 }, camera2D.rotation, WHITE);
+    DrawTexturePro(borders, { 0, 0, (float)borders.width, (float)borders.height }, { 0, 0, borders.width * camera2D.zoom, borders.height * camera2D.zoom }, { 0, 0 }, camera2D.rotation, WHITE);
   }
   else if (goods_map) {
     political_map = false;
-    DrawTexturePro(texgoods[ id_good ], { 0, 0, (float)texgoods[ id_good ].width, (float)texgoods[ id_good ].height }, { 0, 0, texgoods[ id_good ].width * camera.zoom, texgoods[ id_good ].height * camera.zoom }, { 0, 0 }, camera.rotation, WHITE);
+    DrawTexturePro(texgoods[ id_good ], { 0, 0, (float)texgoods[ id_good ].width, (float)texgoods[ id_good ].height }, { 0, 0, texgoods[ id_good ].width * camera2D.zoom, texgoods[ id_good ].height * camera2D.zoom }, { 0, 0 }, camera2D.rotation, WHITE);
   }
   EndMode2D();
   DrawFPS(130, 100);
@@ -129,10 +173,20 @@ void drawDebugMode(World* w) {
 void drawGameScreen(World* w) {
   BeginDrawing(); {
     if (mode == PLAY) {
-      drawGameMode(w);
+      if (is3DView) {
+        render_map_3d(w, p);
+      }
+      else {
+        drawGameMode(w);
+      }
     }
     else if (mode == DEBUG) {
-      drawDebugMode(w);
+      if (is3DView) {
+        render_map_3d(w, p);
+      }
+      else {
+        drawDebugMode(w);
+      }
     }
   }
   EndDrawing();
@@ -178,6 +232,10 @@ void updateWorld(World* w) {
 
 void updateGameScreen(World* w) {
   prevMousePos = GetMousePosition();
+  if (IsKeyPressed(KEY_TAB)) {
+    cout << "Toggling 3D view" << endl;
+    is3DView = !is3DView;
+  }
 
   //asdasdas
   UpdateMusicStream(musics[ music_id ]);
@@ -258,7 +316,7 @@ void drawCountryMarketGUI(World* w) {
 }
 
 void drawProvinceGUI(World* w) {
-  Vector2 coordinates = getCoordinatesByMouse(camera);
+  Vector2 coordinates = getCoordinatesByMouse(camera2D);
   int x = (int)coordinates.x;
   int y = (int)coordinates.y;
   Rectangle guiRec = { 10, 160, 310, 300 };
@@ -318,35 +376,89 @@ void drawProvinceGUI(World* w) {
 }
 
 void cameraMoveLetters() {
-  if (IsKeyDown(KEY_W))
-    camera.offset.y += 10 / camera.zoom;
-  if (IsKeyDown(KEY_S))
-    camera.offset.y -= 10 / camera.zoom;
-  if (IsKeyDown(KEY_A))
-    camera.offset.x += 10 / camera.zoom;
-  if (IsKeyDown(KEY_D))
-    camera.offset.x -= 10 / camera.zoom;
+  float speed = 10.0f;
+
+  if (!is3DView) {
+    if (IsKeyDown(KEY_W)) camera2D.offset.y += speed / camera2D.zoom;
+    if (IsKeyDown(KEY_S)) camera2D.offset.y -= speed / camera2D.zoom;
+    if (IsKeyDown(KEY_A)) camera2D.offset.x += speed / camera2D.zoom;
+    if (IsKeyDown(KEY_D)) camera2D.offset.x -= speed / camera2D.zoom;
+  }
+  else {
+    Vector3 forward = Vector3Normalize(Vector3Subtract(camera3D.target, camera3D.position));
+    Vector3 right = Vector3Normalize(Vector3CrossProduct(forward, camera3D.up));
+    Vector3 move = { 0 };
+
+    if (IsKeyDown(KEY_W)) move = Vector3Add(move, forward);
+    if (IsKeyDown(KEY_S)) move = Vector3Subtract(move, forward);
+    if (IsKeyDown(KEY_D)) move = Vector3Add(move, right);
+    if (IsKeyDown(KEY_A)) move = Vector3Subtract(move, right);
+    if (IsKeyDown(KEY_Q)) {
+      camera3D.position.y += speed * GetFrameTime();
+      camera3D.target.y += speed * GetFrameTime();
+    }
+    if (IsKeyDown(KEY_E)) {
+      camera3D.position.y -= speed * GetFrameTime();
+      camera3D.target.y -= speed * GetFrameTime();
+    }
+
+    camera3D.position = Vector3Add(camera3D.position, Vector3Scale(move, speed * GetFrameTime()));
+    camera3D.target = Vector3Add(camera3D.target, Vector3Scale(move, speed * GetFrameTime()));
+  }
 }
 
 void cameraMove() {
-  // Zoom handling
-  float mouseDelta = GetMouseWheelMove();
-  float newZoom = camera.zoom + mouseDelta * 0.02f;
-  if (newZoom <= 0) newZoom = 0.01f;
-  camera.zoom = newZoom;
+  if (!is3DView) {
+    // ----------- 2D CAMERA CONTROLS -----------
+    // Zoom handling
+    float mouseDelta = GetMouseWheelMove();
+    float newZoom = camera2D.zoom + mouseDelta * 0.02f;
+    if (newZoom <= 0.01f) newZoom = 0.01f;
+    camera2D.zoom = newZoom;
 
-  // Get the current mouse position
-  Vector2 thisPos = GetMousePosition();
-  // Calculate the delta from the previous mouse position
-  Vector2 delta = Vector2Subtract(thisPos, prevMousePos);
-  // Update the previous mouse position
-  prevMousePos = thisPos;
+    // Mouse dragging
+    Vector2 thisPos = GetMousePosition();
+    Vector2 delta = Vector2Subtract(thisPos, prevMousePos);
+    prevMousePos = thisPos;
 
-  // Handle dragging (panning)
-  if (IsMouseButtonDown(0)) {
-    Vector2 worldDelta = Vector2Scale(delta, -1.0f / camera.zoom);
-    camera.target = Vector2Add(camera.target, worldDelta);
+    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+      Vector2 worldDelta = Vector2Scale(delta, -1.0f / camera2D.zoom);
+      camera2D.target = Vector2Add(camera2D.target, worldDelta);
+    }
+
+    cameraMoveLetters();
+
   }
-  // Additional panning using keyboard input
-  cameraMoveLetters();
+  else {
+    // ----------- 3D CAMERA CONTROLS -----------
+    cameraMoveLetters();
+
+    // Optional mouse look
+    if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
+      Vector2 mouseDelta = GetMouseDelta();
+      float rotSpeed = 0.003f;
+
+      Vector3 forward = Vector3Normalize(Vector3Subtract(camera3D.target, camera3D.position));
+      Vector3 right = Vector3Normalize(Vector3CrossProduct(forward, camera3D.up));
+
+      // Rotate horizontally
+      Matrix rotY = MatrixRotateY(-mouseDelta.x * rotSpeed);
+      forward = Vector3Transform(forward, rotY);
+
+      // Rotate vertically
+      Matrix rotX = MatrixRotate(Vector3CrossProduct(forward, camera3D.up), -mouseDelta.y * rotSpeed);
+      forward = Vector3Transform(forward, rotX);
+
+      camera3D.target = Vector3Add(camera3D.position, forward);
+    }
+
+    // Optional zoom (scroll = move forward/backward)
+    float scroll = GetMouseWheelMove();
+    if (scroll != 0.0f) {
+      Vector3 direction = Vector3Normalize(Vector3Subtract(camera3D.target, camera3D.position));
+      Vector3 zoom = Vector3Scale(direction, scroll * 4.0f);
+      camera3D.position = Vector3Add(camera3D.position, zoom);
+      camera3D.target = Vector3Add(camera3D.target, zoom);
+    }
+  }
 }

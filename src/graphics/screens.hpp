@@ -20,6 +20,8 @@ void updateMainMenuScreen();
 void drawMainMenuScreen();
 void destroyMainMenuScreen();
 
+
+void init_camera3D(int mapWidth, int mapHeight);
 //game screen functions
 void initGameScreen(World* w, province_properties* props);
 void updateGameScreen(World* w);

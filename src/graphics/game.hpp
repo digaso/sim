@@ -59,6 +59,7 @@ void run(World* w) {
   province_properties* props = generate_map(w);
   w->updateCountries();
   initGameScreen(w, props);
+  init_camera3D(w->get_num_cols(), w->get_num_rows());
   atomic_bool playing = true;
   thread t1([&]() {
     while (playing)
