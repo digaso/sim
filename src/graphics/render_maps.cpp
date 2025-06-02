@@ -6,10 +6,11 @@
 #include "render_maps.hpp"
 
 
+
 Texture2D renderGeographicalMap(World* w, province_properties* p) {
   byte* pixels = new byte[ w->get_num_rows() * w->get_num_cols() * 4 ];
-  for (int i = 0; i < w->get_num_rows(); i++) {
-    for (int j = 0; j < w->get_num_cols(); j++) {
+  for (uint i = 0; i < w->get_num_rows(); i++) {
+    for (uint j = 0; j < w->get_num_cols(); j++) {
       int index = (i * w->get_num_cols() + j);
       //int x = j * TILESIZE;
       //int y = i * TILESIZE;
@@ -158,7 +159,6 @@ Texture2D renderFogOfWarMap(World* w, uint country_id) {
   byte* pixels = new byte[ rows * cols * 4 ];
   for (int i = 0; i < rows * cols; i++) {
     int index = i * 4;
-    Province* prov = w->getProvinceById(i);
     if (!provinces_known[ i ]) {
       pixels[ index + 0 ] = (byte)0;
       pixels[ index + 1 ] = (byte)0;

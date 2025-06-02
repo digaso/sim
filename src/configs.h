@@ -2,18 +2,18 @@
 #include <string>
 #include <vector>
 // world variables
-#define INITIAL_YEAR 822
+#define INITIAL_YEAR 731
 #define INITIAL_MONTH 1
 #define INITIAL_DAY 1
 // graphics variables
 #define NUM_CHUNKS 3
 #define TILESIZE 2
-#define CHUNKSIZE 32
+#define CHUNKSIZE 64
 // generation variables
-#define MAXCOUNTRIES 1
-#define MAXRELIGIONS 1
-#define MAXPROVINCES 15
-#define MINPROVINCES 10
+#define MAXCOUNTRIES 70
+#define MAXRELIGIONS 10
+#define MAXPROVINCES 80
+#define MINPROVINCES 50
 
 
 
@@ -128,8 +128,8 @@ typedef struct province_properties {
 } province_properties;
 
 typedef struct buildings_stats {
-  uint_fast8_t id;
-  uint_fast8_t amount;
+  uint id;
+  uint amount;
   Ownership owner;
 } BuildingStats;
 

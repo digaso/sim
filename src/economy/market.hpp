@@ -11,6 +11,8 @@ using namespace std;
 class World;
 
 class Market {
+  uint owner_id;
+  uint capital_id;
   vector<uint> provinces;
   float* goods_prices;
   float* goods_demands;
@@ -29,6 +31,8 @@ public:
   float* get_production();
   float* get_stocks();
   void updateMarketPrices();
+  void setOwner(uint id);
+  void setCapital(uint id);
   void updateDemands();
   void updateProductions();
   void addDemand(uint good_id, float amount);

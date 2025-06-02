@@ -28,7 +28,7 @@ private:
   int country_owner_id; //id to country that owns the province
   float migration_atraction; //value between 0 and 1
   uint infrastructure;
-  vector<uint_fast8_t> goods; //id of goods
+  vector<uint> goods; //id of goods
   vector<BuildingStats> buildings; //id of buildings
 
 
@@ -56,10 +56,10 @@ public:
   rank_province upgrade_rank();
   rank_province downgrade_rank();
   void set_migration_atraction(float migration_atraction);
-  void add_goods(uint_fast8_t good_id);
-  vector<uint_fast8_t> get_goods();
+  void add_goods(uint good_id);
+  vector<uint> get_goods();
   friend ostream& operator<<(ostream& os, const Province& p);
-  void add_building(uint_fast8_t building_id);
+  void add_building(uint building_id);
   vector<BuildingStats> getBuildingStats();
   void add_population(Population pop);
   float get_populations_growth();
@@ -68,7 +68,7 @@ public:
   Market* get_market(World* w);
   void set_infrastructure(uint infrastructure);
   uint get_infrastructure();
-  uint get_building_amount(uint_fast8_t building_id);
+  uint get_building_amount(uint building_id);
   vector<Population>* get_pops();
   void updatePopulation(World* w);
 };

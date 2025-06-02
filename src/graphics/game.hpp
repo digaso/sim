@@ -53,13 +53,12 @@ void updateWorld(World* w, game_velocity* velocity) {
 
 void run(World* w) {
   SetTraceLogLevel(LOG_ERROR);
-  InitWindow(window_width, window_height, "Winds of Gold");
+  InitWindow(window_width, window_height, "Skulls of Iron");
   SetTargetFPS(60);
   drawLoadingScreen();
   province_properties* props = generate_map(w);
   w->updateCountries();
   initGameScreen(w, props);
-  //create thread
   atomic_bool playing = true;
   thread t1([&]() {
     while (playing)

@@ -408,8 +408,6 @@ vector<Province*> World::get_neighbours_without_diagonal(Province* p) {
     neighbours.push_back(this->getProvinceByCoords(x, y + 1));
   }
 
-
-
   return neighbours;
 
 }

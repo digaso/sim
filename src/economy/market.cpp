@@ -15,15 +15,19 @@ Market::Market(World* w) {
   }
 }
 void Market::updateMarketPrices() {
-  cout << "Production Start: " << this->production_stack.size() << endl;
-  cout << "Demand Start: " << this->demand_stack.size() << endl;
   this->updateDemands();
   this->updateProductions();
-  cout << "Production End: " << this->production_stack.size() << endl;
-  cout << "Demand End: " << this->demand_stack.size() << endl;
   for (uint16_t i = 0; i < this->goods.size(); i++) {
     this->goods_prices[ i ] = goods[ i ].get_base_value() + (this->goods_demands[ i ] - this->goods_production[ i ]) / 100;
   }
+}
+
+void Market::setOwner(uint id) {
+  this->owner_id = id;
+}
+
+void Market::setCapital(uint id) {
+  this->capital_id = id;
 }
 
 void Market::cleanMarket() {
@@ -56,8 +60,6 @@ void Market::addDemand(uint good_id, float amount) {
 
 void Market::addProduction(uint good_id, float amount) {
   this->production_stack.push(make_pair(good_id, amount));
-  cout << "stack size: " << this->demand_stack.size() << endl;
-
 }
 
 vector<uint> Market::getProvinces() {

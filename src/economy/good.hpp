@@ -81,9 +81,9 @@ private:
   type_good type;
   class_good good_class;
   bool maritime = false;
-  uint initial_amoount;
   bool* map;
 public:
+  uint count;
   void static set_goods(World* world);
   Good(/* args */);
   Good(uint id, string name, float base_value, type_good type, class_good good_class);
@@ -95,8 +95,8 @@ public:
   void set_map(bool* map);
 
   bool* get_map();
-  uint get_initial_amount();
-  void set_initial_amount(uint initial_amount);
+  uint get_initial_count();
+  void set_initial_count(uint initial_count);
   void set_maritime(bool maritime);
 
   float get_base_value();

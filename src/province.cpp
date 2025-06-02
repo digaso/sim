@@ -130,12 +130,12 @@ float Province::get_moisture()
   return this->moisture;
 }
 
-vector<uint_fast8_t> Province::get_goods()
+vector<uint> Province::get_goods()
 {
   return this->goods;
 }
 
-void Province::add_goods(uint_fast8_t good_id)
+void Province::add_goods(uint good_id)
 {
   this->goods.push_back(good_id);
 }
@@ -161,7 +161,7 @@ vector<Population>* Province::get_pops()
   return &(this->pops);
 }
 
-void Province::add_building(uint_fast8_t building_id)
+void Province::add_building(uint building_id)
 {
   for (auto& b : this->buildings)
   {
@@ -180,7 +180,7 @@ void Province::set_type(type_province type)
   this->type = type;
 }
 
-uint Province::get_building_amount(uint_fast8_t building_id)
+uint Province::get_building_amount(uint building_id)
 {
   for (auto& b : this->buildings)
   {

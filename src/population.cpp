@@ -90,7 +90,7 @@ void Population::update(World* w)
   //else {
   //  this->population_militancy += 0.0f;
   //}
-  //this->size += this->size * this->population_growth;
+  this->size = this->size * this->population_growth;
   //this->size = this->size < 0 ? 0 : this->size;
 }
 
@@ -98,18 +98,18 @@ float Population::get_population_growth(World* world)
 {
   Province* province = world->getProvinceById(this->province_id);
   Culture culture = world->getCultures().at(this->culture_id);
-  float growth = 0.0f;
+  float growth = 0.0002;
   if (this->pop_class == population_class::slaves) {
-    growth = 0.0f;
+    growth = 0.0005f;
   }
   else if (this->pop_class == population_class::peasants) {
-    growth = 0.01f;
+    growth = 0.0015f;
   }
   else if (this->pop_class == population_class::burghers) {
-    growth = 0.02f;
+    growth = 0.001f;
   }
   else if (this->pop_class == population_class::nobles) {
-    growth = 0.03f;
+    growth = 0.0008f;
   }
   return growth + 1;
 

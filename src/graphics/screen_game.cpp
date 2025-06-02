@@ -33,12 +33,8 @@ static Vector2 prevMousePos;
 static string province_name, good_name, CountryName, type_prov, coords, population, region_name, kingName, height;
 static game_velocity velocity = PAUSED;
 static province_properties* p;
-static bool dragging = false;
-static Vector2 dragStartPos = { 0 };
-static Vector2 cameraStartTarget = { 0 };
+
 static game_mode mode = DEBUG;
-static int screen_width = 320;
-static int screen_height = 240;
 static bool country_chosen = false;
 static Country* player_country = nullptr;
 

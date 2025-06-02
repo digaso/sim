@@ -9,6 +9,7 @@ Good::Good(uint id, string name, float base_value, type_good type, class_good go
   this->base_value = base_value;
   this->type = type;
   this->good_class = good_class;
+  this->count = 0;
 }
 
 Good::~Good() {}
@@ -92,14 +93,6 @@ void Good::set_map(bool* map) {
 
 bool* Good::get_map() {
   return this->map;
-}
-
-uint Good::get_initial_amount() {
-  return this->initial_amoount;
-}
-
-void Good::set_initial_amount(uint initial_amount) {
-  this->initial_amoount = initial_amount;
 }
 
 class_good Good::get_class() {

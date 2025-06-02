@@ -272,10 +272,9 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
   for (uint i = 0; i < goods.size(); i++) {
     Good g = goods[ i ];
     bool* bmap = new bool[ rows * cols ];
-    for (uint i = 0; i < rows * cols; i++) {
-      bmap[ i ] = false;
+    for (uint k = 0; k < rows * cols; k++) {
+      bmap[ k ] = false;
     }
-    int count = 0;
     if (g.get_type() != manufactured) {
 
       for (uint row = 0; row < rows; row++) {
@@ -283,139 +282,562 @@ void set_map_goods(World* w, float frequency, int seed, int octaves) {
           float** map = maps[ i ];
           Province* p = w->getProvinceById(row * cols + col);
           if (p->get_type() == type_province::wasteland) continue;
-          if (g.get_name() == "Salt" && (p->get_type() == coastal_desert || p->get_type() == coast)) {
-            p->add_goods(g.getId()); count++;
-            bmap[ row * cols + col ] = true;
-            continue;
+          if (g.get_name() == "Salt") {
+            if (p->get_type() == coast || p->get_type() == coastal_desert) {
+              if (GetRandomValue(0, 100) < 90) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            else if (p->get_type() == mountain) {
+              if (GetRandomValue(0, 100) < 8) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
           }
-          if (g.get_name() == "Timber" && (p->get_type() == forest || p->get_type() == tropical_forest || p->get_type() == tropical || p->get_type() == grassland || p->get_type() == taiga) && GetRandomValue(0, 100) < 90) {
-            p->add_goods(g.getId()); count++;
-            bmap[ row * cols + col ] = true;
-            continue;
+          if (g.get_name() == "Timber") {
+            if (p->get_type() == forest || p->get_type() == tropical_forest || p->get_type() == tropical) {
+              if (GetRandomValue(0, 100) < 90) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            if (p->get_type() == grassland || p->get_type() == taiga || p->get_type() == tundra || p->get_type() == temperate_desert) {
+              if (GetRandomValue(0, 100) < 30) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            if (p->get_type() == coastal_desert || p->get_type() == desert || p->get_type() == bare || p->get_type() == hill || p->get_type() == mountain) {
+              if (GetRandomValue(0, 100) < 10) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
           }
-          if (g.get_name() == "Timber" && (p->get_type() == coastal_desert || p->get_type() == desert || p->get_type() == bare)) {
-            if (GetRandomValue(0, 100) < 20) {
-              p->add_goods(g.getId()); count++;
+          if (g.get_name() == "Dyes") {
+            if (p->get_type() == tropical || p->get_type() == tropical_forest) {
+              if (GetRandomValue(0, 100) < 20) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            if (p->get_type() == coast || p->get_type() == coastal_desert || p->get_type() == temperate_desert) {
+              if (GetRandomValue(0, 100) < 10) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+          if (g.get_name() == "Silk") {
+            if (p->get_type() == grassland || p->get_type() == temperate_desert) {
+              if (GetRandomValue(0, 100) < 10) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            if (p->get_type() == coast || p->get_type() == coastal_desert || p->get_type() == desert || p->get_type() == bare) {
+              if (GetRandomValue(0, 100) < 5) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+          if (g.get_name() == "Leather") {
+            if (p->get_type() == grassland || p->get_type() == forest || p->get_type() == tropical_forest || p->get_type() == taiga) {
+              if (GetRandomValue(0, 100) < 25) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            else if (p->get_type() == coast || p->get_type() == coastal_desert || p->get_type() == desert || p->get_type() == bare) {
+              if (GetRandomValue(0, 100) < 5) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+
+          if (g.get_name() == "Sugar") {
+            if (p->get_type() == tropical || p->get_type() == tropical_forest || p->get_type() == coastal_desert) {
+              if (GetRandomValue(0, 100) < 20) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            if (p->get_type() == coast || p->get_type() == temperate_desert) {
+              if (GetRandomValue(0, 100) < 10) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+          if (g.get_name() == "Coffee") {
+            if (p->get_type() == tropical || p->get_type() == tropical_forest || p->get_type() == coastal_desert) {
+              if (GetRandomValue(0, 100) < 25) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+
+            if (p->get_type() == desert || p->get_type() == bare || p->get_type() == temperate_desert) {
+              if (GetRandomValue(0, 100) < 5) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+          if (g.get_name() == "Tobacco") {
+            if (p->get_type() == tropical || p->get_type() == tropical_forest || p->get_type() == coastal_desert) {
+              if (GetRandomValue(0, 100) < 25) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+
+            if (p->get_type() == coast || p->get_type() == desert || p->get_type() == bare || p->get_type() == temperate_desert) {
+              if (GetRandomValue(0, 100) < 5) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+          if (g.get_name() == "Cocoa") {
+            if (p->get_type() == tropical || p->get_type() == tropical_forest || p->get_type() == coastal_desert) {
+              if (GetRandomValue(0, 100) < 25) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+
+            if (p->get_type() == coast || p->get_type() == desert || p->get_type() == bare || p->get_type() == temperate_desert) {
+              if (GetRandomValue(0, 100) < 5) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+
+          if (g.get_name() == "Tea") {
+            if (p->get_type() == temperate_desert || p->get_type() == coastal_desert) {
+              if (GetRandomValue(0, 100) < 20) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            if (p->get_type() == coast || p->get_type() == tropical || p->get_type() == tropical_forest) {
+              if (GetRandomValue(0, 100) < 5) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            if (p->get_type() == grassland || p->get_type() == desert || p->get_type() == bare) {
+              if (GetRandomValue(0, 100) < 2) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+
+          if (g.get_name() == "Incense") {
+            if (p->get_type() == temperate_desert || p->get_type() == coastal_desert) {
+              if (GetRandomValue(0, 100) < 25) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            if (p->get_type() == coast || p->get_type() == tropical || p->get_type() == tropical_forest) {
+              if (GetRandomValue(0, 100) < 5) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            if (p->get_type() == grassland) {
+              if (GetRandomValue(0, 100) < 1) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+
+          if (g.get_name() == "Spices") {
+            if (p->get_type() == temperate_desert || p->get_type() == coastal_desert) {
+              if (GetRandomValue(0, 100) < 15) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            if (p->get_type() == tropical || p->get_type() == tropical_forest) {
+              if (GetRandomValue(0, 100) < 12) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+
+          if (g.get_name() == "Cloves") {
+            if (p->get_type() == temperate_desert || p->get_type() == coastal_desert) {
+              if (GetRandomValue(0, 100) < 10) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            if (p->get_type() == tropical || p->get_type() == tropical_forest) {
+              if (GetRandomValue(0, 100) < 8) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+
+          if (g.get_name() == "Opioum") {
+            if (p->get_type() == temperate_desert || p->get_type() == coastal_desert) {
+              if (GetRandomValue(0, 100) < 15) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            if (p->get_type() == coast || p->get_type() == tropical || p->get_type() == tropical_forest) {
+              if (GetRandomValue(0, 100) < 10) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+
+          if (g.get_name() == "Gold" && p->is_land()) {
+            uint8_t chance = GetRandomValue(0, 240);
+            if (chance < 7) {
+              p->add_goods(g.getId()); g.count++;
               bmap[ row * cols + col ] = true;
             }
             continue;
           }
-          if (g.get_name() == "Gold" && p->is_land()) {
+          if (g.get_name() == "Silver" && p->is_land()) {
             uint8_t chance = GetRandomValue(0, 240);
-            if (chance < 233) {
-              continue;
+            if (chance < 15) {
+              p->add_goods(g.getId()); g.count++;
+              bmap[ row * cols + col ] = true;
             }
-            p->add_goods(g.getId()); count++;
-            bmap[ row * cols + col ] = true;
             continue;
+          }
+          if (g.get_name() == "Fur") {
+            if (p->get_type() == taiga || p->get_type() == tundra) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 30) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            else if (p->get_type() == forest) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 15) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            else if (p->get_type() == grassland) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 5) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
           }
           if (g.get_type() == catchable && g.is_maritime() && (p->get_type() == coast || p->get_type() == coastal_desert))
           {
-            p->add_goods(g.getId()); count++;
+            p->add_goods(g.getId()); g.count++;
             bmap[ row * cols + col ] = true;
           }
-          else if (map[ row ][ col ] > 0.5 - (1.0 / g.get_base_value()) && (p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)) {
-            if (g.get_name() == "Camels" && (p->get_type() == desert || p->get_type() == coastal_desert || p->get_type() == temperate_desert || p->get_type() == bare)) {
-              uint chance = GetRandomValue(0, 100);
-              if (chance < 20) {
-                continue;
-              }
-              p->add_goods(g.getId()); count++;
+          if (g.get_name() == "Horses" && (p->get_type() == grassland || p->get_type() == tundra || p->get_type() == taiga)) {
+            uint chance = GetRandomValue(0, 100);
+            if (chance < 13) {
+              p->add_goods(g.getId()); g.count++;
               bmap[ row * cols + col ] = true;
-              continue;
             }
-            if (g.get_name() == "Cattle" && (p->get_type() == grassland || p->get_type() == forest || p->get_type() == tropical || p->get_type() == tropical_forest || p->get_type() == temperate_desert)) {
+
+          }
+          if (g.get_name() == "Camels" && (p->get_type() == desert || p->get_type() == coastal_desert || p->get_type() == temperate_desert || p->get_type() == bare)) {
+            uint chance = GetRandomValue(0, 100);
+            if (chance < 30) {
+              p->add_goods(g.getId()); g.count++;
+              bmap[ row * cols + col ] = true;
+            }
+
+          }
+
+          if (g.get_name() == "Grain") {
+            uint chance = GetRandomValue(0, 100);
+            if (p->get_type() == grassland) {
+
+              if (chance < 35) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            else if ((p->get_type() == forest || p->get_type() == tropical_forest || p->get_type() == tropical || p->get_type() == temperate_desert || p->get_type() == coast || p->get_type() == coastal_desert)) {
               uint chance = GetRandomValue(0, 100);
               if (chance < 10) {
-                continue;
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
               }
-              p->add_goods(g.getId()); count++;
-              bmap[ row * cols + col ] = true;
-              continue;
             }
-            if (g.get_name() == "Horses" && (p->get_type() == grassland || p->get_type() == forest || p->get_type() == tropical || p->get_type() == tropical_forest || p->get_type() == temperate_desert)) {
+            else if ((p->get_type() == hill || p->get_type() == mountain || p->get_type() == taiga || p->get_type() == tundra || p->get_type() == bare)) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 5) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+          if (g.get_name() == "Vegetables") {
+            uint chance = GetRandomValue(0, 100);
+            if (p->get_type() == grassland) {
+
+              if (chance < 25) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            else if ((p->get_type() == forest || p->get_type() == tropical_forest || p->get_type() == tropical || p->get_type() == temperate_desert || p->get_type() == coast || p->get_type() == coastal_desert)) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 15) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            else if ((p->get_type() == hill || p->get_type() == mountain || p->get_type() == taiga || p->get_type() == tundra || p->get_type() == bare)) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 3) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+          if (g.get_name() == "Wine") {
+            if (p->get_type() == grassland) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 7) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            else if ((p->get_type() == hill)) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 18) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+          if (g.get_name() == "Cotton") {
+            uint chance = GetRandomValue(0, 100);
+            if (p->get_type() == grassland) {
+
+              if (chance < 25) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            else if ((p->get_type() == forest || p->get_type() == tropical_forest || p->get_type() == tropical || p->get_type() == temperate_desert || p->get_type() == coast || p->get_type() == coastal_desert)) {
               uint chance = GetRandomValue(0, 100);
               if (chance < 10) {
-                continue;
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
               }
-              p->add_goods(g.getId()); count++;
-              bmap[ row * cols + col ] = true;
-              continue;
             }
+            else if ((p->get_type() == hill || p->get_type() == mountain || p->get_type() == taiga || p->get_type() == tundra || p->get_type() == bare)) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 1) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+          if (g.get_name() == "Rice") {
+            uint chance = GetRandomValue(0, 100);
+            if (p->get_type() == grassland) {
 
-            if (g.get_name() == "Elephants" && (p->get_type() == type_province::temperate_desert || p->get_type() == type_province::coastal_desert || p->get_type() == type_province::tropical || p->get_type() == type_province::tropical_forest)) {
-              if (GetRandomValue(0, 100) < 10) continue;
-              p->add_goods(g.getId()); count++;
-              bmap[ row * cols + col ] = true;
-              continue;
-            }
-            if (g.get_type() == plantable && (p->get_type() == type_province::desert || p->get_type() == type_province::bare))
-            {
-              uint8_t chance = GetRandomValue(0, 100);
-              if (chance < 30) {
-                continue;
+              if (chance < 15) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
               }
-              p->add_goods(g.getId()); count++;
-              bmap[ row * cols + col ] = true;
-              continue;
             }
-            if (g.get_type() == plantable && (p->get_type() == mountain || p->get_type() == coastal_desert || p->get_type() == taiga || p->get_type() == tundra))
-            {
-              uint8_t chance = GetRandomValue(0, 100);
-              if (chance < 30) {
-                continue;
-              }
-              p->add_goods(g.getId()); count++;
-              bmap[ row * cols + col ] = true;
-              continue;
-            }
-            if (g.get_type() == plantable && (p->get_type() == grassland || p->get_type() == forest || p->get_type() == tropical || p->get_type() == tropical_forest || p->get_type() == temperate_desert))
-            {
-              uint8_t chance = GetRandomValue(0, 100);
+            else if ((p->get_type() == forest || p->get_type() == tropical_forest || p->get_type() == tropical || p->get_type() == temperate_desert || p->get_type() == coast || p->get_type() == coastal_desert)) {
+              uint chance = GetRandomValue(0, 100);
               if (chance < 20) {
-                continue;
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
               }
-              p->add_goods(g.getId()); count++;
-              bmap[ row * cols + col ] = true;
-              continue;
             }
-            if (g.get_name() == "Stone" && (p->get_type() == grassland || p->get_type() == forest || p->get_type() == tropical || p->get_type() == tropical_forest))
-            {
-              uint8_t chance = GetRandomValue(0, 100);
+            else if ((p->get_type() == hill || p->get_type() == mountain || p->get_type() == taiga || p->get_type() == tundra || p->get_type() == bare)) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 1) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+          if (g.get_name() == "Fruit") {
+            uint chance = GetRandomValue(0, 100);
+            if (p->get_type() == grassland || p->get_type() == taiga || p->get_type() == tundra) {
+
+              if (chance < 15) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            else if ((p->get_type() == forest || p->get_type() == tropical_forest || p->get_type() == tropical)) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 25) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            else if ((p->get_type() == hill || p->get_type() == mountain)) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 5) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+
+          if (g.get_name() == "Copper") {
+            if (p->get_type() == mountain || p->get_type() == hill || p->get_type() == bare || p->get_type() == taiga || p->get_type() == tundra) {
+              uint chance = GetRandomValue(0, 100);
               if (chance < 30) {
-                continue;
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
               }
-              p->add_goods(g.getId()); count++;
-              bmap[ row * cols + col ] = true;
-              continue;
             }
-            if (g.get_name() == "Gems" && (type_province::mountain || p->get_type() == type_province::hill || p->get_type() == type_province::bare || p->get_type() == type_province::tundra || p->get_type() == type_province::taiga)) {
-              uint8_t chance = GetRandomValue(0, 10);
-              if (chance < 8) {
-                continue;
+            if (p->get_type() == grassland || p->get_type() == forest || p->get_type() == tropical || p->get_type() == tropical_forest || p->get_type() == temperate_desert) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 9) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
               }
-              p->add_goods(g.getId()); count++;
-              bmap[ row * cols + col ] = true;
-              continue;
             }
-            if (g.get_type() == type_good::mineral && (p->get_type() == type_province::mountain || p->get_type() == type_province::hill || p->get_type() == bare || p->get_type() == tundra || p->get_type() == taiga) && p->get_type() != type_province::sea && p->get_type() != type_province::deep_sea && p->get_type() != type_province::coastal_sea)
-            {
-              p->add_goods(g.getId()); count++;
-              bmap[ row * cols + col ] = true;
-
+            if (p->get_type() == desert) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 4) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
             }
-            if (g.get_type() == type_good::plantable)
-            {
-              p->add_goods(g.getId()); count++;
+          }
 
+          if (g.get_name() == "Iron") {
+            if (p->get_type() == mountain || p->get_type() == hill || p->get_type() == bare || p->get_type() == taiga || p->get_type() == tundra) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 20) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            if (p->get_type() == grassland || p->get_type() == forest || p->get_type() == tropical || p->get_type() == tropical_forest || p->get_type() == temperate_desert) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 6) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            if (p->get_type() == desert) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 4) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+
+          if (g.get_name() == "Cattle" && (p->get_type() == grassland || p->get_type() == forest || p->get_type() == tropical || p->get_type() == tropical_forest || p->get_type() == temperate_desert)) {
+            uint chance = GetRandomValue(0, 100);
+            if (chance < 30) {
+              p->add_goods(g.getId()); g.count++;
               bmap[ row * cols + col ] = true;
+            }
+          }
+          if (g.get_name() == "Elephants" && (p->get_type() == type_province::temperate_desert || p->get_type() == type_province::coastal_desert || p->get_type() == type_province::tropical || p->get_type() == type_province::tropical_forest)) {
+            if (GetRandomValue(0, 100) < 25) {
+              p->add_goods(g.getId()); g.count++;
+              bmap[ row * cols + col ] = true;
+            }
+          }
+          if (g.get_name() == "Stone")
+          {
+            if (p->get_type() == grassland || p->get_type() == forest || p->get_type() == tropical || p->get_type() == tropical_forest) {
+              uint8_t chance = GetRandomValue(0, 100);
+              if (chance < 10) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            if (p->get_type() == hill || p->get_type() == mountain || p->get_type() == taiga || p->get_type() == tundra || p->get_type() == bare) {
+              uint8_t chance = GetRandomValue(0, 100);
+              if (chance < 25) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            if (p->get_type() == desert) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 5) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+          if (g.get_name() == "Gems") {
+            if (p->get_type() == mountain || p->get_type() == hill || p->get_type() == bare || p->get_type() == taiga || p->get_type() == tundra) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 5) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            if (p->get_type() == grassland || p->get_type() == forest || p->get_type() == tropical || p->get_type() == tropical_forest || p->get_type() == temperate_desert) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 1) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            if (p->get_type() == desert) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 1) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+          }
+          if (g.get_name() == "Marble") {
+            if (p->get_type() == mountain || p->get_type() == hill || p->get_type() == bare || p->get_type() == taiga || p->get_type() == tundra) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 15) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            if (p->get_type() == grassland || p->get_type() == forest || p->get_type() == tropical || p->get_type() == tropical_forest || p->get_type() == temperate_desert) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 6) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
+            }
+            if (p->get_type() == desert) {
+              uint chance = GetRandomValue(0, 100);
+              if (chance < 2) {
+                p->add_goods(g.getId()); g.count++;
+                bmap[ row * cols + col ] = true;
+              }
             }
           }
         }
       }
     }
-    //if (count == 0)cout << g.get_name() << " " << count << endl;
-    w->getGoodById(g.getId())->set_initial_amount(count);
     w->setGoodMapById(g.getId(), bmap);
   }
   maps.clear();
@@ -544,6 +966,8 @@ void generate_countries(World* w) {
       c.set_capital_id(p->getId());
       provinces.push_back(p->getId());
       market.add_province(p->getId());
+      market.setOwner(i);
+      market.setCapital(p->getId());
       generate_royalty(w, &c, p);
       for (uint j = 0; j < num_provinces - 1; j++) {
         p = w->getProvinceById(provinces.at(GetRandomValue(0, provinces.size() - 1)));
@@ -613,7 +1037,6 @@ vector<uint> getProvinceRadius(uint province_id, int radius, World* w) {
       if (row >= 0 && row < rows && col >= 0 && col < cols) {
         Province* n = w->getProvinceByCoords(col, row);
         provinces.push_back(n->getId());
-
       }
     }
   }
